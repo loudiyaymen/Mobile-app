@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import EmergencyHomeScreen from './src/screens/EmergencyHomescreen';
+import EmergencyConfirmScreen from './src/screens/EmergencyConfirmScreen';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="EmergencyHome"
+        screenOptions={{
+          headerStyle: { backgroundColor: '#394A59' },
+          headerTintColor: '#fff',
+          headerTitleStyle: { fontWeight: 'bold' },
+        }}
+      >
+        <Stack.Screen
+          name="EmergencyHome"
+          component={EmergencyHomeScreen}
+          options={{ title: 'Emergency Home' }}
+        />
+        <Stack.Screen
+          name="EmergencyConfirm"
+          component={EmergencyConfirmScreen}
+          options={{ title: 'Confirm Emergency' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
