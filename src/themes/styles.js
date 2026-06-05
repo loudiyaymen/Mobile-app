@@ -2,11 +2,12 @@ import { StyleSheet } from "react-native";
 
 // Algonquin College Brand Colors
 const COLORS = {
-  ALGONQUIN_GREEN: '#006341',     
-  CHARCOAL: '#212721',           
-  WHITE: '#FFFFFF',                 
+  ALGONQUIN_GREEN: '#006341',      
+  CHARCOAL: '#212721',             
+  WHITE: '#FFFFFF',                  
   NEW_GROWTH_GREEN: '#43B02A',      
   DARK_ALGONQUIN_GREEN: '#003328',  
+  SOS_RED: '#E53935',               
 };
 
 const styles = StyleSheet.create({
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // FAB (Floating Action Button) styles
+  // FAB styles
   fabContainer: {
     position: 'absolute',
     right: 20,
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 3,
-    borderColor: COLORS.ALGONQUIN_GREEN,
+    borderColor: COLORS.SOS_RED,
     borderTopColor: 'transparent',
     borderRightColor: 'transparent',
   },
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: COLORS.ALGONQUIN_GREEN,
+    backgroundColor: COLORS.SOS_RED,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
@@ -82,6 +83,9 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  fabPaper: {
+    backgroundColor: COLORS.SOS_RED,
   },
 
   // Confirm screen styles
@@ -236,7 +240,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: COLORS.ALGONQUIN_GREEN,
+    backgroundColor: COLORS.SOS_RED,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
@@ -279,7 +283,7 @@ const styles = StyleSheet.create({
   phoneNumber: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: COLORS.ALGONQUIN_GREEN,
+    color: COLORS.CHARCOAL,
     letterSpacing: 2,
   },
   instructionsContainer: {

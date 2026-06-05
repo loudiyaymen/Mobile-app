@@ -1,16 +1,17 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { PaperProvider } from 'react-native-paper';
 import EmergencyHomeScreen from './src/screens/EmergencyHomescreen';
 import EmergencyConfirmScreen from './src/screens/EmergencyConfirmScreen';
-import EmergencyHelpScreen from './src/screens/EmergencyHelpScreen';
+import EmergencyConnectedScreen from './src/screens/EmergencyConnectedScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer>
       <Stack.Navigator
         initialRouteName="EmergencyHome"
         screenOptions={{
@@ -35,11 +36,12 @@ export default function App() {
           options={{ title: 'Confirm Emergency' }}
         />
         <Stack.Screen
-          name="EmergencyHelp"
-          component={EmergencyHelpScreen}
-          options={{ title: 'Calling Security' }}
+          name="EmergencyConnected"
+          component={EmergencyConnectedScreen}
+          options={{ title: 'Security Information' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </PaperProvider>
   );
 }
