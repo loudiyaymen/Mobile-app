@@ -424,6 +424,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginRight: 6,
+    backgroundColor: COLORS.ALGONQUIN_GREEN,
     alignItems: "center",
   },
   categoryButtonText: {

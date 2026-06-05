@@ -10,6 +10,7 @@ import {
   Alert,
   Image,
 } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { styles, COLORS } from "../../themes/styles";
@@ -77,19 +78,15 @@ export default function ReportLostItemScreen() {
 
   // SELECT TYPE SCREEN
   return (
-    <ScrollView style={[styles.container, { padding: 16 }]}>
+    <ScrollView
+      style={[
+        styles.container,
+        { paddingBlockStart: 16, paddingBlockEnd: 60, paddingHorizontal: 16 },
+      ]}
+    >
       {/* TOGGLE */}
       <View style={{ flexDirection: "row", marginBottom: 20 }}>
-        <Pressable
-          onPress={() => setMode("lost")}
-          style={[
-            styles.lostFound,
-            {
-              backgroundColor:
-                mode === "lost" ? COLORS.ALGONQUIN_GREEN : COLORS.WHITE,
-            },
-          ]}
-        >
+        <Pressable onPress={() => setMode("lost")} style={styles.lostFound}>
           <Text
             style={{ color: mode === "lost" ? COLORS.WHITE : COLORS.CHARCOAL }}
           >
@@ -97,16 +94,7 @@ export default function ReportLostItemScreen() {
           </Text>
         </Pressable>
 
-        <Pressable
-          onPress={() => setMode("found")}
-          style={[
-            styles.lostFound,
-            {
-              backgroundColor:
-                mode === "lost" ? COLORS.ALGONQUIN_GREEN : COLORS.WHITE,
-            },
-          ]}
-        >
+        <Pressable onPress={() => setMode("found")} style={styles.lostFound}>
           <Text
             style={{ color: mode === "found" ? COLORS.WHITE : COLORS.CHARCOAL }}
           >
