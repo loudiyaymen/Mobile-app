@@ -1,45 +1,13 @@
-import React from 'react';
-import { Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import EmergencyHomeScreen from './src/screens/EmergencyHomescreen';
-import EmergencyConfirmScreen from './src/screens/EmergencyConfirmScreen';
-import EmergencyHelpScreen from './src/screens/EmergencyHelpScreen';
-
-const Stack = createNativeStackNavigator();
+import { NavigationContainer } from "@react-navigation/native";
+import RootNavigator from "./src/navigation/RootNavigator";
+import { navigationRef } from "./src/navigation/navigationRef";
+import SOSButton from "./src/components/SOSButton";
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="EmergencyHome"
-        screenOptions={{
-          headerStyle: { backgroundColor: '#006341' },
-          headerTintColor: '#FFFFFF',
-          headerTitleStyle: { fontWeight: 'bold' },
-          headerBackTitle: 'Back',
-          headerBackTitleVisible: true,
-          headerBackTitleStyle: {
-            fontSize: 14,
-          },
-        }}
-      >
-        <Stack.Screen
-          name="EmergencyHome"
-          component={EmergencyHomeScreen}
-          options={{ title: 'Emergency Home' }}
-        />
-        <Stack.Screen
-          name="EmergencyConfirm"
-          component={EmergencyConfirmScreen}
-          options={{ title: 'Confirm Emergency' }}
-        />
-        <Stack.Screen
-          name="EmergencyHelp"
-          component={EmergencyHelpScreen}
-          options={{ title: 'Calling Security' }}
-        />
-      </Stack.Navigator>
+    <NavigationContainer ref={navigationRef}>
+      <RootNavigator />
+      <SOSButton />
     </NavigationContainer>
   );
 }
