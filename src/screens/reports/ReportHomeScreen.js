@@ -4,9 +4,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { styles, COLORS } from "../../themes/styles";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ReportHomeScreen() {
+  const insets = useSafeAreaInsets();
+
   const navigation = useNavigation();
   const [reports, setReports] = useState([]);
 
@@ -28,7 +30,7 @@ export default function ReportHomeScreen() {
 
   if (reports.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={[styles.container, { paddingVertical: 16 }]}>
         <Ionicons
           name="document-text-outline"
           size={180}
@@ -49,17 +51,12 @@ export default function ReportHomeScreen() {
           <Ionicons name="add" size={22} color={COLORS.WHITE} />
           <Text style={styles.callSecurityButtonText}>Submit new report</Text>
         </Pressable>
-      </SafeAreaView>
+      </View>
     );
   }
   // LIST VIEW
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        { paddingBottom: 32, paddingHorizontal: 16, alignItems: "center" },
-      ]}
-    >
+    <View style={[styles.container, { padding: 16, alignItems: "center" }]}>
       <Pressable
         style={styles.reportButton}
         onPress={() => navigation.navigate("Select Category")}
@@ -68,10 +65,7 @@ export default function ReportHomeScreen() {
         <Text style={styles.callSecurityButtonText}>Submit new report</Text>
       </Pressable>
       <FlatList
-        style={[
-          styles.container,
-          { marginTop: 8, padding: 2, width: "90%", height: "100%" },
-        ]}
+        style={[styles.container, { marginTop: 16, width: "100%" }]}
         data={reports}
         keyExtractor={(item) => `${item.id}-${item.type}-${item.createdAt}`}
         renderItem={({ item }) => (
@@ -92,13 +86,6 @@ export default function ReportHomeScreen() {
           </View>
         )}
       />
-
-      <Pressable
-        style={[styles.button, { marginTop: 10 }]}
-        onPress={() => navigation.navigate("ReportCategory")}
-      >
-        <Text style={{ color: COLORS.WHITE }}>Submit new report</Text>
-      </Pressable>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: COLORS.ALGONQUIN_GREEN,
+    backgroundColor: "#cb1c10",
     justifyContent: "center",
     alignItems: "center",
     elevation: 8,
@@ -339,6 +339,7 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     borderWidth: 1,
     borderColor: COLORS.NEW_GROWTH_GREEN,
     borderRadius: 10,
@@ -415,6 +416,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 12,
     marginBottom: 16,
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
     elevation: 2,
@@ -432,6 +434,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginLeft: 16,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: COLORS.CHARCOAL,
+    marginBottom: 12,
   },
 });
 

@@ -13,10 +13,13 @@ import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { styles, COLORS } from "../../themes/styles";
 
 export default function ReportIncidentScreen() {
+  const insets = useSafeAreaInsets();
+
   const navigation = useNavigation();
 
   const [locationText, setLocationText] = useState("");
@@ -101,141 +104,167 @@ export default function ReportIncidentScreen() {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { paddingBlockEnd: 48, paddingHorizontal: 16 }]}
-    >
-      {/* Important banner */}
-      <View style={styles.dangerBanner}>
-        <Text style={{ fontWeight: "bold", marginBottom: 6 }}>
-          In immediate danger?
-        </Text>
-        <Text>Call emergency services or use the SOS button at any time.</Text>
-      </View>
+    <View style={[styles.container, { paddingVertical: 16 }]}>
+      <ScrollView
+        style={[
+          styles.container,
+          { paddingBlockEnd: 48, paddingHorizontal: 16 },
+        ]}
+      >
+        {/* Important banner */}
+        <View style={styles.dangerBanner}>
+          <Text style={{ fontWeight: "bold", marginBottom: 6 }}>
+            In immediate danger?
+          </Text>
+          <Text>
+            Call emergency services or use the SOS button at any time.
+          </Text>
+        </View>
 
-      {/* LOCATION */}
-      <Text style={styles.label}>Location *</Text>
-      <View style={styles.inputRow}>
+        {/* LOCATION */}
+        <Text style={styles.label}>Location *</Text>
+        <View style={styles.inputRow}>
+          <TextInput
+            placeholder="Building, room, or area"
+            value={locationText}
+            onChangeText={setLocationText}
+          />
+          <Pressable onPress={handleGetLocation}>
+            <Ionicons
+              name="location"
+              size={22}
+              color={COLORS.ALGONQUIN_GREEN}
+            />
+          </Pressable>
+        </View>
+
+        {/* DATE */}
+        <Text style={styles.label}>Date *</Text>
+        <View>
+          <Pressable
+            onPress={() => setShowDatePicker(true)}
+            style={styles.inputRow}
+          >
+            <TextInput
+              placeholder="Select date"
+              value={date ? date.toDateString() : ""}
+              editable={false}
+            />
+            <Ionicons
+              name="calendar"
+              size={22}
+              color={COLORS.ALGONQUIN_GREEN}
+            />
+          </Pressable>
+        </View>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={date || new Date()}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
+
+        {/* TIME */}
+        <Text style={styles.label}>Time *</Text>
+        <View>
+          <Pressable
+            onPress={() => setShowTimePicker(true)}
+            style={styles.inputRow}
+          >
+            <TextInput
+              placeholder="Select time"
+              value={
+                time
+                  ? time.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : ""
+              }
+              editable={false}
+            />
+            <Ionicons name="time" size={22} color={COLORS.ALGONQUIN_GREEN} />
+          </Pressable>
+        </View>
+
+        {showTimePicker && (
+          <DateTimePicker
+            value={time || new Date()}
+            mode="time"
+            display="default"
+            onChange={handleTimeChange}
+          />
+        )}
+
+        {/* DETAILS */}
+        <Text style={styles.label}>Incident Details *</Text>
         <TextInput
-          placeholder="Building, room, or area"
-          value={locationText}
-          onChangeText={setLocationText}
+          placeholder="Describe what happened or what you observed..."
+          style={styles.textArea}
+          multiline
+          value={details}
+          onChangeText={setDetails}
         />
-        <Pressable onPress={handleGetLocation}>
-          <Ionicons name="location" size={22} color={COLORS.ALGONQUIN_GREEN} />
+
+        {/* MEDIA */}
+        <Pressable
+          onPress={handlePickMedia}
+          style={{
+            marginVertical: 20,
+            alignItems: "center",
+            padding: 16,
+            borderWidth: 1,
+            borderColor: "#ccc",
+            borderRadius: 12,
+          }}
+        >
+          <Ionicons name="camera" size={28} />
+          <Text>Add Photo or Video</Text>
         </Pressable>
-      </View>
 
-      {/* DATE */}
-      <Text style={styles.label}>Date *</Text>
-      <View style={styles.inputRow}>
-        <TextInput
-          placeholder="Select date"
-          value={date ? date.toDateString() : ""}
-          editable={false}
-        />
-        <Pressable onPress={() => setShowDatePicker(true)}>
-          <Ionicons name="calendar" size={22} color={COLORS.ALGONQUIN_GREEN} />
+        {media && (
+          <Image
+            source={{ uri: media }}
+            style={{ width: "100%", height: 200, marginBottom: 20 }}
+          />
+        )}
+
+        {/* CHECKBOXES */}
+        <Pressable
+          style={styles.checkboxRow}
+          onPress={() => setAnonymous(!anonymous)}
+        >
+          <Ionicons
+            name={anonymous ? "checkbox" : "square-outline"}
+            style={{ color: COLORS.ALGONQUIN_GREEN }}
+            size={22}
+          />
+          <Text style={{ marginLeft: 8 }}>Submit anonymously</Text>
         </Pressable>
-      </View>
 
-      {showDatePicker && (
-        <DateTimePicker
-          value={date || new Date()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
-
-      {/* TIME */}
-      <Text style={styles.label}>Time *</Text>
-      <View style={styles.inputRow}>
-        <TextInput
-          placeholder="Select time"
-          value={
-            time
-              ? time.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-              : ""
-          }
-          editable={false}
-        />
-        <Pressable onPress={() => setShowTimePicker(true)}>
-          <Ionicons name="time" size={22} color={COLORS.ALGONQUIN_GREEN} />
+        <Pressable
+          style={styles.checkboxRow}
+          onPress={() => setEmailUpdates(!emailUpdates)}
+        >
+          <Ionicons
+            name={emailUpdates ? "checkbox" : "square-outline"}
+            style={{ color: COLORS.ALGONQUIN_GREEN }}
+            size={22}
+          />
+          <Text style={{ marginLeft: 8 }}>Send updates via email</Text>
         </Pressable>
-      </View>
 
-      {showTimePicker && (
-        <DateTimePicker
-          value={time || new Date()}
-          mode="time"
-          display="default"
-          onChange={handleTimeChange}
-        />
-      )}
-
-      {/* DETAILS */}
-      <Text style={styles.label}>Incident Details *</Text>
-      <TextInput
-        placeholder="Describe what happened or what you observed..."
-        style={styles.textArea}
-        multiline
-        value={details}
-        onChangeText={setDetails}
-      />
-
-      {/* MEDIA */}
-      <Pressable
-        onPress={handlePickMedia}
-        style={{
-          marginVertical: 20,
-          alignItems: "center",
-          padding: 16,
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 12,
-        }}
-      >
-        <Ionicons name="camera" size={28} />
-        <Text>Add Photo or Video</Text>
-      </Pressable>
-
-      {media && (
-        <Image
-          source={{ uri: media }}
-          style={{ width: "100%", height: 200, marginBottom: 20 }}
-        />
-      )}
-
-      {/* CHECKBOXES */}
-      <Pressable
-        style={styles.checkboxRow}
-        onPress={() => setAnonymous(!anonymous)}
-      >
-        <Ionicons name={anonymous ? "checkbox" : "square-outline"} size={22} />
-        <Text style={{ marginLeft: 8 }}>Submit anonymously</Text>
-      </Pressable>
-
-      <Pressable
-        style={styles.checkboxRow}
-        onPress={() => setEmailUpdates(!emailUpdates)}
-      >
-        <Ionicons
-          name={emailUpdates ? "checkbox" : "square-outline"}
-          size={22}
-        />
-        <Text style={{ marginLeft: 8 }}>Send updates via email</Text>
-      </Pressable>
-
-      {/* SUBMIT */}
-      <Pressable
-        style={[styles.reportButton, { alignSelf: "center" }]}
-        onPress={handleSubmit}
-      >
-        <Text style={{ color: COLORS.WHITE }}>Submit Report</Text>
-      </Pressable>
-    </ScrollView>
+        {/* SUBMIT */}
+        <Pressable
+          style={[styles.reportButton, { alignSelf: "center" }]}
+          onPress={handleSubmit}
+        >
+          <Text style={{ color: COLORS.WHITE }}>Submit Report</Text>
+        </Pressable>
+      </ScrollView>
+    </View>
   );
 }

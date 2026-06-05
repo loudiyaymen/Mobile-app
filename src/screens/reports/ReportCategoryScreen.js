@@ -4,9 +4,11 @@ import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { styles, COLORS } from "../../themes/styles";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ReportCategoryScreen() {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const CategoryRow = ({ title, icon, onPress }) => (
     <Pressable onPress={onPress} style={styles.category}>
@@ -16,9 +18,7 @@ export default function ReportCategoryScreen() {
   );
 
   return (
-    <View
-      style={[styles.container, { paddingBottom: 32, paddingHorizontal: 16 }]}
-    >
+    <View style={[styles.container, { padding: 16 }]}>
       <Text style={[styles.confirmCardTitle, { marginVertical: 24 }]}>
         Select Report Type
       </Text>

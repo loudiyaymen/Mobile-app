@@ -88,7 +88,9 @@ export default function ReportLostItemScreen() {
       <View style={{ flexDirection: "row", marginBottom: 20 }}>
         <Pressable onPress={() => setMode("lost")} style={styles.lostFound}>
           <Text
-            style={{ color: mode === "lost" ? COLORS.WHITE : COLORS.CHARCOAL }}
+            style={{
+              color: mode === "lost" ? COLORS.WHITE : COLORS.NEW_GROWTH_GREEN,
+            }}
           >
             I lost an item
           </Text>
@@ -96,7 +98,9 @@ export default function ReportLostItemScreen() {
 
         <Pressable onPress={() => setMode("found")} style={styles.lostFound}>
           <Text
-            style={{ color: mode === "found" ? COLORS.WHITE : COLORS.CHARCOAL }}
+            style={{
+              color: mode === "found" ? COLORS.WHITE : COLORS.NEW_GROWTH_GREEN,
+            }}
           >
             I found an item
           </Text>
