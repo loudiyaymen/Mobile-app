@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, FlatList } from "react-native";
+import React, { useState, useCallback } from "react";
+import { View, Text, Pressable, FlatList, BackHandler } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { styles, COLORS } from "../../themes/styles";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ReportHomeScreen() {
-  const insets = useSafeAreaInsets();
-
   const navigation = useNavigation();
   const [reports, setReports] = useState([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => true;
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress,
+      );
+
+      return () => subscription.remove();
+    }, []),
+  );
 
   const loadReports = async () => {
     const stored = await AsyncStorage.getItem("reports");
@@ -30,17 +39,26 @@ export default function ReportHomeScreen() {
 
   if (reports.length === 0) {
     return (
-      <View style={[styles.container, { paddingVertical: 16 }]}>
+      <View
+        style={[
+          styles.container,
+          {
+            padding: 16,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
+      >
         <Ionicons
           name="document-text-outline"
-          size={180}
+          size={160}
           color={COLORS.GREY}
           style={{ marginBottom: 20 }}
         />
 
         <Text style={styles.confirmCardTitle}>No Reports Yet</Text>
 
-        <Text style={styles.instructionsText}>
+        <Text style={[styles.instructionsText, { marginBottom: 24 }]}>
           Submit an incident report to help keep our campus safe
         </Text>
 

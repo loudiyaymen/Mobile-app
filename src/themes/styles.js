@@ -395,7 +395,8 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: COLORS.CHARCOAL,
   },
   itemReference: {
     color: COLORS.CHARCOAL,
@@ -440,6 +441,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLORS.CHARCOAL,
     marginBottom: 12,
+  },
+  media: {
+    marginVertical: 20,
+    alignItems: "center",
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 12,
   },
 });
 

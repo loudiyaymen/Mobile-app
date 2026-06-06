@@ -4,14 +4,18 @@ import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { styles, COLORS } from "../../themes/styles";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function ReportCategoryScreen() {
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
 
   const CategoryRow = ({ title, icon, onPress }) => (
-    <Pressable onPress={onPress} style={styles.category}>
+    <Pressable
+      onPress={onPress}
+      style={[
+        styles.category,
+        { borderWidth: 1, borderColor: COLORS.CHARCOAL },
+      ]}
+    >
       <Ionicons name={icon} size={24} color={COLORS.ALGONQUIN_GREEN} />
       <Text style={styles.categoryButtonText}>{title}</Text>
     </Pressable>

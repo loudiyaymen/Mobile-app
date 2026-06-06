@@ -42,7 +42,7 @@ export default function ReportLostItemScreen() {
       return;
     }
 
-    navigation.navigate("Report Submitted", {
+    navigation.replace("Report Submitted", {
       reportData: {
         id: Date.now().toString(),
         type: "Lost Item",
@@ -61,7 +61,7 @@ export default function ReportLostItemScreen() {
       return;
     }
 
-    navigation.navigate("Report Submitted", {
+    navigation.replace("Report Submitted", {
       reportData: {
         id: Date.now().toString(),
         type: "Found Item",
@@ -164,8 +164,9 @@ export default function ReportLostItemScreen() {
         onChangeText={setLocation}
       />
 
-      <Pressable style={styles.mediaBox} onPress={pickPhoto}>
-        <Text>Add Photo</Text>
+      <Pressable onPress={pickPhoto} style={styles.media}>
+        <Ionicons name={photo ? "reload" : "camera"} size={28} />
+        <Text>{photo ? "Choose Another Photo" : "Add Photo"}</Text>
       </Pressable>
 
       {photo && <Image source={{ uri: photo }} style={styles.photoPreview} />}
@@ -197,7 +198,7 @@ export default function ReportLostItemScreen() {
       )}
 
       <Pressable
-        style={styles.reportButton}
+        style={[styles.reportButton, { marginBlockEnd: 32 }]}
         onPress={mode === "lost" ? submitLostItem : submitFoundItem}
       >
         <Text style={{ color: COLORS.WHITE }}>Submit Report</Text>

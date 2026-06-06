@@ -13,13 +13,10 @@ import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { styles, COLORS } from "../../themes/styles";
 
 export default function ReportIncidentScreen() {
-  const insets = useSafeAreaInsets();
-
   const navigation = useNavigation();
 
   const [locationText, setLocationText] = useState("");
@@ -210,19 +207,9 @@ export default function ReportIncidentScreen() {
         />
 
         {/* MEDIA */}
-        <Pressable
-          onPress={handlePickMedia}
-          style={{
-            marginVertical: 20,
-            alignItems: "center",
-            padding: 16,
-            borderWidth: 1,
-            borderColor: "#ccc",
-            borderRadius: 12,
-          }}
-        >
-          <Ionicons name="camera" size={28} />
-          <Text>Add Photo or Video</Text>
+        <Pressable onPress={handlePickMedia} style={styles.media}>
+          <Ionicons name={media ? "reload" : "camera"} size={28} />
+          <Text>{media ? "Choose Another Photo" : "Add Photo"}</Text>
         </Pressable>
 
         {media && (

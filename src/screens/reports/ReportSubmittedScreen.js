@@ -44,14 +44,23 @@ export default function ReportSubmittedScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.homeTitle}>Report Submitted</Text>
+    <View
+      style={[
+        styles.container,
+        { padding: 16, alignItems: "center", justifyContent: "center" },
+      ]}
+    >
+      <Text style={[styles.homeTitle, { marginBottom: 16 }]}>
+        Report Submitted
+      </Text>
 
-      <Text style={styles.subTitle}>
+      <Text style={[styles.subTitle, { marginBottom: 16 }]}>
         Thank you. Your report has been recorded.
       </Text>
 
-      <Text style={styles.homeTitle}>Reference Code: {referenceCode}</Text>
+      <Text style={[styles.homeTitle, { marginBottom: 16 }]}>
+        Reference Code: {referenceCode}
+      </Text>
 
       <Pressable style={styles.reportButton} onPress={handleClose}>
         <Text style={{ color: COLORS.WHITE }}>Return to Reports</Text>
