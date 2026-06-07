@@ -1,10 +1,10 @@
 // Thank-you screen after user has contacted security
 
-import React, { useRef, useEffect } from 'react';
-import { Text, View, Pressable, Animated } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { styles, COLORS } from '../themes/styles';
-import { useNavigation } from '@react-navigation/native';
+import { useRef, useEffect } from "react";
+import { Text, View, Pressable, Animated } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { styles, COLORS } from "../themes/styles";
+import { useNavigation } from "@react-navigation/native";
 
 export default function EmergencyConnectedScreen() {
   const navigation = useNavigation();
@@ -23,11 +23,13 @@ export default function EmergencyConnectedScreen() {
   };
 
   const handleReturnToMap = () => {
-    navigation.navigate('EmergencyHome');
+    navigation.navigate("EmergencyHome");
   };
 
   return (
-    <Animated.View style={[styles.container, styles.callingContainer, fadeInAnimatedStyle]}>
+    <Animated.View
+      style={[styles.container, styles.callingContainer, fadeInAnimatedStyle]}
+    >
       <View style={styles.callingContent}>
         {/* Green phone icon */}
         <View style={styles.callingIconContainer}>
@@ -41,15 +43,14 @@ export default function EmergencyConnectedScreen() {
           </View>
         </View>
 
-     
         <Text style={styles.callingTitle}>Thank you for contacting</Text>
         <Text
           style={{
             fontSize: 18,
             color: COLORS.CHARCOAL,
-            fontWeight: '700',
+            fontWeight: "700",
             marginBottom: 24,
-            textAlign: 'center',
+            textAlign: "center",
           }}
         >
           Algonquin College Security
@@ -65,7 +66,7 @@ export default function EmergencyConnectedScreen() {
               fontSize: 14,
               color: COLORS.CHARCOAL,
               lineHeight: 22,
-              textAlign: 'center',
+              textAlign: "center",
               marginBottom: 12,
             }}
           >
@@ -78,9 +79,9 @@ export default function EmergencyConnectedScreen() {
               fontSize: 14,
               color: COLORS.CHARCOAL,
               lineHeight: 22,
-              textAlign: 'center',
+              textAlign: "center",
               marginBottom: 12,
-              fontWeight: '600',
+              fontWeight: "600",
             }}
           >
             DIAL Ext. 5000 from any College phone.
@@ -90,13 +91,11 @@ export default function EmergencyConnectedScreen() {
               fontSize: 14,
               color: COLORS.CHARCOAL,
               lineHeight: 22,
-              textAlign: 'center',
+              textAlign: "center",
             }}
           >
-            You can also report any incident using the
-            {' '}
-            <Text style={{ fontWeight: '600' }}>Report an Incident</Text>
-            {' '}
+            You can also report any incident using the{" "}
+            <Text style={{ fontWeight: "600" }}>Report an Incident</Text>{" "}
             feature on the app home screen.
           </Text>
         </View>
@@ -107,13 +106,15 @@ export default function EmergencyConnectedScreen() {
             borderRadius: 12,
             paddingVertical: 16,
             paddingHorizontal: 32,
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
           }}
           onPress={handleReturnToMap}
         >
-          <Text style={{ color: COLORS.WHITE, fontSize: 16, fontWeight: '600' }}>
+          <Text
+            style={{ color: COLORS.WHITE, fontSize: 16, fontWeight: "600" }}
+          >
             Return to Map
           </Text>
         </Pressable>
@@ -121,4 +122,3 @@ export default function EmergencyConnectedScreen() {
     </Animated.View>
   );
 }
-

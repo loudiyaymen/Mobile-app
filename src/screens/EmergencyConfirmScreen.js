@@ -1,17 +1,15 @@
 // Displays the emergency SOS confirmation screen
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, Pressable, Linking, Animated, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { styles, COLORS } from '../themes/styles';
-import { useNavigation } from '@react-navigation/native';
+import { useEffect, useRef } from "react";
+import { Text, View, Pressable, Linking, Animated, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { styles, COLORS } from "../themes/styles";
+import { useNavigation } from "@react-navigation/native";
 
 export default function EmergencyConfirmScreen() {
   const navigation = useNavigation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const progressAnim = useRef(new Animated.Value(0)).current;
-  const hasAutoConfirmed = useRef(false);
-  const securityPhoneNumber = '613-727-4723'; 
+  const securityPhoneNumber = "613-727-4723";
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -26,15 +24,15 @@ export default function EmergencyConfirmScreen() {
     try {
       await Linking.openURL(url);
     } catch (err) {
-      console.warn('Could not open dialer:', err);
+      console.warn("Could not open dialer:", err);
       Alert.alert(
-        'Open dialer failed',
+        "Open dialer failed",
         `Please try again ${securityPhoneNumber}.`,
-        [{ text: 'OK' }]
+        [{ text: "OK" }],
       );
     }
     setTimeout(() => {
-      navigation.navigate('EmergencyConnected');
+      navigation.navigate("EmergencyConnected");
     }, 500);
   };
 
@@ -50,12 +48,11 @@ export default function EmergencyConfirmScreen() {
     opacity: fadeAnim,
   };
 
-
   return (
-    <Animated.View style={[styles.confirmScreenBackground, fadeInAnimatedStyle]}>
-     
+    <Animated.View
+      style={[styles.confirmScreenBackground, fadeInAnimatedStyle]}
+    >
       <View style={styles.confirmCard}>
-      
         <View style={styles.shieldIconContainer}>
           <View style={styles.shieldIconBackground}>
             <Ionicons name="shield" size={32} color={COLORS.ALGONQUIN_GREEN} />
@@ -74,7 +71,9 @@ export default function EmergencyConfirmScreen() {
             onPress={handleConfirm}
           >
             <Ionicons name="call" size={20} color={COLORS.WHITE} />
-            <Text style={styles.confirmEmergencyButtonText}>Confirm Emergency</Text>
+            <Text style={styles.confirmEmergencyButtonText}>
+              Confirm Emergency
+            </Text>
           </Pressable>
 
           <Pressable
