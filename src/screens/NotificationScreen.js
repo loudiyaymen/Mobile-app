@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { CalendarBlankIcon, XIcon } from "phosphor-react-native";
 import { useNotifications } from "../context/NotificationContext";
-import { styles } from "../styles/NotificationScreenStyles";
+import { styles } from "../themes/NotificationsScreenStyles";
 
 export default function NotificationScreen({ navigation }) {
   const { notifications, markAllAsRead } = useNotifications();
@@ -15,12 +16,7 @@ export default function NotificationScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
-        <Icon
-          name="calendar-blank-outline"
-          size={24}
-          color="#000"
-          style={styles.cardIcon}
-        />
+        <CalendarBlankIcon size={24} color="#000" style={styles.cardIcon} />
         <Text style={styles.cardTitle}>{item.title}</Text>
       </View>
       <Text style={styles.cardBody}>{item.body}</Text>
@@ -41,7 +37,7 @@ export default function NotificationScreen({ navigation }) {
           onPress={() => navigation.goBack()}
           style={styles.closeButton}
         >
-          <Icon name="close" size={24} color="#000" />
+          <XIcon size={24} color="#000" />
         </TouchableOpacity>
       </View>
 
