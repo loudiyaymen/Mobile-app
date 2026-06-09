@@ -1,16 +1,14 @@
 // Displays the emergency SOS confirmation screen
 
-import { useState, useEffect, useRef } from "react";
-import { Text, View, Pressable, Linking, Animated } from "react-native";
+import { useEffect, useRef } from "react";
+import { Text, View, Pressable, Linking, Animated, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { styles, COLORS } from "../themes/styles";
 import { useNavigation } from "@react-navigation/native";
 
-export default function EmergencyHomescreen() {
+export default function EmergencyConfirmScreen() {
   const navigation = useNavigation();
-  const [counter, setCounter] = useState(5);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const progressAnim = useRef(new Animated.Value(0)).current;
   const securityPhoneNumber = "613-727-4723";
 
   useEffect(() => {
@@ -21,7 +19,6 @@ export default function EmergencyHomescreen() {
     }).start();
   }, []);
 
-  // Handling the phone API - opens phone dialer with security number
   const confirmAndCall = async () => {
     const url = `tel:${securityPhoneNumber}`;
     try {
@@ -75,7 +72,6 @@ export default function EmergencyHomescreen() {
           >
             <Ionicons name="call" size={20} color={COLORS.WHITE} />
             <Text style={styles.confirmEmergencyButtonText}>
-              {" "}
               Confirm Emergency
             </Text>
           </Pressable>

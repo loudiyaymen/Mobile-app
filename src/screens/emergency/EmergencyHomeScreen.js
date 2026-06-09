@@ -1,12 +1,87 @@
 // Displays the emergency SOS FAB home screen
 
-import React, { useRef, useState } from "react";
-import { Text, View, Pressable, Animated } from "react-native";
+import { useRef, useState } from "react";
+import {
+  Text,
+  View,
+  Pressable,
+  Animated,
+  TouchableOpacity,
+} from "react-native";
 import { styles, COLORS } from "../themes/styles";
 import { useNavigation } from "@react-navigation/native";
+import { BellIcon } from "phosphor-react-native";
 
-export default function EmergencyHomeScreen() {
+import { useNotifications } from "../context/NotificationContext";
+
+export default function EmergencyHomescreen() {
   const navigation = useNavigation();
+  const { addNotification, unreadCount } = useNotifications();
+
+  // We trigger a fake notification after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      addNotification({
+        id: "1",
+        title: "Emergency Meeting",
+        body: "Emergency safety meeting in 30 minutes at Student Center.",
+        timestamp: "1m ago",
+        type: "emergency",
+      });
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  //TODO: Separate the UI from the styles and integrate the modal properly instead of using a layout effect
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Notifications")}
+          style={{
+            marginRight: 8,
+            width: 44,
+            height: 44,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <BellIcon size={24} color="#FFFFFF" weight="regular" />
+
+          {unreadCount > 0 && (
+            <View
+              style={{
+                position: "absolute",
+                top: 6,
+                right: 6,
+                backgroundColor: COLORS.SOS_RED,
+                borderRadius: 10,
+                minWidth: 18,
+                height: 18,
+                justifyContent: "center",
+                alignItems: "center",
+                borderWidth: 1.5,
+                borderColor: COLORS.ALGONQUIN_GREEN,
+                zIndex: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: COLORS.WHITE,
+                  fontSize: 10,
+                  fontWeight: "bold",
+                  paddingHorizontal: 2,
+                }}
+              >
+                {unreadCount}
+              </Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, unreadCount]);
   const timerRef = useRef(null);
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
@@ -85,6 +160,7 @@ export default function EmergencyHomeScreen() {
             </Animated.View>
           </Animated.View>
         )}
+
         <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
           <Animated.View style={[styles.fab, fabAnimatedStyle]}>
             <Text style={styles.fabIcon}>SOS</Text>

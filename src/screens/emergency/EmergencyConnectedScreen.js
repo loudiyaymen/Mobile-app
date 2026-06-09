@@ -1,9 +1,9 @@
 // Thank-you screen after user has contacted security
 
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { Text, View, Pressable, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, COLORS } from "../../themes/styles";
+import { styles, COLORS } from "../themes/styles";
 import { useNavigation } from "@react-navigation/native";
 
 export default function EmergencyConnectedScreen() {
