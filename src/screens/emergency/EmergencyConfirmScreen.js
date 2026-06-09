@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Text, View, Pressable, Linking, Animated, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, COLORS } from "../themes/styles";
+import { styles, COLORS } from "../../themes/styles";
 import { useNavigation } from "@react-navigation/native";
 
 export default function EmergencyConfirmScreen() {

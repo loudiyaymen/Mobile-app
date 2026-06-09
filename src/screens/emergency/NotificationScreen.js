@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { CalendarBlankIcon, XIcon } from "phosphor-react-native";
-import { useNotifications } from "../context/NotificationContext";
-import { styles } from "../themes/NotificationsScreenStyles";
+import { useNotifications } from "../../context/NotificationContext";
+import { styles } from "../../themes/NotificationsScreenStyles";
 
 export default function NotificationScreen({ navigation }) {
   const { notifications, markAllAsRead } = useNotifications();

@@ -1,6 +1,6 @@
 // Displays the emergency SOS FAB home screen
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import {
   Text,
   View,
@@ -8,11 +8,11 @@ import {
   Animated,
   TouchableOpacity,
 } from "react-native";
-import { styles, COLORS } from "../themes/styles";
+import { styles, COLORS } from "../../themes/styles";
 import { useNavigation } from "@react-navigation/native";
 import { BellIcon } from "phosphor-react-native";
 
-import { useNotifications } from "../context/NotificationContext";
+import { useNotifications } from "../../context/NotificationContext";
 
 export default function EmergencyHomescreen() {
   const navigation = useNavigation();
