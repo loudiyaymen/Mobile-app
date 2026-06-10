@@ -17,6 +17,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
   },
 
+  eventsContainer: {
+    paddingHorizontal: 5,
+  },
+
   // Home screen styles
   homeTitleContainer: {
     flex: 1,
