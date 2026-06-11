@@ -1,22 +1,10 @@
 import { StyleSheet } from "react-native";
-import typography from "./typography";
-
-// Algonquin College Brand Colors
-const COLORS = {
-  ALGONQUIN_GREEN: "#006341",
-  CHARCOAL: "#212721",
-  WHITE: "#FFFFFF",
-  NEW_GROWTH_GREEN: "#43B02A",
-  DARK_ALGONQUIN_GREEN: "#003328",
-  SOS_RED: "#E53935",
-};
 
 const styles = StyleSheet.create({
   // Container styles
   container: {
     flex: 1,
-    backgroundColor: COLORS.WHITE,
-    paddingBottom: 32,
+    backgroundColor: colors.primary_White,
   },
 
   eventsContainer: {
@@ -32,7 +20,7 @@ const styles = StyleSheet.create({
   },
   homeTitle: {
     fontSize: 18,
-    color: COLORS.CHARCOAL,
+    color: colors.Primary_Charcoal,
     textAlign: "center",
     fontWeight: "600",
   },
@@ -65,7 +53,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 3,
-    borderColor: COLORS.SOS_RED,
+    borderColor: colors.SOS_Red,
     borderTopColor: "transparent",
     borderRightColor: "transparent",
   },
@@ -73,11 +61,11 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: COLORS.SOS_RED,
+    backgroundColor: colors.SOS_Red,
     justifyContent: "center",
     alignItems: "center",
     elevation: 8,
-    shadowColor: COLORS.CHARCOAL,
+    shadowColor: colors.Primary_Charcoal,
     shadowOffset: {
       width: 0,
       height: 4,
@@ -86,12 +74,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
   },
   fabIcon: {
-    color: COLORS.WHITE,
+    color: colors.primary_White,
     fontSize: 16,
     fontWeight: "bold",
   },
   fabPaper: {
-    backgroundColor: COLORS.SOS_RED,
+    backgroundColor: colors.SOS_Red,
   },
 
   // Confirm screen styles
@@ -103,14 +91,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   confirmCard: {
-    backgroundColor: COLORS.WHITE,
+    backgroundColor: colors.primary_White,
     borderRadius: 16,
     padding: 24,
     width: "100%",
     maxWidth: 400,
     alignItems: "center",
     elevation: 4,
-    shadowColor: COLORS.CHARCOAL,
+    shadowColor: colors.Primary_Charcoal,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -132,13 +120,13 @@ const styles = StyleSheet.create({
   confirmCardTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: COLORS.CHARCOAL,
+    color: colors.CHARCOAL,
     marginBottom: 12,
     textAlign: "center",
   },
   confirmCardSubtitle: {
     fontSize: 16,
-    color: COLORS.CHARCOAL,
+    color: colors.CHARCOAL,
     textAlign: "center",
     marginBottom: 30,
   },
@@ -164,19 +152,19 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
     borderTopColor: "transparent",
     borderRightColor: "transparent",
-    borderBottomColor: COLORS.ALGONQUIN_GREEN,
-    borderLeftColor: COLORS.ALGONQUIN_GREEN,
+    borderBottomColor: colors.ALGONQUIN_GREEN,
+    borderLeftColor: colors.ALGONQUIN_GREEN,
   },
   countdownCircleNumber: {
     fontSize: 48,
     fontWeight: "bold",
-    color: COLORS.ALGONQUIN_GREEN,
+    color: colors.ALGONQUIN_GREEN,
     marginBottom: 4,
   },
   countdownCircleLabel: {
     fontSize: 12,
     fontWeight: "600",
-    color: COLORS.CHARCOAL,
+    color: colors.CHARCOAL,
     letterSpacing: 1,
   },
 
@@ -201,10 +189,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   confirmEmergencyButton: {
-    backgroundColor: COLORS.ALGONQUIN_GREEN,
+    backgroundColor: colors.ALGONQUIN_GREEN,
     width: "100%",
     elevation: 4,
-    shadowColor: COLORS.CHARCOAL,
+    shadowColor: colors.CHARCOAL,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -213,18 +201,18 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   confirmEmergencyButtonText: {
-    color: COLORS.WHITE,
+    color: colors.WHITE,
     fontSize: 16,
     fontWeight: "bold",
   },
   cancelButtonNew: {
-    backgroundColor: COLORS.WHITE,
+    backgroundColor: colors.WHITE,
     width: "100%",
     borderWidth: 1,
     borderColor: "#E0E0E0",
   },
   cancelButtonTextNew: {
-    color: COLORS.CHARCOAL,
+    color: colors.CHARCOAL,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -246,11 +234,11 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: COLORS.SOS_RED,
+    backgroundColor: colors.SOS_RED,
     justifyContent: "center",
     alignItems: "center",
     elevation: 4,
-    shadowColor: COLORS.CHARCOAL,
+    shadowColor: colors.CHARCOAL,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -261,13 +249,13 @@ const styles = StyleSheet.create({
   callingTitle: {
     fontSize: 28,
     fontWeight: "bold",
-    color: COLORS.CHARCOAL,
+    color: colors.CHARCOAL,
     marginBottom: 16,
     textAlign: "center",
   },
   callingStatus: {
     fontSize: 16,
-    color: COLORS.CHARCOAL,
+    color: colors.CHARCOAL,
     textAlign: "center",
     marginBottom: 30,
     lineHeight: 24,
@@ -282,14 +270,12 @@ const styles = StyleSheet.create({
   },
   phoneNumberLabel: {
     fontSize: 14,
-    color: "#666666",
     marginBottom: 8,
     fontWeight: "600",
   },
   phoneNumber: {
     fontSize: 32,
     fontWeight: "bold",
-    color: COLORS.CHARCOAL,
     letterSpacing: 2,
   },
   instructionsContainer: {
@@ -298,7 +284,6 @@ const styles = StyleSheet.create({
   },
   instructionsText: {
     fontSize: 14,
-    color: "#666666",
     textAlign: "center",
     lineHeight: 20,
   },
@@ -486,4 +471,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { styles, COLORS };
+export { styles };
