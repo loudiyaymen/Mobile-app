@@ -1,30 +1,62 @@
-import { View, Text, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { styles } from "../../themes/styles";
-import Card from "../../components/Cards";
 import { typography } from "../../themes/typography";
+import Card from "../../components/Cards";
+import { fetchEventsByTab } from "../../services/eventService";
 
 export default function EventsScreen() {
-  const events = [
-    {
-      id: 1,
-      title: "Self-Defense Workshop",
-      description: "Learn basic self-defense techniques in this hands-on workshop.",
-      image: "https://www.shutterstock.com/image-photo/athlete-red-trunks-delivers-strong-600nw-2646352499.jpg"
-    },
-    {
-      id: 2,
-      title: "Cyber Escape Room",
-      description: "Solve puzzles and challenges while learning about cybersecurity.",
-      image: "https://img.freepik.com/free-photo/html-css-collage-concept-with-hacker_23-2150061984.jpg?semt=ais_rp_50_assets&w=740&q=80"
-    },
-  ];
+  const [eventGroups, setEventGroups] = useState({ official: [], student: [] });
+  const [activeTab, setActiveTab] = useState("official");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      const result = await fetchEventsByTab();
+      setEventGroups(result);
+      setLoading(false);
+    }
+    
+    loadData();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator size="large" style={{ flex: 1, justifyContent: 'center' }} />;
+  }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={typography.h3}>Upcoming Events</Text>
-      
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.eventsContainer}>
-        {events.map((event) => (
+
+      <View style={{ flexDirection: "row", marginVertical: 15 }}>
+        <TouchableOpacity 
+          onPress={() => setActiveTab("official")}
+          style={{ 
+            paddingBottom: 5, 
+            marginRight: 20, 
+            borderBottomWidth: activeTab === "official" ? 2 : 0 
+          }}
+        >
+          <Text style={activeTab === "official" ? { fontWeight: "bold" } : {}}>Official</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          onPress={() => setActiveTab("student")}
+          style={{ 
+            paddingBottom: 5, 
+            borderBottomWidth: activeTab === "student" ? 2 : 0 
+          }}
+        >
+          <Text style={activeTab === "student" ? { fontWeight: "bold" } : {}}>Student</Text>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView 
+        horizontal={true} 
+        showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={styles.eventsContainer}
+      >
+        {eventGroups[activeTab].map((event) => (
           <Card
             key={event.id}
             image={event.image}
