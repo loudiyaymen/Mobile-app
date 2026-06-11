@@ -2,8 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import EventsScreen from "../screens/events/EventsScreen";
 
-import { COLORS } from "../themes/styles";
-
+import { colors } from "../themes/color";
 const Stack = createNativeStackNavigator();
 
 export default function EventsStack() {
@@ -11,8 +10,8 @@ export default function EventsStack() {
     <Stack.Navigator
       initialRouteName="Events"
       screenOptions={{
-        headerStyle: { backgroundColor: COLORS.ALGONQUIN_GREEN },
-        headerTintColor: COLORS.WHITE,
+        headerStyle: { backgroundColor: colors.primary_AC_Green },
+        headerTintColor: colors.primary_White,
         headerTitleStyle: { fontWeight: "bold" },
         headerBackTitle: "Back",
         headerBackTitleVisible: true,

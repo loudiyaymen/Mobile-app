@@ -7,7 +7,7 @@ import ReportAssaultScreen from "../screens/reports/ReportAssaultScreen";
 import ReportLostItemScreen from "../screens/reports/ReportLostItemScreen";
 import ReportSubmittedScreen from "../screens/reports/ReportSubmittedScreen";
 
-import { COLORS } from "../themes/styles";
+import { colors } from "../themes/color";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,8 +16,8 @@ export default function ReportStack() {
     <Stack.Navigator
       initialRouteName="My Reports"
       screenOptions={{
-        headerStyle: { backgroundColor: COLORS.ALGONQUIN_GREEN },
-        headerTintColor: COLORS.WHITE,
+        headerStyle: { backgroundColor: colors.primary_AC_Green },
+        headerTintColor: colors.primary_White,
         headerTitleStyle: { fontWeight: "bold" },
         headerBackTitle: "Back",
         headerBackTitleVisible: true,

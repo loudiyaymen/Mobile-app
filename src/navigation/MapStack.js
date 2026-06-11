@@ -1,8 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MapScreen from "../screens/map/MapScreen";
-
-import { COLORS } from "../themes/styles";
+import { colors } from "../themes/color";
 
 const Stack = createNativeStackNavigator();
 
@@ -11,8 +10,8 @@ export default function MapStack() {
     <Stack.Navigator
       initialRouteName="Campus Map"
       screenOptions={{
-        headerStyle: { backgroundColor: COLORS.ALGONQUIN_GREEN },
-        headerTintColor: COLORS.WHITE,
+        headerStyle: { backgroundColor: colors.primary_AC_Green },
+        headerTintColor: colors.primary_White,
         headerTitleStyle: { fontWeight: "bold" },
         headerBackTitle: "Back",
         headerBackTitleVisible: true,
