@@ -13,8 +13,6 @@ export const fetchEventsByTab = async () => {
             userId: item.userId
         }));
 
-        console.log('Formatted events:', formattedData);
-
         return {
             official: formattedData.filter(event => event.userId === 1),
             student: formattedData.filter(event => event.userId !== 1)

@@ -15,6 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { styles, COLORS } from "../../themes/styles";
+import { typography } from "../../themes/typography";
 
 export default function ReportIncidentScreen() {
   const navigation = useNavigation();
@@ -101,31 +102,17 @@ export default function ReportIncidentScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingVertical: 16 }]}>
+    <View style={styles.container}>
       <ScrollView
         style={[
           styles.container,
           { paddingBlockEnd: 48, paddingHorizontal: 16 },
         ]}
       >
-        {/* Important banner */}
-        <View style={styles.dangerBanner}>
-          <Text style={{ fontWeight: "bold", marginBottom: 6 }}>
-            In immediate danger?
-          </Text>
-          <Text>
-            Call emergency services or use the SOS button at any time.
-          </Text>
-        </View>
 
         {/* LOCATION */}
-        <Text style={styles.label}>Location *</Text>
+        <Text style={[typography.h4, styles.label]}>Location *</Text>
         <View style={styles.inputRow}>
-          <TextInput
-            placeholder="Building, room, or area"
-            value={locationText}
-            onChangeText={setLocationText}
-          />
           <Pressable onPress={handleGetLocation}>
             <Ionicons
               name="location"
@@ -133,24 +120,31 @@ export default function ReportIncidentScreen() {
               color={COLORS.ALGONQUIN_GREEN}
             />
           </Pressable>
+          <TextInput
+            style={typography.body}
+            placeholder="e.g, ACCE Building, Floor 2"
+            value={locationText}
+            onChangeText={setLocationText}
+          />
         </View>
 
         {/* DATE */}
-        <Text style={styles.label}>Date *</Text>
+        <Text style={[typography.h4, styles.label]}>Date *</Text>
         <View>
           <Pressable
             onPress={() => setShowDatePicker(true)}
             style={styles.inputRow}
           >
-            <TextInput
-              placeholder="Select date"
-              value={date ? date.toDateString() : ""}
-              editable={false}
-            />
             <Ionicons
               name="calendar"
               size={22}
               color={COLORS.ALGONQUIN_GREEN}
+            />
+            <TextInput
+              style={typography.body}
+              placeholder="e.g., Feb 14, 2026"
+              value={date ? date.toDateString() : ""}
+              editable={false}
             />
           </Pressable>
         </View>
@@ -165,14 +159,20 @@ export default function ReportIncidentScreen() {
         )}
 
         {/* TIME */}
-        <Text style={styles.label}>Time *</Text>
+        <Text style={[typography.h4, styles.label]}>Time of incident</Text>
         <View>
           <Pressable
             onPress={() => setShowTimePicker(true)}
             style={styles.inputRow}
           >
+            <Ionicons
+              name="time"
+              size={22}
+              color={COLORS.ALGONQUIN_GREEN}
+            />
             <TextInput
-              placeholder="Select time"
+            style={typography.body}
+              placeholder="e.g., 2:30 PM"
               value={
                 time
                   ? time.toLocaleTimeString([], {
@@ -183,7 +183,6 @@ export default function ReportIncidentScreen() {
               }
               editable={false}
             />
-            <Ionicons name="time" size={22} color={COLORS.ALGONQUIN_GREEN} />
           </Pressable>
         </View>
 
@@ -197,17 +196,18 @@ export default function ReportIncidentScreen() {
         )}
 
         {/* DETAILS */}
-        <Text style={styles.label}>Incident Details *</Text>
+        <Text style={[typography.h4, styles.label]}>Incident Details *</Text>
         <TextInput
-          placeholder="Describe what happened or what you observed..."
-          style={styles.textArea}
-          multiline
+          placeholder="Describe the situation (e.g., suspicious activity near E-Building entrance)"
+          style={[styles.textArea, typography.body]}
+          multiline={true}
           value={details}
           onChangeText={setDetails}
         />
 
         {/* MEDIA */}
-        <Pressable onPress={handlePickMedia} style={styles.media}>
+        <Text style={[typography.h4, styles.label]}>Attachments</Text>
+        <Pressable onPress={handlePickMedia} style={styles.mediaBox}>
           <Ionicons name={media ? "reload" : "camera"} size={28} />
           <Text>{media ? "Choose Another Photo" : "Add Photo"}</Text>
         </Pressable>
@@ -218,31 +218,6 @@ export default function ReportIncidentScreen() {
             style={{ width: "100%", height: 200, marginBottom: 20 }}
           />
         )}
-
-        {/* CHECKBOXES */}
-        <Pressable
-          style={styles.checkboxRow}
-          onPress={() => setAnonymous(!anonymous)}
-        >
-          <Ionicons
-            name={anonymous ? "checkbox" : "square-outline"}
-            style={{ color: COLORS.ALGONQUIN_GREEN }}
-            size={22}
-          />
-          <Text style={{ marginLeft: 8 }}>Submit anonymously</Text>
-        </Pressable>
-
-        <Pressable
-          style={styles.checkboxRow}
-          onPress={() => setEmailUpdates(!emailUpdates)}
-        >
-          <Ionicons
-            name={emailUpdates ? "checkbox" : "square-outline"}
-            style={{ color: COLORS.ALGONQUIN_GREEN }}
-            size={22}
-          />
-          <Text style={{ marginLeft: 8 }}>Send updates via email</Text>
-        </Pressable>
 
         {/* SUBMIT */}
         <Pressable

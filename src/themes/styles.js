@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import typography from "./typography";
 
 // Algonquin College Brand Colors
 const COLORS = {
@@ -15,6 +16,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
+    paddingBottom: 32,
   },
 
   eventsContainer: {
@@ -347,13 +349,19 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    gap: 10,
     borderWidth: 1,
-    borderColor: COLORS.NEW_GROWTH_GREEN,
+    borderColor: COLORS.ALGONQUIN_GREEN,
     borderRadius: 10,
-    paddingHorizontal: 12,
-    marginBottom: 14,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
     backgroundColor: COLORS.WHITE,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   inputField: {
     flex: 1,
@@ -371,15 +379,20 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
   },
   mediaBox: {
-    width: "100%",
     height: 200,
     borderWidth: 1,
-    borderColor: COLORS.NEW_GROWTH_GREEN,
+    borderColor: COLORS.ALGONQUIN_GREEN,
     borderRadius: 12,
     marginBottom: 14,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: COLORS.WHITE,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   checkboxRow: {
     flexDirection: "row",
@@ -415,10 +428,17 @@ const styles = StyleSheet.create({
     borderColor: COLORS.NEW_GROWTH_GREEN,
     borderRadius: 10,
     padding: 12,
-    minHeight: 120,
+    minHeight: 230,
     marginBottom: 14,
     backgroundColor: COLORS.WHITE,
     textAlignVertical: "top",
+    shadowColor: COLORS.CHARCOAL,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   category: {
     backgroundColor: COLORS.WHITE,
@@ -453,10 +473,16 @@ const styles = StyleSheet.create({
   media: {
     marginVertical: 20,
     alignItems: "center",
-    padding: 16,
+    padding: 42,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: COLORS.NEW_GROWTH_GREEN,
     borderRadius: 12,
+  },
+
+  // Report Incident screen styles
+  label: {
+    marginTop: 12,
+    marginBottom: 4,
   },
 });
 
