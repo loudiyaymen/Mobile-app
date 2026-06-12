@@ -10,8 +10,8 @@ export default function SettingsStack() {
     <Stack.Navigator
       initialRouteName="Settings"
       screenOptions={{
-        headerStyle: { backgroundColor: colors.primary_AC_Green },
-        headerTintColor: colors.primary_White,
+        headerStyle: { backgroundColor: colors.primary_White },
+        headerTintColor: colors.Primary_Charcoal,
         headerTitleStyle: { fontWeight: "bold" },
         headerBackTitle: "Back",
         headerBackTitleVisible: true,

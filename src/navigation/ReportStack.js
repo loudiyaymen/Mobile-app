@@ -16,8 +16,8 @@ export default function ReportStack() {
     <Stack.Navigator
       initialRouteName="My Reports"
       screenOptions={{
-        headerStyle: { backgroundColor: colors.primary_AC_Green },
-        headerTintColor: colors.primary_White,
+        headerStyle: { backgroundColor: colors.primary_White },
+        headerTintColor: colors.Primary_Charcoal,
         headerTitleStyle: { fontWeight: "bold" },
         headerBackTitle: "Back",
         headerBackTitleVisible: true,
