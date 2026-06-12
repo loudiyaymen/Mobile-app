@@ -8,9 +8,10 @@ import {
   Animated,
   TouchableOpacity,
 } from "react-native";
-import { styles, COLORS } from "../../themes/styles";
+import { styles } from "../../themes/styles";
 import { useNavigation } from "@react-navigation/native";
 import { BellIcon } from "phosphor-react-native";
+import { colors } from "../../themes/color";
 
 import { useNotifications } from "../../context/NotificationContext";
 
@@ -55,20 +56,20 @@ export default function EmergencyHomescreen() {
                 position: "absolute",
                 top: 6,
                 right: 6,
-                backgroundColor: COLORS.SOS_RED,
+                backgroundColor: colors.SOS_Red,
                 borderRadius: 10,
                 minWidth: 18,
                 height: 18,
                 justifyContent: "center",
                 alignItems: "center",
                 borderWidth: 1.5,
-                borderColor: COLORS.ALGONQUIN_GREEN,
+                borderColor: colors.primary_AC_Green,
                 zIndex: 10,
               }}
             >
               <Text
                 style={{
-                  color: COLORS.WHITE,
+                  color: colors.primary_White,
                   fontSize: 10,
                   fontWeight: "bold",
                   paddingHorizontal: 2,

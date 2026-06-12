@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { styles, COLORS } from "../../themes/styles";
+import { styles } from "../../themes/styles";
+import { colors } from "../../themes/color";
 
 export default function ReportSubmittedScreen() {
   const navigation = useNavigation();
@@ -63,7 +64,7 @@ export default function ReportSubmittedScreen() {
       </Text>
 
       <Pressable style={styles.reportButton} onPress={handleClose}>
-        <Text style={{ color: COLORS.WHITE }}>Return to Reports</Text>
+        <Text style={{ color: colors.primary_White }}>Return to Reports</Text>
       </Pressable>
     </View>
   );

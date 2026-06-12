@@ -3,7 +3,8 @@ import { View, Text, Pressable, FlatList, BackHandler } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { styles, COLORS } from "../../themes/styles";
+import { styles } from "../../themes/styles";
+import { colors } from "../../themes/color";
 
 export default function ReportHomeScreen() {
   const navigation = useNavigation();
@@ -52,7 +53,7 @@ export default function ReportHomeScreen() {
         <Ionicons
           name="document-text-outline"
           size={160}
-          color={COLORS.GREY}
+          color={colors.Grey}
           style={{ marginBottom: 20 }}
         />
 
@@ -66,7 +67,7 @@ export default function ReportHomeScreen() {
           style={styles.reportButton}
           onPress={() => navigation.navigate("Select Category")}
         >
-          <Ionicons name="add" size={22} color={COLORS.WHITE} />
+          <Ionicons name="add" size={22} color={colors.primary_White} />
           <Text style={styles.callSecurityButtonText}>Submit new report</Text>
         </Pressable>
       </View>
@@ -79,7 +80,7 @@ export default function ReportHomeScreen() {
         style={styles.reportButton}
         onPress={() => navigation.navigate("Select Category")}
       >
-        <Ionicons name="add" size={22} color={COLORS.WHITE} />
+        <Ionicons name="add" size={22} color={colors.primary_White} />
         <Text style={styles.callSecurityButtonText}>Submit new report</Text>
       </Pressable>
       <FlatList

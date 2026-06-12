@@ -3,7 +3,8 @@
 import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { styles, COLORS } from "../../themes/styles";
+import { styles } from "../../themes/styles";
+import { colors } from "../../themes/color";
 
 export default function ReportCategoryScreen() {
   const navigation = useNavigation();
@@ -13,10 +14,10 @@ export default function ReportCategoryScreen() {
       onPress={onPress}
       style={[
         styles.category,
-        { borderWidth: 1, borderColor: COLORS.CHARCOAL },
+        { borderWidth: 1, borderColor: colors.Primary_Charcoal },
       ]}
     >
-      <Ionicons name={icon} size={24} color={COLORS.ALGONQUIN_GREEN} />
+      <Ionicons name={icon} size={24} color={colors.primary_AC_Green} />
       <Text style={styles.categoryButtonText}>{title}</Text>
     </Pressable>
   );

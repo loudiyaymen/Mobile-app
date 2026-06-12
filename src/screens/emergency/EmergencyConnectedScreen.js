@@ -3,8 +3,9 @@
 import { useRef, useEffect } from "react";
 import { Text, View, Pressable, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, COLORS } from "../../themes/styles";
+import { styles } from "../../themes/styles";
 import { useNavigation } from "@react-navigation/native";
+import { colors } from "../../themes/color";
 
 export default function EmergencyConnectedScreen() {
   const navigation = useNavigation();
@@ -36,10 +37,10 @@ export default function EmergencyConnectedScreen() {
           <View
             style={[
               styles.callingIconCircle,
-              { backgroundColor: COLORS.ALGONQUIN_GREEN },
+              { backgroundColor: colors.primary_AC_Green },
             ]}
           >
-            <Ionicons name="call" size={50} color={COLORS.WHITE} />
+            <Ionicons name="call" size={50} color={colors.primary_White} />
           </View>
         </View>
 
@@ -47,7 +48,7 @@ export default function EmergencyConnectedScreen() {
         <Text
           style={{
             fontSize: 18,
-            color: COLORS.CHARCOAL,
+            color: colors.Primary_Charcoal,
             fontWeight: "700",
             marginBottom: 24,
             textAlign: "center",
@@ -64,7 +65,7 @@ export default function EmergencyConnectedScreen() {
           <Text
             style={{
               fontSize: 14,
-              color: COLORS.CHARCOAL,
+              color: colors.Primary_Charcoal,
               lineHeight: 22,
               textAlign: "center",
               marginBottom: 12,
@@ -77,7 +78,7 @@ export default function EmergencyConnectedScreen() {
           <Text
             style={{
               fontSize: 14,
-              color: COLORS.CHARCOAL,
+              color: colors.Primary_Charcoal,
               lineHeight: 22,
               textAlign: "center",
               marginBottom: 12,
@@ -89,7 +90,7 @@ export default function EmergencyConnectedScreen() {
           <Text
             style={{
               fontSize: 14,
-              color: COLORS.CHARCOAL,
+              color: colors.Primary_Charcoal,
               lineHeight: 22,
               textAlign: "center",
             }}
@@ -102,7 +103,7 @@ export default function EmergencyConnectedScreen() {
 
         <Pressable
           style={{
-            backgroundColor: COLORS.CHARCOAL,
+            backgroundColor: colors.Primary_Charcoal,
             borderRadius: 12,
             paddingVertical: 16,
             paddingHorizontal: 32,
@@ -113,7 +114,11 @@ export default function EmergencyConnectedScreen() {
           onPress={handleReturnToMap}
         >
           <Text
-            style={{ color: COLORS.WHITE, fontSize: 16, fontWeight: "600" }}
+            style={{
+              color: colors.primary_White,
+              fontSize: 16,
+              fontWeight: "600",
+            }}
           >
             Return to Map
           </Text>

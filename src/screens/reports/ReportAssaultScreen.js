@@ -1,6 +1,7 @@
 import { View, Text, Pressable, Linking } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { styles, COLORS } from "../../themes/styles";
+import { styles } from "../../themes/styles";
+import { colors } from "../../themes/color";
 
 export default function ReportAssaultScreen() {
   const insets = useSafeAreaInsets();
@@ -37,7 +38,7 @@ export default function ReportAssaultScreen() {
       {/* Official report */}
       <Text style={styles.sectionTitle}>Official Report</Text>
       <Pressable style={styles.reportButton} onPress={openOfficialReport}>
-        <Text style={{ color: COLORS.WHITE }}>
+        <Text style={{ color: colors.primary_White }}>
           Algonquin College Sexual Violence Report
         </Text>
       </Pressable>
@@ -49,11 +50,13 @@ export default function ReportAssaultScreen() {
       <Pressable
         style={[
           styles.reportButton,
-          { backgroundColor: COLORS.NEW_GROWTH_GREEN },
+          { backgroundColor: colors.Secondary_New_Growth_Green },
         ]}
         onPress={openSupportServices}
       >
-        <Text style={{ color: COLORS.CHARCOAL }}>Project Lighthouse</Text>
+        <Text style={{ color: colors.Primary_Charcoal }}>
+          Project Lighthouse
+        </Text>
       </Pressable>
 
       {/* Emergency contacts */}
@@ -70,7 +73,7 @@ export default function ReportAssaultScreen() {
             Campus Security:{" "}
             <Text
               style={{
-                color: COLORS.ALGONQUIN_GREEN,
+                color: colors.primary_AC_Green,
                 textDecorationLine: "underline",
               }}
             >
@@ -84,7 +87,7 @@ export default function ReportAssaultScreen() {
             Emergency Services:{" "}
             <Text
               style={{
-                color: COLORS.ALGONQUIN_GREEN,
+                color: colors.primary_AC_Green,
                 textDecorationLine: "underline",
               }}
             >

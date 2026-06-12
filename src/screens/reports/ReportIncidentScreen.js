@@ -14,7 +14,8 @@ import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-import { styles, COLORS } from "../../themes/styles";
+import { styles } from "../../themes/styles";
+import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
 
 export default function ReportIncidentScreen() {
@@ -109,7 +110,6 @@ export default function ReportIncidentScreen() {
           { paddingBlockEnd: 48, paddingHorizontal: 16 },
         ]}
       >
-
         {/* LOCATION */}
         <Text style={[typography.h4, styles.label]}>Location *</Text>
         <View style={styles.inputRow}>
@@ -117,7 +117,7 @@ export default function ReportIncidentScreen() {
             <Ionicons
               name="location"
               size={22}
-              color={COLORS.ALGONQUIN_GREEN}
+              color={colors.primary_AC_Green}
             />
           </Pressable>
           <TextInput
@@ -138,7 +138,7 @@ export default function ReportIncidentScreen() {
             <Ionicons
               name="calendar"
               size={22}
-              color={COLORS.ALGONQUIN_GREEN}
+              color={colors.primary_AC_Green}
             />
             <TextInput
               style={typography.body}
@@ -165,13 +165,9 @@ export default function ReportIncidentScreen() {
             onPress={() => setShowTimePicker(true)}
             style={styles.inputRow}
           >
-            <Ionicons
-              name="time"
-              size={22}
-              color={COLORS.ALGONQUIN_GREEN}
-            />
+            <Ionicons name="time" size={22} color={colors.primary_AC_Green} />
             <TextInput
-            style={typography.body}
+              style={typography.body}
               placeholder="e.g., 2:30 PM"
               value={
                 time
@@ -224,7 +220,7 @@ export default function ReportIncidentScreen() {
           style={[styles.reportButton, { alignSelf: "center" }]}
           onPress={handleSubmit}
         >
-          <Text style={{ color: COLORS.WHITE }}>Submit Report</Text>
+          <Text style={{ color: colors.primary_White }}>Submit Report</Text>
         </Pressable>
       </ScrollView>
     </View>

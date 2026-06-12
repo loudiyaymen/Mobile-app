@@ -3,8 +3,9 @@
 import { useEffect, useRef } from "react";
 import { Text, View, Pressable, Linking, Animated, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { styles, COLORS } from "../../themes/styles";
+import { styles } from "../../themes/styles";
 import { useNavigation } from "@react-navigation/native";
+import { colors } from "../../themes/color";
 
 export default function EmergencyConfirmScreen() {
   const navigation = useNavigation();
@@ -55,7 +56,7 @@ export default function EmergencyConfirmScreen() {
       <View style={styles.confirmCard}>
         <View style={styles.shieldIconContainer}>
           <View style={styles.shieldIconBackground}>
-            <Ionicons name="shield" size={32} color={COLORS.ALGONQUIN_GREEN} />
+            <Ionicons name="shield" size={32} color={colors.primary_AC_Green} />
           </View>
         </View>
 
@@ -70,7 +71,7 @@ export default function EmergencyConfirmScreen() {
             style={[styles.button, styles.confirmEmergencyButton]}
             onPress={handleConfirm}
           >
-            <Ionicons name="call" size={20} color={COLORS.WHITE} />
+            <Ionicons name="call" size={20} color={colors.primary_White} />
             <Text style={styles.confirmEmergencyButtonText}>
               Confirm Emergency
             </Text>

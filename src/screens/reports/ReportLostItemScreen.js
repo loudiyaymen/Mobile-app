@@ -13,7 +13,8 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import { styles, COLORS } from "../../themes/styles";
+import { styles } from "../../themes/styles";
+import { colors } from "../../themes/color";
 
 export default function ReportLostItemScreen() {
   const navigation = useNavigation();
@@ -89,7 +90,10 @@ export default function ReportLostItemScreen() {
         <Pressable onPress={() => setMode("lost")} style={styles.lostFound}>
           <Text
             style={{
-              color: mode === "lost" ? COLORS.WHITE : COLORS.NEW_GROWTH_GREEN,
+              color:
+                mode === "lost"
+                  ? colors.primary_White
+                  : colors.Secondary_New_Growth_Green,
             }}
           >
             I lost an item
@@ -99,7 +103,10 @@ export default function ReportLostItemScreen() {
         <Pressable onPress={() => setMode("found")} style={styles.lostFound}>
           <Text
             style={{
-              color: mode === "found" ? COLORS.WHITE : COLORS.NEW_GROWTH_GREEN,
+              color:
+                mode === "found"
+                  ? colors.primary_White
+                  : colors.Secondary_New_Growth_Green,
             }}
           >
             I found an item
@@ -201,7 +208,7 @@ export default function ReportLostItemScreen() {
         style={[styles.reportButton, { marginBlockEnd: 32 }]}
         onPress={mode === "lost" ? submitLostItem : submitFoundItem}
       >
-        <Text style={{ color: COLORS.WHITE }}>Submit Report</Text>
+        <Text style={{ color: colors.primary_White }}>Submit Report</Text>
       </Pressable>
     </ScrollView>
   );
