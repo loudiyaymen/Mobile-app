@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   category: {
-    backgroundColor: colors.primary_White,
+    backgroundColor: colors.primary_AC_Green,
     padding: 20,
     borderRadius: 12,
     marginBottom: 16,
@@ -445,10 +445,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   categoryButtonText: {
-    color: colors.primary_AC_Green,
-    fontSize: 18,
+    color: colors.primary_White,
     fontWeight: "bold",
-    marginLeft: 16,
+  },
+  categoryButtonDescription: {
+    color: colors.primary_White,
+    paddingTop: 16,
   },
   sectionTitle: {
     fontSize: 20,

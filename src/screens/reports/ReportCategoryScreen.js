@@ -5,11 +5,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
+import { typography } from "../../themes/typography";
 
 export default function ReportCategoryScreen() {
   const navigation = useNavigation();
 
-  const CategoryRow = ({ title, icon, onPress }) => (
+  const CategoryRow = ({ title, description, onPress }) => (
     <Pressable
       onPress={onPress}
       style={[
@@ -17,33 +18,33 @@ export default function ReportCategoryScreen() {
         { borderWidth: 1, borderColor: colors.Primary_Charcoal },
       ]}
     >
-      <Ionicons name={icon} size={24} color={colors.primary_AC_Green} />
-      <Text style={styles.categoryButtonText}>{title}</Text>
+      <View>
+        <Text style={[styles.categoryButtonText, typography.h3]}>{title}</Text>
+        <Text style={[styles.categoryButtonDescription, typography.body]}>
+          {description}
+        </Text>
+      </View>
     </Pressable>
   );
 
   return (
     <View style={[styles.container, { padding: 16 }]}>
-      <Text style={[styles.confirmCardTitle, { marginVertical: 24 }]}>
-        Select Report Type
-      </Text>
-
       <CategoryRow
-        title="Incidents"
-        icon="alert-circle"
+        title="Incident report"
+        description="Report general incidents or suspicious activity"
         onPress={() => navigation.navigate("Incident Report")}
       />
 
       <CategoryRow
-        title="Sexual Assault"
-        icon="shield"
-        onPress={() => navigation.navigate("Sexual Assault Report")}
+        title="Lost Items"
+        description="Report a lost item"
+        onPress={() => navigation.navigate("Submit Report")}
       />
 
       <CategoryRow
-        title="Lost Item"
-        icon="cube"
-        onPress={() => navigation.navigate("Submit Report")}
+        title="Sexual Assault"
+        description="Report sexual assault or harassment"
+        onPress={() => navigation.navigate("Sexual Assault Report")}
       />
     </View>
   );
