@@ -50,13 +50,11 @@ export default function ReportAssaultScreen() {
       <Pressable
         style={[
           styles.reportButton,
-          { backgroundColor: colors.Secondary_New_Growth_Green },
+          { backgroundColor: COLORS.NEW_GROWTH_GREEN },
         ]}
         onPress={openSupportServices}
       >
-        <Text style={{ color: colors.Primary_Charcoal }}>
-          Project Lighthouse
-        </Text>
+        <Text style={{ color: COLORS.CHARCOAL }}>Project Lighthouse</Text>
       </Pressable>
 
       {/* Emergency contacts */}

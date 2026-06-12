@@ -165,7 +165,11 @@ export default function ReportIncidentScreen() {
             onPress={() => setShowTimePicker(true)}
             style={styles.inputRow}
           >
-            <Ionicons name="time" size={22} color={colors.primary_AC_Green} />
+            <Ionicons
+              name="time"
+              size={22}
+              color={COLORS.ALGONQUIN_GREEN}
+            />
             <TextInput
               style={typography.body}
               placeholder="e.g., 2:30 PM"

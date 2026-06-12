@@ -15,3 +15,29 @@ export const colors = StyleSheet.create({
   Grey: "#B5B5B5",
   Dark_Grey: "#5E5E5E",
 });
+
+export const lightTheme = StyleSheet.create({
+  colors: {
+    background: colors.primary_White,
+    surface: colors.Light_Grey,
+    text: colors.Primary_Charcoal,
+    subtext: colors.Dark_Grey,
+    primary: colors.primary_AC_Green,
+    accent: colors.Secondary_New_Growth_Green,
+    border: colors.Cloud_Grey,
+    error: colors.SOS_Red,
+  }
+});
+
+export const darkTheme = StyleSheet.create({
+  colors: {
+    background: "#121212",
+    surface: "#1E1E1E",
+    text: "#F6F6F6",
+    subtext: colors.Grey,
+    primary: "#008557",
+    accent: "#52D036",
+    border: "#333333",
+    error: "#CF6679",
+  }
+});
