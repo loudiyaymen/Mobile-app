@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 5,
+    alignSelf: 'flex-start',
   },
   innerContainer: {
     borderRadius: 25,
@@ -19,11 +20,12 @@ export const styles = StyleSheet.create({
   },
   cardImage: {
     width: '100%',
-    height: 150,
+    height: 200,
     resizeMode: 'cover',
   },
   textContainer: {
     padding: 10,
+    paddingBottom: 35,
     alignItems: 'left',
   },
   cardTitle: {

@@ -4,16 +4,20 @@ import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import Card from "../../components/Cards";
 import { fetchEventsByTab } from "../../services/eventService";
+import { colors } from "../../themes/color";
 
 export default function EventsScreen() {
-  const [eventGroups, setEventGroups] = useState({ official: [], student: [] });
-  const [activeTab, setActiveTab] = useState("official");
+  const [eventGroups, setEventGroups] = useState({ allEvents: [], myEvents: [] });
+  const [activeTab, setActiveTab] = useState("allEvents");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       const result = await fetchEventsByTab();
-      setEventGroups(result);
+      setEventGroups({
+        allEvents: result?.allEvents ?? result?.official ?? [],
+        myEvents: result?.myEvents ?? result?.student ?? [],
+      });
       setLoading(false);
     }
     
@@ -25,38 +29,60 @@ export default function EventsScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={typography.h3}>Upcoming Events</Text>
-
-      <View style={{ flexDirection: "row", marginVertical: 15 }}>
+    <View>
+      <View style={{ flexDirection: "row", marginVertical: 15, justifyContent: "center", gap: 16 }}>
         <TouchableOpacity 
-          onPress={() => setActiveTab("official")}
-          style={{ 
-            paddingBottom: 5, 
-            marginRight: 20, 
-            borderBottomWidth: activeTab === "official" ? 2 : 0 
+          onPress={() => setActiveTab("allEvents")}
+          style={{
+                  paddingVertical: 8,
+                  paddingHorizontal: 32,
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  backgroundColor: activeTab === "allEvents" ? colors.primary_AC_Green : "transparent",
+                  borderColor: activeTab === "allEvents" ? colors.primary_AC_Green : colors.Primary_Charcoal,
+                  borderWidth: 1,
           }}
         >
-          <Text style={activeTab === "official" ? { fontWeight: "bold" } : {}}>Official</Text>
+          <Text
+            style={[
+              { color: activeTab === "allEvents" ? colors.primary_White : colors.Primary_Charcoal },
+              activeTab === "allEvents" ? { fontWeight: "bold" } : null,
+            ]}
+          >
+            All Events
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
-          onPress={() => setActiveTab("student")}
+          onPress={() => setActiveTab("myEvents")}
           style={{ 
-            paddingBottom: 5, 
-            borderBottomWidth: activeTab === "student" ? 2 : 0 
+                  paddingVertical: 8,
+                  paddingHorizontal: 32,
+                  borderRadius: 8,
+                  justifyContent: "center",
+                  backgroundColor: activeTab === "myEvents" ? colors.primary_AC_Green : "transparent",
+                  borderColor: activeTab === "myEvents" ? colors.primary_AC_Green : colors.Primary_Charcoal,
+                  borderWidth: 1,
           }}
         >
-          <Text style={activeTab === "student" ? { fontWeight: "bold" } : {}}>Student</Text>
+          <Text
+          style={[
+              { color: activeTab === "myEvents" ? colors.primary_White : colors.Primary_Charcoal },
+              activeTab === "myEvents" ? { fontWeight: "bold" } : null,
+            ]}>
+            My Events
+          </Text>
         </TouchableOpacity>
       </View>
+    <ScrollView>
+      <Text style={typography.h3}>Security Events</Text>
 
       <ScrollView 
         horizontal={true} 
         showsHorizontalScrollIndicator={false} 
         contentContainerStyle={styles.eventsContainer}
       >
-        {eventGroups[activeTab].map((event) => (
+        {(eventGroups[activeTab] ?? []).map((event) => (
           <Card
             key={event.id}
             image={event.image}
@@ -65,6 +91,41 @@ export default function EventsScreen() {
           />
         ))} 
       </ScrollView>
+
+      <Text style={typography.h3}>Scavenger Hunts</Text>
+
+      <ScrollView 
+        horizontal={true} 
+        showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={styles.eventsContainer}
+      >
+        {(eventGroups[activeTab] ?? []).map((event) => (
+          <Card
+            key={event.id}
+            image={event.image}
+            title={event.title}
+            description={event.description}
+          />
+        ))} 
+      </ScrollView>
+
+      <Text style={typography.h3}>Academic Events</Text>
+
+      <ScrollView 
+        horizontal={true} 
+        showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={styles.eventsContainer}
+      >
+        {(eventGroups[activeTab] ?? []).map((event) => (
+          <Card
+            key={event.id}
+            image={event.image}
+            title={event.title}
+            description={event.description}
+          />
+        ))} 
+      </ScrollView>
+    </ScrollView>
     </View>
   );
 }
