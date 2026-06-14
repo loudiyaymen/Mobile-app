@@ -29,19 +29,14 @@ export default function EventsScreen() {
   }
 
   return (
-    <View>
-      <View style={{ flexDirection: "row", marginVertical: 15, justifyContent: "center", gap: 16 }}>
+    <View style={styles.container}>
+      <View style={{ flexDirection: "row", marginVertical: 15, justifyContent: "center" }}>
         <TouchableOpacity 
           onPress={() => setActiveTab("allEvents")}
-          style={{
-                  paddingVertical: 8,
-                  paddingHorizontal: 32,
-                  borderRadius: 8,
-                  justifyContent: "center",
-                  backgroundColor: activeTab === "allEvents" ? colors.primary_AC_Green : "transparent",
-                  borderColor: activeTab === "allEvents" ? colors.primary_AC_Green : colors.Primary_Charcoal,
-                  borderWidth: 1,
-          }}
+          style={[styles.tabButtonContainer, {
+            backgroundColor: activeTab === "allEvents" ? colors.primary_AC_Green : "transparent",
+            borderColor: activeTab === "allEvents" ? colors.primary_AC_Green : colors.Primary_Charcoal,
+          }]}
         >
           <Text
             style={[
@@ -55,15 +50,10 @@ export default function EventsScreen() {
 
         <TouchableOpacity 
           onPress={() => setActiveTab("myEvents")}
-          style={{ 
-                  paddingVertical: 8,
-                  paddingHorizontal: 32,
-                  borderRadius: 8,
-                  justifyContent: "center",
-                  backgroundColor: activeTab === "myEvents" ? colors.primary_AC_Green : "transparent",
-                  borderColor: activeTab === "myEvents" ? colors.primary_AC_Green : colors.Primary_Charcoal,
-                  borderWidth: 1,
-          }}
+          style={[styles.tabButtonContainer, {
+            backgroundColor: activeTab === "myEvents" ? colors.primary_AC_Green : "transparent",
+            borderColor: activeTab === "myEvents" ? colors.primary_AC_Green : colors.Primary_Charcoal,
+          }]}
         >
           <Text
           style={[
@@ -75,8 +65,9 @@ export default function EventsScreen() {
         </TouchableOpacity>
       </View>
     <ScrollView>
-      <Text style={typography.h3}>Security Events</Text>
-
+      <View style={ styles.labelContainer }>
+        <Text style={ typography.h3 }>Security Events</Text>
+      </View>
       <ScrollView 
         horizontal={true} 
         showsHorizontalScrollIndicator={false} 
@@ -91,9 +82,9 @@ export default function EventsScreen() {
           />
         ))} 
       </ScrollView>
-
-      <Text style={typography.h3}>Scavenger Hunts</Text>
-
+      <View style={ styles.labelContainer }>
+        <Text style={ typography.h3 }>Scavenger Hunts</Text>
+      </View>
       <ScrollView 
         horizontal={true} 
         showsHorizontalScrollIndicator={false} 
@@ -108,9 +99,9 @@ export default function EventsScreen() {
           />
         ))} 
       </ScrollView>
-
-      <Text style={typography.h3}>Academic Events</Text>
-
+      <View style={ styles.labelContainer }>
+        <Text style={ typography.h3 }>Academic Events</Text>
+      </View>
       <ScrollView 
         horizontal={true} 
         showsHorizontalScrollIndicator={false} 

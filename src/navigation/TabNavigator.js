@@ -11,8 +11,27 @@ import {
   CalendarBlankIcon,
   GearSixIcon,
 } from "phosphor-react-native";
+import { colors } from "../themes/color";
+import { View } from "react-native";
 
 const Tab = createBottomTabNavigator();
+const sharedTabBarStyle = {
+  position: "absolute",
+  backgroundColor: colors.primary_White,
+  borderTopStartRadius: 40,
+  borderTopEndRadius: 40,
+  overflow: "hidden",
+};
+
+const sharedTabBarBackgroundStyle = {
+  flex: 1,
+  backgroundColor: colors.primary_White,
+  borderWidth: 1,
+  borderColor: colors.Cloud_Grey,
+  borderBottomWidth: 0,
+  borderTopLeftRadius: 40,
+  borderTopRightRadius: 40,
+};
 
 export default function TabNavigator() {
   return (
@@ -22,6 +41,12 @@ export default function TabNavigator() {
           headerShown: false,
           ...headerOptions,
           headerStyle,
+          tabBarActiveTintColor: colors.primary_AC_Green,
+          tabBarInactiveTintColor: colors.Primary_Charcoal,
+          tabBarStyle: sharedTabBarStyle,
+          tabBarBackground: () => (
+            <View style={sharedTabBarBackgroundStyle} />
+          ),
       }}
     >
       <Tab.Screen
@@ -56,7 +81,10 @@ export default function TabNavigator() {
             title: "Reports",
             tabBarStyle: hideOnScreens.includes(routeName)
               ? { display: "none" }
-              : undefined,
+              : sharedTabBarStyle,
+            tabBarBackground: hideOnScreens.includes(routeName)
+              ? undefined
+              : () => <View style={sharedTabBarBackgroundStyle} />,
             tabBarIcon: ({ size, color, focused }) => (
               <FileTextIcon
                 size={size}

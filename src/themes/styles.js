@@ -7,9 +7,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primary_White,
   },
-
   eventsContainer: {
     paddingHorizontal: 5,
+    margin: 12,
+    gap: 24,
+  },
+  labelContainer: {
+    paddingHorizontal: 5,
+    marginHorizontal: 12,
   },
 
   // Home screen styles
@@ -177,6 +182,17 @@ const styles = StyleSheet.create({
   confirmButtonContainer: {
     width: "100%",
     gap: 12,
+  },
+  tabButtonContainer: {
+    paddingVertical: 6,
+    borderRadius: 24,
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    flex: 1,
+    marginInlineStart: 12,
+    marginInlineEnd: 12,
   },
 
   // Button base styles
