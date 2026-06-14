@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import MapScreen from "../screens/map/MapScreen";
 import { colors } from "../themes/color";
 import { typography } from "../themes/typography";
+import { headerStyle, headerOptions } from "../themes/header.styles";
 
 const Stack = createNativeStackNavigator();
 
@@ -11,15 +12,8 @@ export default function MapStack() {
     <Stack.Navigator
       initialRouteName="Wayfinder"
       screenOptions={{
-        headerStyle: { backgroundColor: colors.primary_White },
-        headerTintColor: colors.Primary_Charcoal,
-        headerTitleStyle: { fontWeight: "bold" },
-        headerTitleAlign: "left",
-        headerBackTitle: "Back",
-        headerBackTitleVisible: true,
-        headerBackTitleStyle: {
-          fontSize: 24,
-        },
+        ...headerOptions,
+        headerStyle,
       }}
     >
       <Stack.Screen
@@ -27,7 +21,7 @@ export default function MapStack() {
         component={MapScreen}
         options={{
           headerTitle: () => (
-            <View>
+            <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
               <Text
                 style={[
                   typography.h2,

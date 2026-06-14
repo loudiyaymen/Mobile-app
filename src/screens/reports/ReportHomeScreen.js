@@ -5,6 +5,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { FileTextIcon, PlusCircleIcon } from "phosphor-react-native";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 export default function ReportHomeScreen() {
   const navigation = useNavigation();

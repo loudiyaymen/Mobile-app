@@ -168,7 +168,7 @@ export default function ReportIncidentScreen() {
             <Ionicons
               name="time"
               size={22}
-              color={COLORS.ALGONQUIN_GREEN}
+              color={colors.primary_AC_Green}
             />
             <TextInput
               style={typography.body}

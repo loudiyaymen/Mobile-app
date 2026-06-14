@@ -4,14 +4,13 @@ import EventsStack from "./EventsStack";
 import SettingsStack from "./SettingsStack";
 import ReportStack from "./ReportStack";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { headerOptions, headerStyle } from "../themes/header.styles";
 import {
   NavigationArrowIcon,
   FileTextIcon,
   CalendarBlankIcon,
   GearSixIcon,
 } from "phosphor-react-native";
-import { colors } from "../themes/color";
-import { typography } from "../themes/typography";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,12 +19,9 @@ export default function TabNavigator() {
     <Tab.Navigator
       initialRouteName="WayFinder"
       screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: colors.primary_AC_Green,
-        tabBarInactiveTintColor: colors.Primary_Charcoal,
-        tabBarLabelStyle: {
-          ...typography.caption,
-        },
+          headerShown: false,
+          ...headerOptions,
+          headerStyle,
       }}
     >
       <Tab.Screen
@@ -89,7 +85,7 @@ export default function TabNavigator() {
         name="Settings"
         component={SettingsStack}
         options={{
-          title: "Events",
+          title: "Settings",
           tabBarIcon: ({ size, color, focused }) => (
             <GearSixIcon
               size={size}
