@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   tabButtonContainer: {
     paddingVertical: 6,
-    borderRadius: 24,
+    borderRadius: 12,
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",

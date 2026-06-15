@@ -12,9 +12,9 @@ export default function EventsStack() {
     <Stack.Navigator
       initialRouteName="Events"
       screenOptions={{
-              ...headerOptions,
-              headerStyle,
-            }}
+        ...headerOptions,
+        headerStyle,
+      }}
     >
       <Stack.Screen
         name="Events"
@@ -27,7 +27,6 @@ export default function EventsStack() {
                 style={[
                   typography.h2,
                   {
-                    fontWeight: "bold",
                     color: colors.Primary_Charcoal,
                   },
                 ]}
