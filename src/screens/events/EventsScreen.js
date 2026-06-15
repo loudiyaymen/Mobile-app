@@ -70,13 +70,13 @@ export default function EventsScreen() {
         >
           <Text
             style={[
+              typography.h5,
               {
                 color:
                   activeTab === "allEvents"
                     ? colors.primary_White
                     : colors.Secondary_Dark_AC_Green,
               },
-              { font: typography.h5 },
             ]}
           >
             All Events
@@ -101,13 +101,13 @@ export default function EventsScreen() {
         >
           <Text
             style={[
+              typography.h5,
               {
                 color:
                   activeTab === "myEvents"
                     ? colors.primary_White
                     : colors.Secondary_Dark_AC_Green,
               },
-              { font: typography.h5 },
             ]}
           >
             My Events
