@@ -26,7 +26,6 @@ export default function MapStack() {
                 style={[
                   typography.h2,
                   {
-                    fontWeight: "bold",
                     color: colors.Primary_Charcoal,
                   },
                 ]}

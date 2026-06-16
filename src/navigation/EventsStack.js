@@ -20,7 +20,6 @@ export default function EventsStack() {
         name="Events"
         component={EventsScreen}
         options={{
-          title: "",
           headerTitle: () => (
             <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
               <Text

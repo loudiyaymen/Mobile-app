@@ -3,7 +3,6 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
   ActivityIndicator,
   Pressable,
 } from "react-native";
@@ -113,7 +112,7 @@ export default function EventsScreen() {
             My Events
           </Text>
         </Pressable>
-      </View>
+      </View>{" "}
       <ScrollView>
         <View style={styles.labelContainer}>
           <Text style={typography.h3}>Security Events</Text>
