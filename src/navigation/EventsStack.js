@@ -4,6 +4,7 @@ import EventsScreen from "../screens/events/EventsScreen";
 import { colors } from "../themes/color";
 import { typography } from "../themes/typography";
 import { headerOptions, headerStyle } from "../themes/header.styles";
+import EventDetailsScreen from "../screens/events/EventDetailsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +21,7 @@ export default function EventsStack() {
         name="Events"
         component={EventsScreen}
         options={{
-          title: "",
+          title: "Events",
           headerTitle: () => (
             <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
               <Text
@@ -40,6 +41,7 @@ export default function EventsStack() {
           ),
         }}
       />
+      <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
     </Stack.Navigator>
   );
 }

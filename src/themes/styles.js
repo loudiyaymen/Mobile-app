@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginHorizontal: 12,
   },
+  headerContainer: {
+    marginBottom: 12,
+  },
 
   // Home screen styles
   homeTitleContainer: {
@@ -473,6 +476,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.Primary_Charcoal,
     marginBottom: 12,
+  },
+  sectionHeader: {
+    marginBottom: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+     gap: 8,
+  },
+  eventImage: {
+    width: "100%",
+    height: 220,
+  },
+  detailsContent: {
+    padding: 16,
   },
   media: {
     marginVertical: 20,

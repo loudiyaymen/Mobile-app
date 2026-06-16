@@ -33,6 +33,21 @@ const sharedTabBarBackgroundStyle = {
   borderTopRightRadius: 40,
 };
 
+const reportHideOnScreens = [
+  "Select Category",
+  "Incident Report",
+  "Sexual Assault Report",
+  "Submit Report",
+  "Report Submitted",
+];
+
+const eventHideOnScreens = ["EventDetails"];
+
+function shouldHideTabBar(route, hideOnScreens) {
+  const routeName = getFocusedRouteNameFromRoute(route);
+  return hideOnScreens.includes(routeName);
+}
+
 export default function TabNavigator() {
   return (
     <Tab.Navigator
@@ -67,22 +82,12 @@ export default function TabNavigator() {
         name="Reports"
         component={ReportStack}
         options={({ route }) => {
-          const routeName = getFocusedRouteNameFromRoute(route);
-          // Add screen names where you want to hide the tab bar
-          const hideOnScreens = [
-            "Select Category",
-            "Incident Report",
-            "Sexual Assault Report",
-            "Submit Report",
-            "Report Submitted",
-          ];
+          const shouldHide = shouldHideTabBar(route, reportHideOnScreens);
 
           return {
             title: "Reports",
-            tabBarStyle: hideOnScreens.includes(routeName)
-              ? { display: "none" }
-              : sharedTabBarStyle,
-            tabBarBackground: hideOnScreens.includes(routeName)
+            tabBarStyle: shouldHide ? { display: "none" } : sharedTabBarStyle,
+            tabBarBackground: shouldHide
               ? undefined
               : () => <View style={sharedTabBarBackgroundStyle} />,
             tabBarIcon: ({ size, color, focused }) => (
@@ -98,15 +103,23 @@ export default function TabNavigator() {
       <Tab.Screen
         name="Events"
         component={EventsStack}
-        options={{
-          title: "Events",
-          tabBarIcon: ({ size, color, focused }) => (
-            <CalendarBlankIcon
-              size={size}
-              color={color}
-              weight={focused ? "fill" : "regular"}
-            />
-          ),
+        options={({ route }) => {
+          const shouldHide = shouldHideTabBar(route, eventHideOnScreens);
+
+          return {
+            title: "Events",
+            tabBarStyle: shouldHide ? { display: "none" } : sharedTabBarStyle,
+            tabBarBackground: shouldHide
+              ? undefined
+              : () => <View style={sharedTabBarBackgroundStyle} />,
+            tabBarIcon: ({ size, color, focused }) => (
+              <CalendarBlankIcon
+                size={size}
+                color={color}
+                weight={focused ? "fill" : "regular"}
+              />
+            ),
+          };
         }}
       />
       <Tab.Screen
