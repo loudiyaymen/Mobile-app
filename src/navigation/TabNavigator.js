@@ -41,7 +41,10 @@ const reportHideOnScreens = [
   "Report Submitted",
 ];
 
-const eventHideOnScreens = ["EventDetails"];
+const eventHideOnScreens = [
+  "EventDetails",
+  "EventRegister"
+];
 
 function shouldHideTabBar(route, hideOnScreens) {
   const routeName = getFocusedRouteNameFromRoute(route);
