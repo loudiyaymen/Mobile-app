@@ -11,8 +11,10 @@ import { typography } from "../../themes/typography";
 import Card from "../../components/Cards";
 import { fetchEventsByTab } from "../../services/eventService";
 import { colors } from "../../themes/color";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 export default function EventsScreen() {
+  const navigation = useNavigation();
   const [eventGroups, setEventGroups] = useState({
     allEvents: [],
     myEvents: [],
@@ -20,18 +22,20 @@ export default function EventsScreen() {
   const [activeTab, setActiveTab] = useState("allEvents");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function loadData() {
-      const result = await fetchEventsByTab();
-      setEventGroups({
-        allEvents: result?.allEvents ?? result?.official ?? [],
-        myEvents: result?.myEvents ?? result?.student ?? [],
-      });
-      setLoading(false);
-    }
+  useFocusEffect(
+    React.useCallback(() => {
+      async function loadData() {
+        const result = await fetchEventsByTab();
+        setEventGroups({
+          allEvents: result?.allEvents ?? result?.official ?? [],
+          myEvents: result?.myEvents ?? result?.student ?? [],
+        });
+        setLoading(false);
+      }
 
-    loadData();
-  }, []);
+      loadData();
+    }, [])
+  );
 
   if (loading) {
     return (
@@ -123,12 +127,14 @@ export default function EventsScreen() {
           contentContainerStyle={styles.eventsContainer}
         >
           {(eventGroups[activeTab] ?? []).map((event) => (
-            <Card
-              key={event.id}
-              image={event.image}
-              title={event.title}
-              description={event.description}
-            />
+            <Pressable key={event.id} onPress={() => navigation.navigate("EventDetails", { event })}>
+              <Card
+                key={event.id}
+                image={event.image}
+                title={event.title}
+                description={event.description}
+              />
+            </Pressable>
           ))}
         </ScrollView>
         <View style={styles.labelContainer}>
@@ -140,12 +146,14 @@ export default function EventsScreen() {
           contentContainerStyle={styles.eventsContainer}
         >
           {(eventGroups[activeTab] ?? []).map((event) => (
-            <Card
-              key={event.id}
-              image={event.image}
-              title={event.title}
-              description={event.description}
-            />
+            <Pressable key={event.id} onPress={() => navigation.navigate("EventDetails", { event })}>
+              <Card
+                key={event.id}
+                image={event.image}
+                title={event.title}
+                description={event.description}
+              />
+            </Pressable>
           ))}
         </ScrollView>
         <View style={styles.labelContainer}>
@@ -157,12 +165,14 @@ export default function EventsScreen() {
           contentContainerStyle={styles.eventsContainer}
         >
           {(eventGroups[activeTab] ?? []).map((event) => (
-            <Card
-              key={event.id}
-              image={event.image}
-              title={event.title}
-              description={event.description}
-            />
+            <Pressable key={event.id} onPress={() => navigation.navigate("EventDetails", { event })}>
+              <Card
+                key={event.id}
+                image={event.image}
+                title={event.title}
+                description={event.description}
+              />
+            </Pressable>
           ))}
         </ScrollView>
       </ScrollView>

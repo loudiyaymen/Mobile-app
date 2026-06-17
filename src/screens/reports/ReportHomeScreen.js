@@ -6,6 +6,7 @@ import { FileTextIcon, PlusCircleIcon } from "phosphor-react-native";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { typography } from "../../themes/typography";
 
 export default function ReportHomeScreen() {
   const navigation = useNavigation();
@@ -53,16 +54,14 @@ export default function ReportHomeScreen() {
       >
         <FileTextIcon
           name="EmptyReport"
-          size={160}
-          color={colors.Grey}
-          style={{ marginBottom: 20 }}
+          size={75}
+          color={colors.Secondary_Dark_AC_Green}
+          style={{ marginBottom: 12}}
         />
 
-        <Text style={styles.confirmCardTitle}>No Reports Yet</Text>
-
-        <Text style={[styles.instructionsText, { marginBottom: 24 }]}>
-          Submit an incident report to help keep our campus safe
-        </Text>
+        <View style={ styles.headerContainer }>
+          <Text style={typography.h4}>No Reports Yet</Text>
+        </View>
 
         <Pressable
           style={styles.reportButton}
@@ -85,7 +84,7 @@ export default function ReportHomeScreen() {
         <Text style={styles.callSecurityButtonText}>Submit new report</Text>
       </Pressable>
       <FlatList
-        style={[styles.container, { marginTop: 16, width: "100%" }]}
+        style={styles.container}
         data={reports}
         keyExtractor={(item) => `${item.id}-${item.type}-${item.createdAt}`}
         renderItem={({ item }) => (

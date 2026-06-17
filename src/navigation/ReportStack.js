@@ -46,14 +46,26 @@ export default function ReportStack() {
         ),
       }}
       />
-      <Stack.Screen name="Select Category" component={ReportCategoryScreen} />
-      <Stack.Screen name="Incident Report" component={ReportIncidentScreen} />
+      <Stack.Screen
+        name="Select Category"
+        component={ReportCategoryScreen}
+      />
+      <Stack.Screen
+        name="Incident Report"
+        component={ReportIncidentScreen}
+      />
       <Stack.Screen
         name="Sexual Assault Report"
         component={ReportAssaultScreen}
       />
-      <Stack.Screen name="Submit Report" component={ReportLostItemScreen} />
-      <Stack.Screen name="Report Submitted" component={ReportSubmittedScreen} />
+      <Stack.Screen
+        name="Submit Report"
+        component={ReportLostItemScreen}
+      />
+      <Stack.Screen
+        name="Report Submitted"
+        component={ReportSubmittedScreen}
+      />
     </Stack.Navigator>
   );
 }

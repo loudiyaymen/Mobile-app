@@ -16,6 +16,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginHorizontal: 12,
   },
+  headerContainer: {
+  paddingVertical: 16,
+  gap: 16,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  iconTextGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+},
 
   // Home screen styles
   homeTitleContainer: {
@@ -204,6 +218,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     gap: 8,
+  },
+  registerButton: {
+    backgroundColor: colors.primary_AC_Green,
   },
   confirmEmergencyButton: {
     backgroundColor: colors.primary_AC_Green,
@@ -468,11 +485,24 @@ const styles = StyleSheet.create({
     color: colors.primary_White,
     paddingTop: 16,
   },
+
+  //section styles
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
     color: colors.Primary_Charcoal,
     marginBottom: 12,
+  },
+  sectionHeader: {
+    marginBottom: 12,
+  },
+
+  eventImage: {
+    width: "100%",
+    height: 220,
+  },
+  detailsContent: {
+    padding: 16,
   },
   media: {
     marginVertical: 20,

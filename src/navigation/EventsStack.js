@@ -4,6 +4,8 @@ import EventsScreen from "../screens/events/EventsScreen";
 import { colors } from "../themes/color";
 import { typography } from "../themes/typography";
 import { headerOptions, headerStyle } from "../themes/header.styles";
+import EventDetailsScreen from "../screens/events/EventDetailsScreen";
+import EventRegisterScreen from "../screens/events/EventRegisterScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +41,8 @@ export default function EventsStack() {
           ),
         }}
       />
+      <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
+      <Stack.Screen name="EventRegister" component={EventRegisterScreen} />
     </Stack.Navigator>
   );
 }
