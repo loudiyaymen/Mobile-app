@@ -190,8 +190,13 @@ const styles = StyleSheet.create({
 
   // Button container
   buttonContainer: {
-    width: "100%",
-    gap: 15,
+    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 12,
   },
   confirmButtonContainer: {
     width: "100%",
@@ -208,6 +213,29 @@ const styles = StyleSheet.create({
     marginInlineStart: 12,
     marginInlineEnd: 12,
   },
+  navCategoryButton: {
+    backgroundColor: colors.primary_AC_Green,
+    paddingVertical: 22,
+    borderRadius: 12,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "left",
+    gap: 16,
+    width: "100%",
+    paddingHorizontal: 20,
+    elevation: 4,
+    shadowColor: colors.Primary_Charcoal,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  navCategoryButtonTextContainer: {
+    flex: 1,
+    flexDirection: "column",
+  },
 
   // Button base styles
   button: {
@@ -221,6 +249,23 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     backgroundColor: colors.primary_AC_Green,
+    color: colors.primary_White,
+    paddingVertical: 16,
+     paddingHorizontal: 32,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 8,
+     width: "100%",
+     elevation: 4,
+     shadowColor: colors.Primary_Charcoal,
+     shadowOffset: {
+       width: 0,
+       height: 2,
+     },
+     shadowOpacity: 0.25,
+     shadowRadius: 3.84,
   },
   confirmEmergencyButton: {
     backgroundColor: colors.primary_AC_Green,

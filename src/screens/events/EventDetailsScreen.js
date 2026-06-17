@@ -76,8 +76,8 @@ export default function EventDetailsScreen() {
 
       </ScrollView>
 
-      <Pressable key={event.id} onPress={() => navigation.navigate("EventRegister", { event })}>
-        <Text style={typography.button}>Register</Text>
+      <Pressable style={styles.registerButton} key={event.id} onPress={() => navigation.navigate("EventRegister", { event })}>
+        <Text style={[typography.body, { color: colors.primary_White }]}>Register</Text>
       </Pressable>
 
     </View>
