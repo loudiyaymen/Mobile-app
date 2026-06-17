@@ -17,19 +17,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
   },
   headerContainer: {
-  paddingVertical: 16,
-  gap: 16,
+    paddingVertical: 16,
+    gap: 16,
   },
   infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   iconTextGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
-},
+  },
 
   // Home screen styles
   homeTitleContainer: {
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
       height: 4,
     },
     shadowOpacity: 0.3,
-    shadowRadius: 4.65,
+    shadowRadius: 4,
   },
   fabIcon: {
     color: colors.primary_White,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   },
   confirmCard: {
     backgroundColor: colors.primary_White,
-    borderRadius: 16,
+    borderRadius: 12,
     padding: 24,
     width: "100%",
     maxWidth: 400,
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 4,
   },
   confirmEmergencyButtonText: {
     color: colors.primary_White,
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 4,
   },
   callSecurityButtonText: {
     color: colors.primary_White,
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
     gap: 10,
     borderWidth: 1,
     borderColor: colors.primary_AC_Green,
-    borderRadius: 10,
+    borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 12,
     backgroundColor: colors.primary_White,
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: colors.Secondary_New_Growth_Green,
-    borderRadius: 10,
+    borderRadius: 12,
     paddingHorizontal: 12,
     height: 48,
     marginBottom: 14,
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
   textArea: {
     borderWidth: 1,
     borderColor: colors.Secondary_New_Growth_Green,
-    borderRadius: 10,
+    borderRadius: 12,
     padding: 12,
     minHeight: 230,
     marginBottom: 14,
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
   lostFound: {
     flex: 1,
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 12,
     marginRight: 6,
     backgroundColor: colors.primary_White,
     alignItems: "center",
