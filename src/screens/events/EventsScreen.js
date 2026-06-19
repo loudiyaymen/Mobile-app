@@ -34,7 +34,7 @@ export default function EventsScreen() {
       }
 
       loadData();
-    }, [])
+    }, []),
   );
 
   if (loading) {
@@ -116,7 +116,7 @@ export default function EventsScreen() {
             My Events
           </Text>
         </Pressable>
-      </View>{" "}
+      </View>
       <ScrollView>
         <View style={styles.labelContainer}>
           <Text style={typography.h3}>Security Events</Text>
@@ -127,7 +127,10 @@ export default function EventsScreen() {
           contentContainerStyle={styles.eventsContainer}
         >
           {(eventGroups[activeTab] ?? []).map((event) => (
-            <Pressable key={event.id} onPress={() => navigation.navigate("EventDetails", { event })}>
+            <Pressable
+              key={event.id}
+              onPress={() => navigation.navigate("EventDetails", { event })}
+            >
               <Card
                 key={event.id}
                 image={event.image}
@@ -146,7 +149,10 @@ export default function EventsScreen() {
           contentContainerStyle={styles.eventsContainer}
         >
           {(eventGroups[activeTab] ?? []).map((event) => (
-            <Pressable key={event.id} onPress={() => navigation.navigate("EventDetails", { event })}>
+            <Pressable
+              key={event.id}
+              onPress={() => navigation.navigate("EventDetails", { event })}
+            >
               <Card
                 key={event.id}
                 image={event.image}
@@ -165,7 +171,10 @@ export default function EventsScreen() {
           contentContainerStyle={styles.eventsContainer}
         >
           {(eventGroups[activeTab] ?? []).map((event) => (
-            <Pressable key={event.id} onPress={() => navigation.navigate("EventDetails", { event })}>
+            <Pressable
+              key={event.id}
+              onPress={() => navigation.navigate("EventDetails", { event })}
+            >
               <Card
                 key={event.id}
                 image={event.image}
