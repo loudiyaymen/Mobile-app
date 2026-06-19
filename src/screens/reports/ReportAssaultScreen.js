@@ -54,7 +54,9 @@ export default function ReportAssaultScreen() {
         ]}
         onPress={openSupportServices}
       >
-        <Text style={{ color: colors.Primary_Charcoal }}>Project Lighthouse</Text>
+        <Text style={{ color: colors.Primary_Charcoal }}>
+          Project Lighthouse
+        </Text>
       </Pressable>
 
       {/* Emergency contacts */}

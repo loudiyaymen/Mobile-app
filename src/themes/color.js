@@ -26,7 +26,7 @@ export const lightTheme = StyleSheet.create({
     accent: colors.Secondary_New_Growth_Green,
     border: colors.Cloud_Grey,
     error: colors.SOS_Red,
-  }
+  },
 });
 
 export const darkTheme = StyleSheet.create({
@@ -39,5 +39,5 @@ export const darkTheme = StyleSheet.create({
     accent: "#52D036",
     border: "#333333",
     error: "#CF6679",
-  }
+  },
 });

@@ -20,6 +20,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     gap: 16,
   },
+  navigationPointsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#EFF4EC",
+    padding: 16,
+    borderRadius: 8,
+  },
   infoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -190,7 +197,7 @@ const styles = StyleSheet.create({
 
   // Button container
   buttonContainer: {
-    width: '100%',
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
@@ -251,21 +258,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary_AC_Green,
     color: colors.primary_White,
     paddingVertical: 16,
-     paddingHorizontal: 32,
+    paddingHorizontal: 32,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
     gap: 8,
-     width: "100%",
-     elevation: 4,
-     shadowColor: colors.Primary_Charcoal,
-     shadowOffset: {
-       width: 0,
-       height: 2,
-     },
-     shadowOpacity: 0.25,
-     shadowRadius: 3.84,
+    width: "100%",
+    elevation: 4,
+    shadowColor: colors.Primary_Charcoal,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   confirmEmergencyButton: {
     backgroundColor: colors.primary_AC_Green,

@@ -56,10 +56,10 @@ export default function ReportHomeScreen() {
           name="EmptyReport"
           size={75}
           color={colors.Secondary_Dark_AC_Green}
-          style={{ marginBottom: 12}}
+          style={{ marginBottom: 12 }}
         />
 
-        <View style={ styles.headerContainer }>
+        <View style={styles.headerContainer}>
           <Text style={typography.h4}>No Reports Yet</Text>
         </View>
 

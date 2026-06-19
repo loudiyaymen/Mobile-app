@@ -11,16 +11,14 @@ export default function SettingsScreen() {
   const theme = isDark ? darkTheme : lightTheme;
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <Text style={styles.sectionTitle}>Settings</Text>
-      
-      <DarkModeToggle 
-        value={isDark} 
-        onToggle={() => setIsDark(!isDark)} 
-      />
+
+      <DarkModeToggle value={isDark} onToggle={() => setIsDark(!isDark)} />
 
       {isDark && <Text style={typography.body}>Dark mode is enabled!</Text>}
     </View>
-
   );
 }

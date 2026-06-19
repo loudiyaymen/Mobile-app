@@ -12,33 +12,33 @@ export default function SettingsStack() {
     <Stack.Navigator
       initialRouteName="Settings"
       screenOptions={{
-              ...headerOptions,
-              headerStyle,
+        ...headerOptions,
+        headerStyle,
       }}
     >
       <Stack.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
-        headerTitle: () => (
-          <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
-            <Text
-              style={[
-                typography.h2,
-                {
-                  fontWeight: "bold",
-                  color: colors.Primary_Charcoal,
-                },
-              ]}
-            >
-              Settings
-            </Text>
-            <Text style={[typography.body, { color: colors.Dark_Grey }]}>
-              Manage your preferences
-            </Text>
-          </View>
-        ),
-      }}
+          headerTitle: () => (
+            <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
+              <Text
+                style={[
+                  typography.h2,
+                  {
+                    fontWeight: "bold",
+                    color: colors.Primary_Charcoal,
+                  },
+                ]}
+              >
+                Settings
+              </Text>
+              <Text style={[typography.body, { color: colors.Dark_Grey }]}>
+                Manage your preferences
+              </Text>
+            </View>
+          ),
+        }}
       />
     </Stack.Navigator>
   );

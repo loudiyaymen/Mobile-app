@@ -41,10 +41,7 @@ const reportHideOnScreens = [
   "Report Submitted",
 ];
 
-const eventHideOnScreens = [
-  "EventDetails",
-  "EventRegister"
-];
+const eventHideOnScreens = ["EventDetails", "EventRegister"];
 
 function shouldHideTabBar(route, hideOnScreens) {
   const routeName = getFocusedRouteNameFromRoute(route);
@@ -56,15 +53,13 @@ export default function TabNavigator() {
     <Tab.Navigator
       initialRouteName="WayFinder"
       screenOptions={{
-          headerShown: false,
-          ...headerOptions,
-          headerStyle,
-          tabBarActiveTintColor: colors.primary_AC_Green,
-          tabBarInactiveTintColor: colors.Primary_Charcoal,
-          tabBarStyle: sharedTabBarStyle,
-          tabBarBackground: () => (
-            <View style={sharedTabBarBackgroundStyle} />
-          ),
+        headerShown: false,
+        ...headerOptions,
+        headerStyle,
+        tabBarActiveTintColor: colors.primary_AC_Green,
+        tabBarInactiveTintColor: colors.Primary_Charcoal,
+        tabBarStyle: sharedTabBarStyle,
+        tabBarBackground: () => <View style={sharedTabBarBackgroundStyle} />,
       }}
     >
       <Tab.Screen

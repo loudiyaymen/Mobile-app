@@ -23,49 +23,37 @@ export default function ReportStack() {
       }}
     >
       <Stack.Screen
-      name="My Reports"
-      component={ReportHomeScreen}
-      options={{
-        headerTitle: () => (
-          <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
-            <Text
-              style={[
-                typography.h2,
-                {
-                  fontWeight: "bold",
-                  color: colors.Primary_Charcoal,
-                },
-              ]}
-            >
-              My Reports
-            </Text>
-            <Text style={[typography.body, { color: colors.Dark_Grey }]}>
-              View and track your incident reports
-            </Text>
-          </View>
-        ),
-      }}
+        name="My Reports"
+        component={ReportHomeScreen}
+        options={{
+          headerTitle: () => (
+            <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
+              <Text
+                style={[
+                  typography.h2,
+                  {
+                    fontWeight: "bold",
+                    color: colors.Primary_Charcoal,
+                  },
+                ]}
+              >
+                My Reports
+              </Text>
+              <Text style={[typography.body, { color: colors.Dark_Grey }]}>
+                View and track your incident reports
+              </Text>
+            </View>
+          ),
+        }}
       />
-      <Stack.Screen
-        name="Select Category"
-        component={ReportCategoryScreen}
-      />
-      <Stack.Screen
-        name="Incident Report"
-        component={ReportIncidentScreen}
-      />
+      <Stack.Screen name="Select Category" component={ReportCategoryScreen} />
+      <Stack.Screen name="Incident Report" component={ReportIncidentScreen} />
       <Stack.Screen
         name="Sexual Assault Report"
         component={ReportAssaultScreen}
       />
-      <Stack.Screen
-        name="Submit Report"
-        component={ReportLostItemScreen}
-      />
-      <Stack.Screen
-        name="Report Submitted"
-        component={ReportSubmittedScreen}
-      />
+      <Stack.Screen name="Submit Report" component={ReportLostItemScreen} />
+      <Stack.Screen name="Report Submitted" component={ReportSubmittedScreen} />
     </Stack.Navigator>
   );
 }
