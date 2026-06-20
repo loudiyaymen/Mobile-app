@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import EmergencyHomeScreen from "../screens/emergency/EmergencyHomeScreen";
 import EmergencyConfirmScreen from "../screens/emergency/EmergencyConfirmScreen";
 import EmergencyConnectedScreen from "../screens/emergency/EmergencyConnectedScreen";
 import NotificationScreen from "../screens/emergency/NotificationScreen";
@@ -10,11 +9,6 @@ const Stack = createNativeStackNavigator();
 export default function EmergencyStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="EmergencyHome"
-        component={EmergencyHomeScreen}
-        options={{ title: "Emergency Home" }}
-      />
       <Stack.Screen
         name="EmergencyConfirm"
         component={EmergencyConfirmScreen}

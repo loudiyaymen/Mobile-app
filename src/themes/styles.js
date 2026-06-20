@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { colors } from "./color";
+import { typography } from "./typography";
 
 const styles = StyleSheet.create({
   // Container styles
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
   },
   fabIcon: {
     color: colors.primary_White,
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: "bold",
   },
   fabPaper: {

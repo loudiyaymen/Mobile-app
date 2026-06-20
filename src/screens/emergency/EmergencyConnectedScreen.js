@@ -23,8 +23,8 @@ export default function EmergencyConnectedScreen() {
     opacity: fadeAnim,
   };
 
-  const handleReturnToMap = () => {
-    navigation.navigate("EmergencyHome");
+  const goBack = () => {
+    navigation.getParent()?.goBack();
   };
 
   return (
@@ -111,7 +111,7 @@ export default function EmergencyConnectedScreen() {
             alignItems: "center",
             justifyContent: "center",
           }}
-          onPress={handleReturnToMap}
+          onPress={goBack}
         >
           <Text
             style={{
