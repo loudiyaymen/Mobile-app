@@ -19,7 +19,7 @@ export default function EventDetailsScreen() {
   const { event } = route.params ?? {};
   const imageUri = event?.image;
   const navigation = useNavigation();
-  Í;
+
   const DetailSection = ({ title, content, icon: Icon }) => (
     <View style={{ marginTop: 16 }}>
       <Text style={[typography.secondaryBody, { marginBottom: 8 }]}>
