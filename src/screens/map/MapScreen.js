@@ -35,7 +35,7 @@ export default function MapScreen() {
         <Pressable
           style={[
             styles.navCategoryButton,
-            { backgroundColor: colors.Secondary_Dark_AC_Green },
+            { backgroundColor: colors.Dark_Grey },
           ]}
           onPress={() => alert("Scan functionality coming soon!")}
         >

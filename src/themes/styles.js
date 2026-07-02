@@ -28,6 +28,23 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
   },
+  shadowContainer: {
+    marginVertical: 4,
+    borderRadius: 12,
+    backgroundColor: colors.primary_White,
+    // ios
+    shadowColor: colors.Primary_Charcoal,
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    //Android
+    elevation: 3,
+
+    overflow: "visible",
+  },
   infoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -417,6 +434,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 18,
     borderRadius: 12,
+    marginBottom: 50,
   },
   inputRow: {
     flexDirection: "row",
@@ -428,13 +446,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 12,
     backgroundColor: colors.primary_White,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
+
   inputField: {
     flex: 1,
     height: 48,
@@ -455,6 +468,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.primary_AC_Green,
     borderRadius: 12,
+    borderStyle: "dashed",
     marginBottom: 14,
     justifyContent: "center",
     alignItems: "center",
@@ -497,20 +511,19 @@ const styles = StyleSheet.create({
   },
   textArea: {
     borderWidth: 1,
-    borderColor: colors.Secondary_New_Growth_Green,
+    borderColor: colors.primary_AC_Green,
     borderRadius: 12,
     padding: 12,
     minHeight: 230,
-    marginBottom: 14,
     backgroundColor: colors.primary_White,
     textAlignVertical: "top",
-    shadowColor: colors.Primary_Charcoal,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+  },
+  textInput: {
+    flex: 1,
+    paddingVertical: 0,
+    lineHeight: undefined,
+    verticalAlign: "middle",
+    height: "100%",
   },
   category: {
     backgroundColor: colors.primary_AC_Green,

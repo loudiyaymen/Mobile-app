@@ -7,13 +7,18 @@ import {
   Alert,
   ScrollView,
   Image,
+  Platform,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  MapPinAreaIcon,
+  CalendarBlankIcon,
+  ClockIcon,
+  CameraIcon,
+} from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
-
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
@@ -29,8 +34,8 @@ export default function ReportIncidentScreen() {
   const [anonymous, setAnonymous] = useState(false);
   const [emailUpdates, setEmailUpdates] = useState(false);
 
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
   // LOCATION AUTO FILL
   const handleGetLocation = async () => {
@@ -52,13 +57,13 @@ export default function ReportIncidentScreen() {
     }
   };
 
-  const handleDateChange = (_, selectedDate) => {
-    setShowDatePicker(false);
+  const handleDateConfirm = (selectedDate) => {
+    setDatePickerVisibility(false);
     if (selectedDate) setDate(selectedDate);
   };
 
-  const handleTimeChange = (_, selectedTime) => {
-    setShowTimePicker(false);
+  const handleTimeConfirm = (selectedTime) => {
+    setTimePickerVisibility(false);
     if (selectedTime) setTime(selectedTime);
   };
 
@@ -81,12 +86,12 @@ export default function ReportIncidentScreen() {
   };
 
   // VALIDATION + SUBMIT
+
   const handleSubmit = () => {
-    if (!locationText || !date || !time || !details) {
-      Alert.alert("Missing Fields", "Please fill in all required fields.");
+    if (!locationText || !date || !details) {
+      Alert.alert("Missing Fields", "Please fill in required fields.");
       return;
     }
-
     const reportData = {
       id: Date.now().toString(),
       type: "Incident",
@@ -101,6 +106,7 @@ export default function ReportIncidentScreen() {
 
     navigation.navigate("Report Submitted", { reportData });
   };
+  const isFormValid = locationText && date && details;
 
   return (
     <View style={styles.container}>
@@ -112,63 +118,65 @@ export default function ReportIncidentScreen() {
       >
         {/* LOCATION */}
         <Text style={[typography.h4, styles.label]}>Location *</Text>
-        <View style={styles.inputRow}>
-          <Pressable onPress={handleGetLocation}>
-            <Ionicons
+        <View style={styles.shadowContainer}>
+          <Pressable style={styles.inputRow} onPress={handleGetLocation}>
+            <MapPinAreaIcon
               name="location"
-              size={22}
-              color={colors.primary_AC_Green}
+              size={24}
+              color={colors.Primary_Charcoal}
+            />
+            <TextInput
+              style={[typography.body, styles.textInput]}
+              placeholder="e.g., ACCE Building, Floor 2"
+              value={locationText}
+              onChangeText={setLocationText}
             />
           </Pressable>
-          <TextInput
-            style={typography.body}
-            placeholder="e.g, ACCE Building, Floor 2"
-            value={locationText}
-            onChangeText={setLocationText}
-          />
         </View>
 
         {/* DATE */}
         <Text style={[typography.h4, styles.label]}>Date *</Text>
-        <View>
+        <View style={styles.shadowContainer}>
           <Pressable
-            onPress={() => setShowDatePicker(true)}
+            onPress={() => setDatePickerVisibility(true)}
             style={styles.inputRow}
           >
-            <Ionicons
+            <CalendarBlankIcon
               name="calendar"
-              size={22}
-              color={colors.primary_AC_Green}
+              size={24}
+              color={colors.Primary_Charcoal}
             />
             <TextInput
-              style={typography.body}
-              placeholder="e.g., Feb 14, 2026"
+              style={[typography.body, styles.textInput, { flex: 1 }]}
+              placeholder="Select Date"
               value={date ? date.toDateString() : ""}
               editable={false}
+              pointerEvents="none"
             />
           </Pressable>
         </View>
 
-        {showDatePicker && (
-          <DateTimePicker
-            value={date || new Date()}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-          />
-        )}
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          value={date || new Date()}
+          mode="date"
+          accentColor={colors.primary_AC_Green}
+          buttonTextColorIOS={colors.primary_AC_Green}
+          onConfirm={handleDateConfirm}
+          onCancel={() => setDatePickerVisibility(false)}
+        />
 
         {/* TIME */}
-        <Text style={[typography.h4, styles.label]}>Time of incident</Text>
-        <View>
+        <Text style={[typography.h4, styles.label]}>Time</Text>
+        <View style={styles.shadowContainer}>
           <Pressable
-            onPress={() => setShowTimePicker(true)}
+            onPress={() => setTimePickerVisibility(true)}
             style={styles.inputRow}
           >
-            <Ionicons name="time" size={22} color={colors.primary_AC_Green} />
+            <ClockIcon name="time" size={24} color={colors.Primary_Charcoal} />
             <TextInput
-              style={typography.body}
-              placeholder="e.g., 2:30 PM"
+              style={[typography.body, styles.textInput]}
+              placeholder="Approximate time (e.g., 2:00 PM)"
               value={
                 time
                   ? time.toLocaleTimeString([], {
@@ -178,34 +186,46 @@ export default function ReportIncidentScreen() {
                   : ""
               }
               editable={false}
+              pointerEvents="none"
             />
           </Pressable>
         </View>
 
-        {showTimePicker && (
-          <DateTimePicker
-            value={time || new Date()}
-            mode="time"
-            display="default"
-            onChange={handleTimeChange}
-          />
-        )}
+        <DateTimePickerModal
+          isVisible={isTimePickerVisible}
+          value={time || new Date()}
+          mode="time"
+          display={Platform.OS === "ios" ? "spinner" : "default"}
+          onConfirm={handleTimeConfirm}
+          onCancel={() => setTimePickerVisibility(false)}
+          accentColor={colors.primary_AC_Green}
+          buttonTextColorIOS={colors.primary_AC_Green}
+          is24Hour={false}
+        />
 
         {/* DETAILS */}
-        <Text style={[typography.h4, styles.label]}>Incident Details *</Text>
-        <TextInput
-          placeholder="Describe the situation (e.g., suspicious activity near E-Building entrance)"
-          style={[styles.textArea, typography.body]}
-          multiline={true}
-          value={details}
-          onChangeText={setDetails}
-        />
+        <Text style={[typography.h4, styles.label]}>Incident details *</Text>
+        <View style={styles.shadowContainer}>
+          <TextInput
+            placeholder="Describe the situation (e.g., suspicious activity near E-Building entrance)"
+            style={[styles.textArea, typography.body]}
+            multiline={true}
+            value={details}
+            onChangeText={setDetails}
+          />
+        </View>
 
         {/* MEDIA */}
         <Text style={[typography.h4, styles.label]}>Attachments</Text>
         <Pressable onPress={handlePickMedia} style={styles.mediaBox}>
-          <Ionicons name={media ? "reload" : "camera"} size={28} />
-          <Text>{media ? "Choose Another Photo" : "Add Photo"}</Text>
+          <CameraIcon
+            name={media ? "reload" : "camera"}
+            size={24}
+            color={colors.primary_AC_Green}
+          />
+          <Text style={{ color: colors.primary_AC_Green }}>
+            {media ? "Choose Another Photo" : "Add Photo"}
+          </Text>
         </Pressable>
 
         {media && (
@@ -217,10 +237,23 @@ export default function ReportIncidentScreen() {
 
         {/* SUBMIT */}
         <Pressable
-          style={[styles.reportButton, { alignSelf: "center" }]}
           onPress={handleSubmit}
+          disabled={!isFormValid}
+          style={[
+            styles.reportButton,
+            { alignSelf: "center" },
+            {
+              backgroundColor: isFormValid
+                ? colors.primary_AC_Green
+                : colors.Dark_Grey,
+            },
+          ]}
         >
-          <Text style={{ color: colors.primary_White }}>Submit Report</Text>
+          <Text
+            style={[typography.secondaryH4, { color: colors.primary_White }]}
+          >
+            Submit Report
+          </Text>
         </Pressable>
       </ScrollView>
     </View>
