@@ -27,6 +27,7 @@ export default function ReportIncidentScreen() {
   const navigation = useNavigation();
 
   const [locationText, setLocationText] = useState("");
+
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
   const [details, setDetails] = useState("");
@@ -36,26 +37,6 @@ export default function ReportIncidentScreen() {
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
-
-  // LOCATION AUTO FILL
-  const handleGetLocation = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-
-    if (status !== "granted") {
-      Alert.alert("Permission denied", "Location permission is required.");
-      return;
-    }
-
-    const loc = await Location.getCurrentPositionAsync({});
-    const reverse = await Location.reverseGeocodeAsync(loc.coords);
-
-    if (reverse.length > 0) {
-      const place = reverse[0];
-      setLocationText(
-        `${place.name || ""} ${place.street || ""}, ${place.city || ""}`,
-      );
-    }
-  };
 
   const handleDateConfirm = (selectedDate) => {
     setDatePickerVisibility(false);
@@ -106,7 +87,11 @@ export default function ReportIncidentScreen() {
 
     navigation.navigate("Report Submitted", { reportData });
   };
-  const isFormValid = locationText && date && details;
+  const isFormValid =
+    locationText.trim() !== "" &&
+    date !== null &&
+    time !== null &&
+    details.trim() !== "";
 
   return (
     <View style={styles.container}>
@@ -119,7 +104,7 @@ export default function ReportIncidentScreen() {
         {/* LOCATION */}
         <Text style={[typography.h4, styles.label]}>Location *</Text>
         <View style={styles.shadowContainer}>
-          <Pressable style={styles.inputRow} onPress={handleGetLocation}>
+          <View style={styles.inputRow}>
             <MapPinAreaIcon
               name="location"
               size={24}
@@ -131,7 +116,7 @@ export default function ReportIncidentScreen() {
               value={locationText}
               onChangeText={setLocationText}
             />
-          </Pressable>
+          </View>
         </View>
 
         {/* DATE */}
