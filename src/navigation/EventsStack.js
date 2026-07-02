@@ -41,8 +41,8 @@ export default function EventsStack() {
           ),
         }}
       />
-      <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
-      <Stack.Screen name="EventRegister" component={EventRegisterScreen} />
+      <Stack.Screen name="Event Details" component={EventDetailsScreen} />
+      <Stack.Screen name="Event Register" component={EventRegisterScreen} />
     </Stack.Navigator>
   );
 }

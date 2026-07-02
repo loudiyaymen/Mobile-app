@@ -7,6 +7,7 @@ import { useRoute } from "@react-navigation/native";
 import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
+import DetailSection from "../../components/DetailsSection";
 import {
   CalendarIcon,
   MapPinSimpleIcon,
@@ -20,20 +21,6 @@ export default function EventDetailsScreen() {
   const imageUri = event?.image;
   const navigation = useNavigation();
 
-  const DetailSection = ({ title, content, icon: Icon }) => (
-    <View style={{ marginTop: 16 }}>
-      <Text style={[typography.secondaryBody, { marginBottom: 8 }]}>
-        {title}
-      </Text>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-        {Icon && (
-          <Icon size={20} color={colors.Primary_Charcoal} weight="bold" />
-        )}
-        <Text style={typography.body}>{content}</Text>
-      </View>
-    </View>
-  );
-
   return (
     <View style={[styles.container]}>
       {imageUri ? (
@@ -42,7 +29,7 @@ export default function EventDetailsScreen() {
       <ScrollView style={styles.detailsContent}>
         {/* Main Header Container */}
         <View style={styles.headerContainer}>
-          {/* Top Row: Title and Organizer */}
+          {/* Top Row */}
           <View style={styles.infoRow}>
             <Text style={[typography.h5, { flex: 1 }]}>
               {event?.title ?? "Event"}
@@ -55,7 +42,7 @@ export default function EventDetailsScreen() {
             </View>
           </View>
 
-          {/* Bottom Row: Date and Time (or Location) */}
+          {/* Bottom Row */}
           <View style={styles.infoRow}>
             <View style={styles.iconTextGroup}>
               <CalendarIcon size={20} color={colors.Primary_Charcoal} />
@@ -71,7 +58,7 @@ export default function EventDetailsScreen() {
             </View>
           </View>
         </View>
-
+        
         <View>
           <DetailSection
             title="Event details"
@@ -90,15 +77,17 @@ export default function EventDetailsScreen() {
         </View>
       </ScrollView>
 
-      <Pressable
-        style={styles.registerButton}
-        key={event.id}
-        onPress={() => navigation.navigate("EventRegister", { event })}
-      >
-        <Text style={[typography.body, { color: colors.primary_White }]}>
-          Register
-        </Text>
-      </Pressable>
+      <View style={{marginHorizontal: 16}}>
+        <Pressable
+          style={styles.registerButton}
+          key={event.id}
+          onPress={() => navigation.navigate("Event Register", { event })}
+        >
+          <Text style={[typography.body, { color: colors.primary_White }]}>
+            Register
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }

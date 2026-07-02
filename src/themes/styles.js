@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primary_White,
   },
+  bodyContainer: {
+    flex: 1,
+    padding: 16,
+    gap: 16,
+  },
   eventsContainer: {
     paddingHorizontal: 5,
     margin: 12,
@@ -276,13 +281,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary_AC_Green,
     color: colors.primary_White,
     paddingVertical: 16,
+    paddingBottom: 16,
     paddingHorizontal: 32,
+    marginBottom: 30,
     borderRadius: 12,
+    position: "fixed",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
     gap: 8,
-    width: "100%",
     elevation: 4,
     shadowColor: colors.Primary_Charcoal,
     shadowOffset: {

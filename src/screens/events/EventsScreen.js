@@ -129,7 +129,7 @@ export default function EventsScreen() {
           {(eventGroups[activeTab] ?? []).map((event) => (
             <Pressable
               key={event.id}
-              onPress={() => navigation.navigate("EventDetails", { event })}
+              onPress={() => navigation.navigate("Event Details", { event })}
             >
               <Card
                 key={event.id}
@@ -151,7 +151,7 @@ export default function EventsScreen() {
           {(eventGroups[activeTab] ?? []).map((event) => (
             <Pressable
               key={event.id}
-              onPress={() => navigation.navigate("EventDetails", { event })}
+              onPress={() => navigation.navigate("Event Details", { event })}
             >
               <Card
                 key={event.id}
@@ -173,7 +173,7 @@ export default function EventsScreen() {
           {(eventGroups[activeTab] ?? []).map((event) => (
             <Pressable
               key={event.id}
-              onPress={() => navigation.navigate("EventDetails", { event })}
+              onPress={() => navigation.navigate("Event Details", { event })}
             >
               <Card
                 key={event.id}
