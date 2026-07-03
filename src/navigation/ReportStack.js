@@ -28,12 +28,17 @@ export default function ReportStack() {
         component={ReportHomeScreen}
         options={{
           headerTitle: () => (
-            <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "flex-start",
+                width: "100%",
+              }}
+            >
               <Text
                 style={[
                   typography.h2,
                   {
-                    fontWeight: "bold",
                     color: colors.Primary_Charcoal,
                   },
                 ]}
