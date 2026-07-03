@@ -41,7 +41,7 @@ export default function ReportSubmittedScreen() {
   }, []);
 
   const handleClose = () => {
-    navigation.navigate("My Reports");
+    navigation.popToTop()
   };
 
   return (

@@ -28,7 +28,7 @@ export default function EventsScreen() {
         const result = await fetchEventsByTab();
         setEventGroups({
           allEvents: result?.allEvents ?? result?.official ?? [],
-          myEvents: result?.myEvents ?? result?.student ?? [],
+          // myEvents: , // This would be populated based on the user's registered events
         });
         setLoading(false);
       }

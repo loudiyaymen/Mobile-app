@@ -12,6 +12,7 @@ import {
   CalendarIcon,
   MapPinSimpleIcon,
   UserIcon,
+  ClockIcon,
 } from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -51,9 +52,9 @@ export default function EventDetailsScreen() {
               </Text>
             </View>
             <View style={styles.iconTextGroup}>
-              <MapPinSimpleIcon size={20} color={colors.Primary_Charcoal} />
+              <ClockIcon size={20} color={colors.Primary_Charcoal} />
               <Text style={typography.body}>
-                {event?.location ?? "4:00 PM"}
+                {event?.time ?? "4:00 PM"}
               </Text>
             </View>
           </View>

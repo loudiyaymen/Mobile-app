@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import { colors } from "./color";
 import { typography } from "./typography";
+import { overlay } from "react-native-paper";
 
 const styles = StyleSheet.create({
   // Container styles
@@ -47,9 +48,35 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     //Android
     elevation: 3,
-
     overflow: "visible",
   },
+  modalRoot: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+  },
+  overlay: {
+    backgroundColor: "#EFF4EC",
+    paddingTop: 24,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    alignItems: "center",
+    gap: 8,
+    width: "100%",
+  },
+  infoContainer: {
+    backgroundColor: colors.primary_White,
+    padding: 12,
+    marginVertical: 12,
+    borderRadius: 12,
+    alignItems: "left",
+    alignSelf: "stretch",
+  },
+
+
   infoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -277,6 +304,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
   },
+  closeOverlayButton: {
+    backgroundColor: colors.primary_AC_Green,
+    color: colors.primary_White,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "stretch",
+  },
   registerButton: {
     backgroundColor: colors.primary_AC_Green,
     color: colors.primary_White,
@@ -449,14 +486,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.primary_AC_Green,
     borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 12,
+    paddingHorizontal: 12,
+    minHeight: 56,
     backgroundColor: colors.primary_White,
   },
 
   inputField: {
     flex: 1,
-    height: 48,
+    height: 24,
+    fontSize: 16,
+    fontFamily: "Metropolis-Regular",
+    color: colors.Primary_Charcoal,
   },
   input: {
     flexDirection: "row",
