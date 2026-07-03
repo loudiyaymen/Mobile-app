@@ -20,6 +20,7 @@ export default function ReportStack() {
       screenOptions={{
         ...headerOptions,
         headerStyle,
+        headerShadowVisible: false,
       }}
     >
       <Stack.Screen

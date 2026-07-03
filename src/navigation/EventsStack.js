@@ -16,6 +16,7 @@ export default function EventsStack() {
       screenOptions={{
         ...headerOptions,
         headerStyle,
+        headerShadowVisible: false,
       }}
     >
       <Stack.Screen

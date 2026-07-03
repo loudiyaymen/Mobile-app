@@ -2,8 +2,9 @@ import { colors } from "./color";
 
 export const headerStyle = {
   backgroundColor: colors.primary_White,
-  borderBottomWidth: 1,
-  borderBottomColor: colors.Light_Grey,
+  borderBottomWidth: 0,
+  shadowOpacity: 0,
+  elevation: 0,
   height: 100, //ignored on iOS
 };
 

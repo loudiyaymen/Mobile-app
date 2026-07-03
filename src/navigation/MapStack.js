@@ -13,6 +13,7 @@ export default function MapStack() {
     <Stack.Navigator
       initialRouteName="Wayfinder"
       screenOptions={{
+        headerShadowVisible: false,
         ...headerOptions,
         headerStyle,
       }}

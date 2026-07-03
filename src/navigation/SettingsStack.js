@@ -14,6 +14,7 @@ export default function SettingsStack() {
       screenOptions={{
         ...headerOptions,
         headerStyle,
+        headerShadowVisible: false,
       }}
     >
       <Stack.Screen
