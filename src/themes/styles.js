@@ -27,12 +27,17 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     gap: 16,
   },
-  navigationPointsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+  navigationCard: {
     backgroundColor: "#EFF4EC",
-    padding: 16,
-    borderRadius: 8,
+    margin: 16,
+    borderRadius: 12,
+    padding: 18,
+    shadowColor: colors.Primary_Charcoal,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 5,
+    elevation: 4,
+    gap: 18,
   },
   shadowContainer: {
     marginVertical: 4,
@@ -75,7 +80,6 @@ const styles = StyleSheet.create({
     alignItems: "left",
     alignSelf: "stretch",
   },
-
 
   infoRow: {
     flexDirection: "row",
@@ -299,7 +303,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 12,
-    alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
     gap: 8,
@@ -489,6 +492,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     minHeight: 56,
     backgroundColor: colors.primary_White,
+  },
+  fieldsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  timeline: {
+    alignItems: "center",
+    marginRight: 12,
+    paddingVertical: 14,
+  },
+  timelineDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: colors.Secondary_New_Growth_Green,
+    backgroundColor: "transparent",
+  },
+  timelineLine: {
+    width: 1,
+    flex: 1,
+    backgroundColor: colors.Secondary_New_Growth_Green,
+    marginVertical: 8,
+  },
+  inputsColumn: {
+    flex: 1,
+    gap: 14,
   },
 
   inputField: {

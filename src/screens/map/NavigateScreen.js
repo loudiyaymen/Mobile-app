@@ -4,6 +4,7 @@ import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
 import { DeviceRotateIcon } from "phosphor-react-native";
+import { NavigationArrowIcon } from "phosphor-react-native";
 
 export default function NavigateScreen() {
   const [startingPoint, setStartingPoint] = React.useState("");
@@ -11,19 +12,55 @@ export default function NavigateScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.navigationPointsContainer}>
-        <View style={{ flexDirection: "column", flex: 1 }}>
-          <TextInput
-            style={styles.input}
-            placeholder="Starting Point"
-          ></TextInput>
-          <TextInput style={styles.input} placeholder="Destination"></TextInput>
-          <Pressable style={styles.button}>
-            <Text style={typography.body}>Start Navigation</Text>
+      <View style={styles.navigationCard}>
+        <View style={styles.fieldsRow}>
+          {/* Dots and line */}
+          <View style={styles.timeline}>
+            <View style={styles.timelineDot} />
+            <View style={styles.timelineLine} />
+            <View style={styles.timelineDot} />
+          </View>
+
+          {/* Inputs */}
+          <View style={styles.inputsColumn}>
+            <TextInput
+              style={styles.input}
+              placeholder="Starting Point"
+              placeholderTextColor={colors.Primary_Charcoal}
+              value={startingPoint}
+              onChangeText={setStartingPoint}
+            />
+            <TextInput
+              style={[styles.input, { marginBottom: 0 }]} 
+              placeholder="Destination"
+              placeholderTextColor={colors.Primary_Charcoal}
+              value={destination}
+              onChangeText={setDestination}
+            />
+          </View>
+
+          {/* Swap Icon */}
+          <Pressable>
+            <DeviceRotateIcon
+              size={28}
+              color={colors.primary_AC_Green}
+              weight="bold"
+            />
           </Pressable>
         </View>
-        <Pressable style={styles.button}>
-          <DeviceRotateIcon size={24} color={colors.primary} />
+
+        {/* Button */}
+        <Pressable
+          style={[styles.buttonContainer, { backgroundColor: colors.primary_AC_Green, justifyContent: 'center'}]}
+        >
+          <NavigationArrowIcon
+            size={26}
+            color={colors.primary_White}
+            weight="bold"
+          />
+          <Text style={[typography.secondaryBody, { color: colors.primary_White }]}>
+            Start navigation
+          </Text>
         </Pressable>
       </View>
     </View>
