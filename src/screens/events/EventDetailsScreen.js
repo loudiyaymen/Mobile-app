@@ -10,7 +10,7 @@ import { colors } from "../../themes/color";
 import DetailSection from "../../components/DetailsSection";
 import {
   CalendarIcon,
-  MapPinSimpleIcon,
+  MapPinIcon,
   UserIcon,
   ClockIcon,
 } from "phosphor-react-native";
@@ -53,13 +53,11 @@ export default function EventDetailsScreen() {
             </View>
             <View style={styles.iconTextGroup}>
               <ClockIcon size={20} color={colors.Primary_Charcoal} />
-              <Text style={typography.body}>
-                {event?.time ?? "4:00 PM"}
-              </Text>
+              <Text style={typography.body}>{event?.time ?? "4:00 PM"}</Text>
             </View>
           </View>
         </View>
-        
+
         <View>
           <DetailSection
             title="Event details"
@@ -67,7 +65,7 @@ export default function EventDetailsScreen() {
           />
           <DetailSection
             title="Location"
-            icon={MapPinSimpleIcon}
+            icon={MapPinIcon}
             content={event?.location ?? "No location specified."}
           />
           <DetailSection
@@ -78,7 +76,7 @@ export default function EventDetailsScreen() {
         </View>
       </ScrollView>
 
-      <View style={{marginHorizontal: 16}}>
+      <View style={{ marginHorizontal: 16 }}>
         <Pressable
           style={styles.registerButton}
           key={event.id}

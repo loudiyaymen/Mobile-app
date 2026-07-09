@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 import {
-  MapPinAreaIcon,
+  MapPinIcon,
   CalendarBlankIcon,
   ClockIcon,
   CameraIcon,
@@ -105,7 +105,7 @@ export default function ReportIncidentScreen() {
         <Text style={[typography.h4, styles.label]}>Location *</Text>
         <View style={styles.shadowContainer}>
           <View style={styles.inputRow}>
-            <MapPinAreaIcon
+            <MapPinIcon
               name="location"
               size={24}
               color={colors.Primary_Charcoal}

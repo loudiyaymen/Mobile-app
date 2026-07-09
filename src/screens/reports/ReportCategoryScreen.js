@@ -1,7 +1,6 @@
 // Report category selection screen
 
 import { View, Text, Pressable } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";

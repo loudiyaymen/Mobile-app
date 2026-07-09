@@ -33,6 +33,7 @@ export default function ReportStack() {
                 flexDirection: "column",
                 alignItems: "flex-start",
                 width: "100%",
+                headerBackTitle: "",
               }}
             >
               <Text
