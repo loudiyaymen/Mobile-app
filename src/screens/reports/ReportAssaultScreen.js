@@ -2,6 +2,7 @@ import { View, Text, Pressable, Linking } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
+import { typography } from "../../themes/typography";
 
 export default function ReportAssaultScreen() {
   const insets = useSafeAreaInsets();
@@ -25,8 +26,7 @@ export default function ReportAssaultScreen() {
   };
 
   return (
-    <View style={[styles.container, { padding: 16 }]}>
-      {/* Disclosure warning */}
+    <View style={styles.container}>
       <View style={styles.dangerBanner}>
         <Text>
           We recognize it is difficult to disclose or report incidents of sexual

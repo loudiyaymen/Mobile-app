@@ -14,6 +14,9 @@ export const colors = StyleSheet.create({
   Light_Grey: "#F6F6F6",
   Grey: "#B5B5B5",
   Dark_Grey: "#5E5E5E",
+
+  Warning_line: "#DBA837",
+  Warning_background: "#EDC65F",
 });
 
 export const lightTheme = StyleSheet.create({
