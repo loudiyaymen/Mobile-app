@@ -1,5 +1,4 @@
 // Reporting found and lost items screen
-
 import { useState } from "react";
 import {
   View,
@@ -10,206 +9,171 @@ import {
   Alert,
   Image,
 } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import {
+  MapPinIcon,
+  UserIcon,
+  EnvelopeIcon,
+  CameraIcon,
+} from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
+import { typography } from "../../themes/typography";
 
 export default function ReportLostItemScreen() {
   const navigation = useNavigation();
 
-  const [mode, setMode] = useState("lost");
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [description, setDescription] = useState("");
-  const [location, setLocation] = useState("");
-  const [photo, setPhoto] = useState(null);
+  const [details, setDetails] = useState("");
+  const [locationText, setLocationText] = useState("");
+  const [media, setMedia] = useState(null);
   const [anonymous, setAnonymous] = useState(false);
   const [updates, setUpdates] = useState(false);
 
-  const pickPhoto = async () => {
+  const handlePickMedia = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permission.granted) return;
 
-    const result = await ImagePicker.launchImageLibraryAsync({});
-    if (!result.canceled) setPhoto(result.assets[0].uri);
-  };
-
-  const submitLostItem = () => {
-    if (!name || !email || !description) {
-      Alert.alert("Missing fields", "Please complete required fields.");
+    if (!permission.granted) {
+      Alert.alert("Permission needed", "Media access is required.");
       return;
     }
 
-    navigation.replace("Report Submitted", {
-      reportData: {
-        id: Date.now().toString(),
-        type: "Lost Item",
-        name,
-        email,
-        description,
-        location,
-        photo,
-      },
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.All,
+      quality: 0.7,
     });
-  };
 
-  const submitFoundItem = () => {
-    if (!description) {
-      Alert.alert("Missing description", "Please describe the item.");
+    if (!result.canceled) {
+      setMedia(result.assets[0].uri);
+    }
+  };
+  const handleSubmit = () => {
+    if (!name || !email || !details) {
+      Alert.alert("Missing Fields", "Please fill in required fields.");
       return;
     }
+    const reportData = {
+      id: Date.now().toString(),
+      type: "lostItem",
+      name,
+      email,
+      details,
+      media,
+      locationText,
+    };
 
-    navigation.replace("Report Submitted", {
-      reportData: {
-        id: Date.now().toString(),
-        type: "Found Item",
-        name,
-        email,
-        description,
-        location,
-        anonymous,
-        updates,
-        photo,
-      },
-    });
+    navigation.navigate("Report Submitted", { reportData });
   };
+  const isFormValid =
+    name.trim() !== "" && email !== null && details.trim() !== "";
 
-  // SELECT TYPE SCREEN
   return (
-    <ScrollView
-      style={[
-        styles.container,
-        { paddingBlockStart: 16, paddingBlockEnd: 60, paddingHorizontal: 16 },
-      ]}
-    >
-      {/* TOGGLE */}
-      <View style={{ flexDirection: "row", marginBottom: 20 }}>
-        <Pressable onPress={() => setMode("lost")} style={styles.lostFound}>
-          <Text
-            style={{
-              color:
-                mode === "lost"
-                  ? colors.primary_White
-                  : colors.Secondary_New_Growth_Green,
-            }}
-          >
-            I lost an item
-          </Text>
-        </Pressable>
-
-        <Pressable onPress={() => setMode("found")} style={styles.lostFound}>
-          <Text
-            style={{
-              color:
-                mode === "found"
-                  ? colors.primary_White
-                  : colors.Secondary_New_Growth_Green,
-            }}
-          >
-            I found an item
-          </Text>
-        </Pressable>
-      </View>
-
-      {/* ALTERNATE FORM FIELDS */}
-      <Text style={styles.homeTitle}>
-        {mode === "lost" ? "Lost Item Report" : "Found Item Report"}
-      </Text>
-
-      {mode === "lost" && (
-        <>
-          <TextInput
-            placeholder="Your Name *"
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-          />
-
-          <TextInput
-            placeholder="Your Email *"
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-          />
-        </>
-      )}
-
-      {mode === "found" && (
-        <>
-          <TextInput
-            placeholder="Your Name (optional)"
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-          />
-
-          <TextInput
-            placeholder="Your Email (optional)"
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-          />
-        </>
-      )}
-
-      {/* UNIFORM FORM FIELDS */}
-      <TextInput
-        placeholder="Item description *"
-        style={styles.textArea}
-        multiline
-        value={description}
-        onChangeText={setDescription}
-      />
-
-      <TextInput
-        placeholder="Location (optional)"
-        style={styles.input}
-        value={location}
-        onChangeText={setLocation}
-      />
-
-      <Pressable onPress={pickPhoto} style={styles.media}>
-        <Ionicons name={photo ? "reload" : "camera"} size={28} />
-        <Text>{photo ? "Choose Another Photo" : "Add Photo"}</Text>
-      </Pressable>
-
-      {photo && <Image source={{ uri: photo }} style={styles.photoPreview} />}
-
-      {mode === "found" && (
-        <>
-          <Pressable
-            style={styles.checkboxRow}
-            onPress={() => setAnonymous(!anonymous)}
-          >
-            <Ionicons
-              name={anonymous ? "checkbox" : "square-outline"}
-              size={22}
-            />
-            <Text style={{ marginLeft: 8 }}>Submit anonymously</Text>
-          </Pressable>
-
-          <Pressable
-            style={styles.checkboxRow}
-            onPress={() => setUpdates(!updates)}
-          >
-            <Ionicons
-              name={updates ? "checkbox" : "square-outline"}
-              size={22}
-            />
-            <Text style={{ marginLeft: 8 }}>Send updates via email</Text>
-          </Pressable>
-        </>
-      )}
-
-      <Pressable
-        style={[styles.reportButton, { marginBlockEnd: 32 }]}
-        onPress={mode === "lost" ? submitLostItem : submitFoundItem}
+    <View style={styles.container}>
+      <ScrollView
+        style={[
+          styles.container,
+          { paddingBlockEnd: 48, paddingHorizontal: 16 },
+        ]}
       >
-        <Text style={{ color: colors.primary_White }}>Submit Report</Text>
-      </Pressable>
-    </ScrollView>
+        <Text style={[typography.h4, styles.label]}>Name *</Text>
+        <View style={styles.shadowContainer}>
+          <View style={styles.inputRow}>
+            <UserIcon name="name" size={24} color={colors.Primary_Charcoal} />
+            <TextInput
+              style={[typography.body, styles.textInput]}
+              placeholder="Enter your name"
+              value={name}
+              onChangeText={setName}
+            />
+          </View>
+        </View>
+
+        <Text style={[typography.h4, styles.label]}>Email *</Text>
+        <View style={styles.shadowContainer}>
+          <View style={styles.inputRow}>
+            <EnvelopeIcon
+              name="email"
+              size={24}
+              color={colors.Primary_Charcoal}
+            />
+            <TextInput
+              style={[typography.body, styles.textInput]}
+              placeholder="Enter your Email"
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
+        </View>
+
+        <Text style={[typography.h4, styles.label]}>Incident details *</Text>
+        <View style={styles.shadowContainer}>
+          <TextInput
+            placeholder="Describe the situation (e.g., suspicious activity near E-Building entrance)"
+            style={[styles.textArea, typography.body]}
+            multiline={true}
+            value={details}
+            onChangeText={setDetails}
+          />
+        </View>
+
+        <Text style={[typography.h4, styles.label]}>Location </Text>
+        <View style={styles.shadowContainer}>
+          <View style={styles.inputRow}>
+            <MapPinIcon
+              name="location"
+              size={24}
+              color={colors.Primary_Charcoal}
+            />
+            <TextInput
+              style={[typography.body, styles.textInput]}
+              placeholder="e.g., ACCE Building, Floor 2"
+              value={locationText}
+              onChangeText={setLocationText}
+            />
+          </View>
+        </View>
+
+        <Text style={[typography.h4, styles.label]}>Attachments</Text>
+        <Pressable onPress={handlePickMedia} style={styles.mediaBox}>
+          <CameraIcon
+            name={media ? "reload" : "camera"}
+            size={24}
+            color={colors.primary_AC_Green}
+          />
+          <Text style={{ color: colors.primary_AC_Green }}>
+            {media ? "Choose Another Photo" : "Add Photo"}
+          </Text>
+        </Pressable>
+
+        {media && (
+          <Image
+            source={{ uri: media }}
+            style={{ width: "100%", height: 200, marginBottom: 20 }}
+          />
+        )}
+
+        <Pressable
+          onPress={handleSubmit}
+          disabled={!isFormValid}
+          style={[
+            styles.reportButton,
+            { alignSelf: "center" },
+            {
+              backgroundColor: isFormValid
+                ? colors.primary_AC_Green
+                : colors.Dark_Grey,
+            },
+          ]}
+        >
+          <Text
+            style={[typography.secondaryH4, { color: colors.primary_White }]}
+          >
+            Submit Report
+          </Text>
+        </Pressable>
+      </ScrollView>
+    </View>
   );
 }

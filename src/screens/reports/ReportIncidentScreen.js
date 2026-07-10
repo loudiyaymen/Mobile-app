@@ -16,7 +16,6 @@ import {
   CameraIcon,
 } from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
-import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { styles } from "../../themes/styles";
@@ -27,7 +26,6 @@ export default function ReportIncidentScreen() {
   const navigation = useNavigation();
 
   const [locationText, setLocationText] = useState("");
-
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
   const [details, setDetails] = useState("");
@@ -67,7 +65,6 @@ export default function ReportIncidentScreen() {
   };
 
   // VALIDATION + SUBMIT
-
   const handleSubmit = () => {
     if (!locationText || !date || !details) {
       Alert.alert("Missing Fields", "Please fill in required fields.");
