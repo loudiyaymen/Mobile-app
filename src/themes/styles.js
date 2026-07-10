@@ -518,7 +518,16 @@ const styles = StyleSheet.create({
   },
   inputsColumn: {
     flex: 1,
-    gap: 14,
+  },
+  amenityItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.primary_White,
+    gap: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    marginBottom: 8,
   },
 
   inputField: {
