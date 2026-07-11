@@ -17,14 +17,6 @@ export default function ReportAssaultScreen() {
     Linking.openURL("https://www.algonquincollege.com/projectlighthouse/");
   };
 
-  const policeNumber = () => {
-    Linking.openURL("tel:911"); // change to any number
-  };
-
-  const campusNumber = () => {
-    Linking.openURL("tel:6137274723"); // change to any number
-  };
-
   return (
     <View
       style={[styles.container, { paddingBlockEnd: 48, paddingHorizontal: 16 }]}
@@ -37,9 +29,7 @@ export default function ReportAssaultScreen() {
         </Text>
       </View>
       {/* Official report */}
-      <Text style={[typography.h3, styles.label]}>
-        Official Report Form
-      </Text>{" "}
+      <Text style={[typography.h3, styles.label]}>Official Report Form</Text>
       <Pressable style={styles.reportButton} onPress={openOfficialReport}>
         <Text style={[typography.secondaryH5, { color: colors.primary_White }]}>
           Algonquin College Sexual Violence Report

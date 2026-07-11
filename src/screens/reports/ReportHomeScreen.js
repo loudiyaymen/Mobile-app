@@ -5,7 +5,6 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { FileTextIcon, PlusCircleIcon } from "phosphor-react-native";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { typography } from "../../themes/typography";
 
 export default function ReportHomeScreen() {
@@ -67,7 +66,7 @@ export default function ReportHomeScreen() {
           style={styles.reportButton}
           onPress={() => navigation.navigate("Select Category")}
         >
-          <PlusCircleIcon name="add" size={32} color={colors.primary_White} />
+          <PlusCircleIcon name="add" size={24} color={colors.primary_White} />
           <Text style={styles.callSecurityButtonText}>Submit new report</Text>
         </Pressable>
       </View>
@@ -76,23 +75,15 @@ export default function ReportHomeScreen() {
   // LIST VIEW
   return (
     <View style={[styles.container, { padding: 16, alignItems: "center" }]}>
-      <Pressable
-        style={styles.reportButton}
-        onPress={() => navigation.navigate("Select Category")}
-      >
-        <Ionicons name="add" size={22} color={colors.primary_White} />
-        <Text style={styles.callSecurityButtonText}>Submit new report</Text>
-      </Pressable>
       <FlatList
-        style={styles.container}
         data={reports}
+        style={{ flexGrow: 0, width: "100%" }}
+        contentContainerStyle={{ paddingBottom: 20 }}
         keyExtractor={(item) => `${item.id}-${item.type}-${item.createdAt}`}
         renderItem={({ item }) => (
           <View style={styles.listItem}>
             <Text>{item.type}</Text>
-
             {item.location && <Text>{item.location}</Text>}
-
             <Text style={styles.itemReference}>
               {new Date(item.createdAt).toLocaleDateString()} •{" "}
               {new Date(item.createdAt).toLocaleTimeString([], {
@@ -100,11 +91,17 @@ export default function ReportHomeScreen() {
                 minute: "2-digit",
               })}
             </Text>
-
             <Text style={styles.itemReference}>Ref: {item.referenceCode}</Text>
           </View>
         )}
       />
+      <Pressable
+        style={styles.reportButton}
+        onPress={() => navigation.navigate("Select Category")}
+      >
+        <PlusCircleIcon name="add" size={24} color={colors.primary_White} />
+        <Text style={styles.callSecurityButtonText}>Submit new report</Text>
+      </Pressable>
     </View>
   );
 }

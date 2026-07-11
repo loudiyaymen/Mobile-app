@@ -591,7 +591,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: colors.Primary_Charcoal,
   },
   itemReference: {
