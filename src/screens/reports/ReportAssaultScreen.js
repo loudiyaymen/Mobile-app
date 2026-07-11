@@ -26,76 +26,46 @@ export default function ReportAssaultScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { paddingBlockEnd: 48, paddingHorizontal: 16 }]}
+    >
       <View style={styles.dangerBanner}>
-        <Text>
+        <Text style={[typography.secondaryBody, styles.label]}>
           We recognize it is difficult to disclose or report incidents of sexual
           violence and sexual assault. The choice to disclose or report is
           entirely yours.
         </Text>
       </View>
-
       {/* Official report */}
-      <Text style={styles.sectionTitle}>Official Report</Text>
+      <Text style={[typography.h3, styles.label]}>
+        Official Report Form
+      </Text>{" "}
       <Pressable style={styles.reportButton} onPress={openOfficialReport}>
-        <Text style={{ color: colors.primary_White }}>
+        <Text style={[typography.secondaryH5, { color: colors.primary_White }]}>
           Algonquin College Sexual Violence Report
         </Text>
       </Pressable>
-
       {/* Support */}
-      <Text style={[styles.sectionTitle, { marginTop: 30 }]}>
-        24/7 Support Services
+      <Text style={[typography.h3, styles.label]}>
+        Access the support you need
       </Text>
       <Pressable
         style={[
           styles.reportButton,
-          { backgroundColor: colors.Secondary_New_Growth_Green },
+          {
+            backgroundColor: colors.primary_White,
+            borderColor: colors.primary_AC_Green,
+            borderWidth: 1,
+          },
         ]}
         onPress={openSupportServices}
       >
-        <Text style={{ color: colors.Primary_Charcoal }}>
+        <Text
+          style={[typography.secondaryH4, { color: colors.primary_AC_Green }]}
+        >
           Project Lighthouse
         </Text>
       </Pressable>
-
-      {/* Emergency contacts */}
-      <View
-        style={[
-          styles.category,
-          { flexDirection: "column", alignItems: "flex-start", marginTop: 30 },
-        ]}
-      >
-        <Text style={styles.confirmCardTitle}>Emergency Contacts</Text>
-
-        <Pressable onPress={campusNumber} style={{ marginBottom: 10 }}>
-          <Text>
-            Campus Security:{" "}
-            <Text
-              style={{
-                color: colors.primary_AC_Green,
-                textDecorationLine: "underline",
-              }}
-            >
-              613-727-4723
-            </Text>
-          </Text>
-        </Pressable>
-
-        <Pressable onPress={policeNumber}>
-          <Text>
-            Emergency Services:{" "}
-            <Text
-              style={{
-                color: colors.primary_AC_Green,
-                textDecorationLine: "underline",
-              }}
-            >
-              9-1-1
-            </Text>
-          </Text>
-        </Pressable>
-      </View>
     </View>
   );
 }

@@ -480,7 +480,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 18,
     borderRadius: 12,
-    marginBottom: 50,
+    marginTop: 8,
+    marginBottom: 32,
   },
   inputRow: {
     flexDirection: "row",
@@ -577,10 +578,13 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   dangerBanner: {
-    backgroundColor: colors.Secondary_New_Growth_Green,
+    backgroundColor: `${colors.Warning_background}75`,
     padding: 16,
     borderRadius: 12,
     marginBottom: 20,
+
+    borderLeftWidth: 5,
+    borderLeftColor: colors.Warning_line,
   },
   listItem: {
     backgroundColor: colors.primary_White,

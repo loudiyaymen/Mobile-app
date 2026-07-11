@@ -61,7 +61,7 @@ export const typography = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     fontFamily: "Arial",
-    fontWeight: 500,
+    fontWeight: 400,
   },
   secondaryCaption: {
     fontSize: 12,
