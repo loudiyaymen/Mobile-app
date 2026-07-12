@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { View, Text, Pressable, FlatList, BackHandler } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { FileTextIcon, PlusCircleIcon } from "phosphor-react-native";
+import { FileTextIcon, PlusCircleIcon, PlusIcon } from "phosphor-react-native";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
@@ -75,6 +75,13 @@ export default function ReportHomeScreen() {
   // LIST VIEW
   return (
     <View style={[styles.container, { padding: 16, alignItems: "center" }]}>
+      <Pressable
+        style={styles.reportButton}
+        onPress={() => navigation.navigate("Select Category")}
+      >
+        <Ionicons name="add" size={22} color={colors.primary_White} />
+        <Text style={styles.callSecurityButtonText}>Submit new report</Text>
+      </Pressable>
       <FlatList
         data={reports}
         style={{ flexGrow: 0, width: "100%" }}
