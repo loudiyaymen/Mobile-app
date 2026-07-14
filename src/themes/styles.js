@@ -673,6 +673,64 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 4,
   },
+  //settings screen styles
+  settingsCard:{
+    backgroundColor: colors.Light_Grey
+  },
+  settingsGroupTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.Primary_Charcoal,
+    marginTop: 24,
+    marginBottom: 12,
+  },
+  groupBox: {
+    backgroundColor: colors.Light_Grey,
+    borderRadius: 12,
+    marginBottom: 24,
+    overflow: 'hidden',
+  },
+  row: {
+    flexDirection: "row",        
+    justifyContent: "space-between",
+    alignItems: "center",        
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: colors.Light_Grey,
+    borderRadius: 12,
+
+    marginBottom: 8,
+  },
+  rowLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    // justifyContent: "space-between",
+    gap: 10,
+    
+  },
+  rowText: {
+    fontSize: 16,
+    color: colors.Primary_Charcoal,
+    fontFamily: "Metropolis-Medium",
+
+  },
+  settingIcons:{
+    color: colors.Primary_Charcoal,
+    
+  },
+  container:        { flex: 1, backgroundColor: '#fff', paddingHorizontal: 16, paddingTop: 60 },
+backRow:          { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 24 },
+groupBox:         { backgroundColor: '#F2F2F7', borderRadius: 12, overflow: 'hidden', marginBottom: 24 },
+row:              { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 16 },
+rowText:          { fontSize: 16, color: '#000', fontWeight: '500' },
+subText:          { fontSize: 13, color: '#888', marginTop: 2 },
+sectionLabel:     { fontSize: 13, color: '#6B6B6B', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8, paddingLeft: 4 },
+previewText:      { textAlign: 'center', color: '#555', marginTop: 8, marginBottom: 4 },
+colorRow:         { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, backgroundColor: '#F2F2F7', borderRadius: 12, marginBottom: 10 },
+colorRowSelected: { borderWidth: 1.5, borderColor: colors.Primary_Green, backgroundColor: '#F0F7F0' },
+colorSwatch:      { width: 44, height: 44, borderRadius: 10, overflow: 'hidden', flexDirection: 'row' },
+emptyCircle:      { width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, borderColor: '#C7C7CC' },
+
 });
 
 export { styles };
