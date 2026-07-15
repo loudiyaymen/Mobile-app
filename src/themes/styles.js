@@ -162,6 +162,31 @@ const styles = StyleSheet.create({
   fabPaper: {
     backgroundColor: colors.SOS_Red,
   },
+  sosFabOverlayWrapper: {
+    position: "absolute",
+    bottom: 105,
+    right: 20,
+    zIndex: 999,
+    alignItems: "center",
+  },
+  sosFabInner: {
+    width: 80,
+    height: 80,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  sosFabHoldHint: {
+    marginBottom: 6,
+    fontSize: 12,
+    textAlign: "center",
+    maxWidth: 140,
+    color: colors.Dark_Grey,
+    fontWeight: "500",
+  },
+  sosFabHoldHintActive: {
+    color: colors.Primary_Charcoal,
+    fontWeight: "600",
+  },
 
   // Confirm screen styles
   confirmScreenBackground: {

@@ -1,71 +1,54 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { View, Pressable, Text, Animated, Easing } from "react-native";
+import { View, Pressable, Text, Animated, Linking, Alert } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { navigate, navigationRef } from "../navigation/navigationRef";
 import { styles } from "../themes/styles";
 
-const HIDDEN_SCREENS = ["EmergencyConfirm", "EmergencyHelp"];
+const HIDDEN_SCREENS = ["EmergencyConnected", "EmergencyHelp"];
 const HOLD_TIME = 3000;
+const SECURITY_PHONE = "613-727-4723";
 
 export default function SOSButton() {
   const [currentRoute, setCurrentRoute] = useState(null);
-  
+  const [isPressing, setIsPressing] = useState(false);
   const timerRef = useRef(null);
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
 
-  // --- Animation Helpers ---
-
-  const animateIn = () => {
-    // Shrink down
+  const resetAnimations = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.85,
-      friction: 7,
-      tension: 40,
+      toValue: 1,
       useNativeDriver: true,
     }).start();
-
-    // Progress bar fills up
     progressAnim.setValue(0);
-    Animated.timing(progressAnim, {
-      toValue: 1,
-      duration: HOLD_TIME,
-      easing: Easing.out(Easing.quad),
-      useNativeDriver: false,
-    }).start();
   };
 
-  const animateOut = (isInstant = false) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
+  const triggerCallAndNavigate = async () => {
+    const url = `tel:${SECURITY_PHONE}`;
+    try {
+      await Linking.openURL(url);
+    } catch (err) {
+      console.warn("Could not open dialer:", err);
+      Alert.alert(
+        "Open dialer failed",
+        `Please try again ${SECURITY_PHONE}.`,
+        [{ text: "OK" }],
+      );
     }
-
-    if (isInstant) {
-      scaleAnim.setValue(1);
-      progressAnim.setValue(0);
-    } else {
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        friction: 4,
-        tension: 100,
-        useNativeDriver: true,
-      }).start();
-
-      Animated.timing(progressAnim, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false,
-      }).start();
-    }
+    navigate("Emergency", { screen: "EmergencyConnected" });
   };
-
-  // --- Lifecycle Hooks ---
 
   useFocusEffect(
     useCallback(() => {
-      return () => animateOut(true);
-    }, [])
+      return () => {
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+          timerRef.current = null;
+        }
+        scaleAnim.setValue(1);
+        progressAnim.setValue(0);
+      };
+    }, [scaleAnim, progressAnim]),
   );
 
   useEffect(() => {
@@ -79,42 +62,83 @@ export default function SOSButton() {
     };
   }, []);
 
-  // --- Handlers ---
-
   const handlePressIn = () => {
-    animateIn();
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    setIsPressing(true);
+
+    Animated.spring(scaleAnim, {
+      toValue: 0.9,
+      useNativeDriver: true,
+    }).start();
+
+    progressAnim.setValue(0);
+    Animated.timing(progressAnim, {
+      toValue: 1,
+      duration: HOLD_TIME,
+      useNativeDriver: false,
+    }).start();
 
     timerRef.current = setTimeout(() => {
-      animateOut(true);
-      navigate("Emergency", { screen: "EmergencyConfirm" });
+      timerRef.current = null;
+      setIsPressing(false);
+      resetAnimations();
+      triggerCallAndNavigate();
     }, HOLD_TIME);
   };
 
   const handlePressOut = () => {
-    animateOut(false);
+    setIsPressing(false);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    resetAnimations();
   };
 
   if (HIDDEN_SCREENS.includes(currentRoute)) return null;
 
+  const rotateInterpolation = progressAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
+
+  const progressCircleAnimatedStyle = {
+    transform: [{ rotate: rotateInterpolation }],
+  };
+
+  const fabAnimatedStyle = {
+    transform: [{ scale: scaleAnim }],
+  };
+
   return (
-    <View style={{ position: "absolute", bottom: 105, right: 20, zIndex: 999 }}>
-      <Animated.View 
-        style={{ 
-          transform: [{ scale: scaleAnim }],
-          elevation: scaleAnim.interpolate({
-            inputRange: [0.85, 1],
-            outputRange: [2, 8]
-          })
-        }}
+    <View style={styles.sosFabOverlayWrapper}>
+      <Text
+        style={[
+          styles.sosFabHoldHint,
+          isPressing && styles.sosFabHoldHintActive,
+        ]}
       >
-        <Pressable
-          style={styles.fab}
-          onPressIn={handlePressIn}
-          onPressOut={handlePressOut}
-        >
-          <Text style={styles.fabIcon}>SOS</Text>
+        {isPressing ? "Keep holding…" : "Hold for 3 seconds"}
+      </Text>
+      <View style={styles.sosFabInner}>
+        {isPressing && (
+          <Animated.View style={styles.progressCircleContainer}>
+            <Animated.View style={styles.progressCircleBase}>
+              <Animated.View
+                style={[styles.progressCircleFill, progressCircleAnimatedStyle]}
+              />
+            </Animated.View>
+          </Animated.View>
+        )}
+        <Pressable onPressIn={handlePressIn} onPressOut={handlePressOut}>
+          <Animated.View style={[styles.fab, fabAnimatedStyle]}>
+            <Text style={styles.fabIcon}>SOS</Text>
+          </Animated.View>
         </Pressable>
-      </Animated.View>
+      </View>
     </View>
   );
 }

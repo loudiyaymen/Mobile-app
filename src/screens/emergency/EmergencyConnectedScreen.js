@@ -120,7 +120,7 @@ export default function EmergencyConnectedScreen() {
               fontWeight: "600",
             }}
           >
-            Return to Map
+            Return to Home
           </Text>
         </Pressable>
       </View>
