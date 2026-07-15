@@ -8,6 +8,7 @@ import RootNavigator from "./src/navigation/RootNavigator";
 import { navigationRef } from "./src/navigation/navigationRef";
 import SOSButton from "./src/components/SOSButton";
 import { useFonts } from "expo-font";
+import { ThemeProvider } from "./src/context/ThemeContext";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -21,14 +22,16 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <NotificationProvider>
-        <PaperProvider>
-          <NavigationContainer ref={navigationRef}>
-            <RootNavigator />
-            <SOSButton />
-          </NavigationContainer>
-        </PaperProvider>
-      </NotificationProvider>
+      <ThemeProvider>
+        <NotificationProvider>
+          <PaperProvider>
+            <NavigationContainer ref={navigationRef}>
+              <RootNavigator />
+              <SOSButton />
+            </NavigationContainer>
+          </PaperProvider>
+        </NotificationProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

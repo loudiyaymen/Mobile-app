@@ -12,16 +12,18 @@ import SettingsPushPreferencesScreen from "../screens/settings/SettingsPushPrefe
 import SettingsPermissionsScreen from "../screens/settings/SettingsPermissionsScreen.js";
 import SettingsLegalScreen from "../screens/settings/SettingsLegalScreen.js";
 import { headerOptions, headerStyle } from "../themes/header.styles";
+import { useTheme } from '../context/ThemeContext';
 
 const Stack = createNativeStackNavigator();
 
 export default function SettingsStack() {
+  const { theme } = useTheme();
   return (
     <Stack.Navigator
       initialRouteName="Settings"
       screenOptions={{
         ...headerOptions,
-        headerStyle,
+        headerStyle: { backgroundColor: theme.colors.background },
         headerShadowVisible: false,
       }}
     >
@@ -30,11 +32,11 @@ export default function SettingsStack() {
         component={SettingsScreen}
         options={{
           headerTitle: () => (
-            <View style={{ flexDirection: "column", alignItems: "flex-start", width: "100%" }}>
-              <Text style={[typography.h2, { fontWeight: "bold", color: colors.Primary_Charcoal }]}>
+            <View style={{ flexDirection: "column", alignItems: "flex-start", width: "100%" , }}>
+              <Text style={[typography.h2, { fontWeight: "bold", color: theme.colors.text }]}>
                 Settings
               </Text>
-              <Text style={[typography.body, { color: colors.Dark_Grey }]}>
+              <Text style={[typography.body, { color: theme.colors.subtext }]}>
                 Manage your preferences
               </Text>
             </View>

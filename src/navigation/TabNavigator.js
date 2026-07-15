@@ -13,25 +13,11 @@ import {
 } from "phosphor-react-native";
 import { colors } from "../themes/color";
 import { View } from "react-native";
+import { useTheme } from '../context/ThemeContext';
+
 
 const Tab = createBottomTabNavigator();
-const sharedTabBarStyle = {
-  position: "absolute",
-  backgroundColor: colors.primary_White,
-  borderTopStartRadius: 40,
-  borderTopEndRadius: 40,
-  overflow: "hidden",
-};
 
-const sharedTabBarBackgroundStyle = {
-  flex: 1,
-  backgroundColor: colors.primary_White,
-  borderWidth: 1,
-  borderColor: colors.Cloud_Grey,
-  borderBottomWidth: 0,
-  borderTopLeftRadius: 40,
-  borderTopRightRadius: 40,
-};
 
 const navHideOnScreens = [
   "Navigate",
@@ -56,6 +42,26 @@ function shouldHideTabBar(route, hideOnScreens) {
 }
 
 export default function TabNavigator() {
+  const {theme} = useTheme();
+
+  const sharedTabBarStyle = {
+    position: "absolute",
+    backgroundColor: theme.colors.background,
+    borderTopStartRadius: 40,
+    borderTopEndRadius: 40,
+    overflow: "hidden",
+  };
+  
+  const sharedTabBarBackgroundStyle = {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderBottomWidth: 0,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+  };
+
   return (
     <Tab.Navigator
       initialRouteName="WayFinder"
@@ -64,7 +70,7 @@ export default function TabNavigator() {
         ...headerOptions,
         headerStyle,
         tabBarActiveTintColor: colors.primary_AC_Green,
-        tabBarInactiveTintColor: colors.Primary_Charcoal,
+        tabBarInactiveTintColor: theme.colors.text,
         tabBarStyle: sharedTabBarStyle,
         tabBarBackground: () => <View style={sharedTabBarBackgroundStyle} />,
       }}

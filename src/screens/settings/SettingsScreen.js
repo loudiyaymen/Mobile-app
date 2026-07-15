@@ -1,19 +1,15 @@
 import { ScrollView, View, Text,TouchableOpacity } from "react-native";
 import { styles } from "../../themes/styles";
-import { useState } from "react";
-import { DarkModeToggle } from "../../components/Toggle";
-import { typography } from "../../themes/typography";
-import { lightTheme, darkTheme } from "../../themes/color";
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
-import { colors } from "../../themes/color";
-import SettingsCampusScreen from "./SettingsCampusScreen";
+import { useTheme } from '../../context/ThemeContext';
+import { useScaledTypography} from "../../themes/ScaledTypo";
 
 export default function SettingsScreen() {
-  const [isDark, setIsDark] = useState(false);
   const navigation = useNavigation();
+  const { theme } = useTheme();
+  const typography = useScaledTypography();
 
-  const theme = isDark ? darkTheme : lightTheme;
 
   return (
     <ScrollView style={[styles.bodyContainer, { backgroundColor: theme.colors.background }]}>
@@ -24,7 +20,8 @@ export default function SettingsScreen() {
           <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('SettingsCampusScreen')}>
             <View style={styles.rowLeft}>
           <Ionicons name="map-outline" size={20} color={theme.colors.icon} />
-          <Text style={[styles.rowText, { color: theme.colors.text }]}>Campus</Text>
+          <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+            Campus</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={theme.colors.icon} />
           </TouchableOpacity>
@@ -32,7 +29,8 @@ export default function SettingsScreen() {
           <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('SettingsAppearanceScreen')}>
             <View style={styles.rowLeft}>
           <Ionicons name="moon-outline" size={20} color={theme.colors.icon} />
-          <Text style={[styles.rowText, { color: theme.colors.text }]}>Appearance</Text>
+          <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+            Appearance</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={theme.colors.icon} />
           </TouchableOpacity>
@@ -40,7 +38,8 @@ export default function SettingsScreen() {
           <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('SettingsAccessibilityScreen')}>
             <View style={styles.rowLeft}>
           <Ionicons name="accessibility-outline" size={20} color={theme.colors.icon} />
-          <Text style={[styles.rowText, { color: theme.colors.text }]}>Accessibility</Text>
+          <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+            Accessibility</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={theme.colors.icon} />
           </TouchableOpacity>
@@ -48,12 +47,14 @@ export default function SettingsScreen() {
 
 
         {/* Safety & Emergency group */}
-      <Text style={[typography.body, { color: theme.colors.text }]}>Safety & Emergency</Text>
+        <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+        Safety & Emergency</Text>
       <View style={styles.groupBox}>
         <TouchableOpacity style={styles.row} onPress={() => {}}>
           <View style={styles.rowLeft}>
             <Ionicons name="person-outline" size={20} color={theme.colors.icon} />
-            <Text style={[styles.rowText, { color: theme.colors.text }]}>Emergerncy Contacts</Text>
+            <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+            Emergerncy Contacts</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={theme.colors.icon} />
         </TouchableOpacity>
@@ -62,12 +63,14 @@ export default function SettingsScreen() {
 
 
       {/* Notifications group */}      
-      <Text style={[typography.body, { color: theme.colors.text }]}>Notifications</Text>
+      <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+      Notifications</Text>
       <View style={styles.groupBox}>
         <TouchableOpacity style={styles.row} onPress={() => {}}>
           <View style={styles.rowLeft}>
             <Ionicons name="megaphone-outline" size={20} color={theme.colors.icon} />
-            <Text style={[styles.rowText, { color: theme.colors.text }]}>Alert Types</Text>
+            <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+            Alert Types</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={theme.colors.icon} />
         </TouchableOpacity>
@@ -76,7 +79,8 @@ export default function SettingsScreen() {
           <View style={styles.rowLeft}>
             <Ionicons name="notifications-outline" size={20} color={theme.colors.icon} />
             
-            <Text style={[styles.rowText, { color: theme.colors.text }]}>Push Preferences</Text>
+            <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+            Push Preferences</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={theme.colors.icon} />
         </TouchableOpacity>
@@ -84,12 +88,14 @@ export default function SettingsScreen() {
 
 
         {/* Privacy & Legal group */}
-    <Text style={[typography.body, { color: theme.colors.text }]}>Privacy & Legal</Text>
+        <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+        Privacy & Legal</Text>
       <View style={styles.groupBox}>
         <TouchableOpacity style={styles.row} onPress={() => {}}>
           <View style={styles.rowLeft}>
             <Ionicons name="shield-outline" size={20} color={theme.colors.icon} />
-            <Text style={[styles.rowText, { color: theme.colors.text }]}>Permissions</Text>
+            <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+            Permissions</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={theme.colors.icon} />
         </TouchableOpacity>
@@ -97,7 +103,8 @@ export default function SettingsScreen() {
         <TouchableOpacity style={styles.row} onPress={() => {}}>
           <View style={styles.rowLeft}>
             <Ionicons name="document-text-outline" size={20} color={theme.colors.icon} />
-            <Text style={[styles.rowText, { color: theme.colors.text }]}>Appearance</Text>
+            <Text style={[styles.rowText, { color: theme.colors.text, fontSize: typography.body.fontSize }]}>
+            Appearance</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={theme.colors.icon} />
         </TouchableOpacity>

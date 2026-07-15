@@ -29,6 +29,7 @@ export const lightTheme = StyleSheet.create({
     accent: colors.Secondary_New_Growth_Green,
     border: colors.Cloud_Grey,
     error: colors.SOS_Red,
+    icon: colors.Primary_Charcoal,
   },
 });
 
@@ -42,5 +43,58 @@ export const darkTheme = StyleSheet.create({
     accent: "#52D036",
     border: "#333333",
     error: "#CF6679",
+    icon: "#F6F6F6",
   },
 });
+
+export const accessibleTheme = StyleSheet.create({
+  colors: {
+    background: "#FFFFFF",
+    surface: "#F0F0F0",
+    text: "#000000",  
+    subtext: "#333333",
+    primary: "#006341",
+    accent: "#43B02A",
+    border: "#999999",
+    error: "#B21A1D",
+  },
+});
+
+export const protanopiaTheme = {
+  colors: {
+    background: "#FFFFFF",
+    surface:    "#F6F6F6",
+    text:       "#212721",
+    subtext:    "#5E5E5E",
+    primary:    "#0072B2",  
+    accent:     "#56B4E9",
+    border:     "#DEE4E7",
+    error:      "#E69F00", 
+  },
+};
+
+export const deuteranopiaTheme = {
+  colors: {
+    background: "#FFFFFF",
+    surface:    "#F6F6F6",
+    text:       "#212721",
+    subtext:    "#5E5E5E",
+    primary:    "#0072B2", 
+    accent:     "#56B4E9",
+    border:     "#DEE4E7",
+    error:      "#E69F00",
+  },
+};
+
+export const tritanopiaTheme = {
+  colors: {
+    background: "#FFFFFF",
+    surface:    "#F6F6F6",
+    text:       "#212721",
+    subtext:    "#5E5E5E",
+    primary:    "#CC79A7",  
+    accent:     "#D55E00",
+    border:     "#DEE4E7",
+    error:      "#D55E00",
+  },
+};
