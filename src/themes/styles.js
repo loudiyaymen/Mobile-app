@@ -668,6 +668,158 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
 
+  reportStackHeaderTitleWrapper: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width: "100%",
+  },
+  reportStackHeaderTitleText: {
+    color: colors.Primary_Charcoal,
+  },
+  reportStackHeaderSubtitle: {
+    color: colors.Dark_Grey,
+  },
+  reportSubmittedScreenContent: {
+    backgroundColor: "transparent",
+  },
+
+  reportHomeEmptyContainer: {
+    padding: 16,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  reportHomeEmptyIcon: {
+    marginBottom: 12,
+  },
+  reportHomeListWrapper: {
+    paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  reportHomeFlatList: {
+    flex: 1,
+    width: "100%",
+  },
+  reportHomeListContent: {
+    paddingBottom: 120,
+  },
+  reportRow: {
+    paddingVertical: 18,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.Cloud_Grey,
+  },
+  reportRowTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 6,
+  },
+  reportRowTypeTitle: {
+    ...typography.h4,
+    color: colors.Primary_Charcoal,
+    flex: 1,
+    paddingRight: 12,
+  },
+  reportRowDateText: {
+    ...typography.caption,
+    color: colors.Grey,
+  },
+  reportRowDescription: {
+    ...typography.body,
+    color: colors.Dark_Grey,
+    marginBottom: 10,
+  },
+  reportRowBottomRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  reportRowRefText: {
+    ...typography.body,
+    color: colors.Dark_Grey,
+    flex: 1,
+    paddingRight: 12,
+  },
+  reportRowStatusPill: {
+    borderRadius: 100,
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    alignSelf: "flex-end",
+  },
+  reportRowStatusPillText: {
+    fontSize: 12,
+    fontFamily: "Arial",
+    fontWeight: "700",
+    color: colors.primary_White,
+  },
+
+  reportSubmittedRoot: {
+    flex: 1,
+    backgroundColor: "transparent",
+    justifyContent: "flex-end",
+  },
+  reportSubmittedBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: colors.Report_Modal_Backdrop,
+  },
+  reportSubmittedSheet: {
+    width: "100%",
+    backgroundColor: colors.Report_Sheet_Background,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 24,
+    paddingTop: 28,
+    alignItems: "center",
+  },
+  reportSubmittedIconCircle: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: colors.primary_AC_Green,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  reportSubmittedTitle: {
+    ...typography.secondaryH3,
+    color: colors.primary_AC_Green,
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  reportSubmittedSubtitle: {
+    ...typography.secondaryBody,
+    color: colors.Dark_Grey,
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  reportSubmittedRefBox: {
+    alignSelf: "stretch",
+    backgroundColor: colors.primary_White,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+  },
+  reportSubmittedRefLabel: {
+    ...typography.secondaryCaption,
+    color: colors.Grey,
+    marginBottom: 4,
+  },
+  reportSubmittedRefValue: {
+    ...typography.secondaryH5,
+    color: colors.Primary_Charcoal,
+  },
+  reportSubmittedPrimaryButton: {
+    alignSelf: "stretch",
+    backgroundColor: colors.primary_AC_Green,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  reportSubmittedPrimaryButtonText: {
+    ...typography.secondaryH4,
+    color: colors.primary_White,
+  },
+
   // Report Incident screen styles
   label: {
     marginTop: 12,
@@ -676,3 +828,5 @@ const styles = StyleSheet.create({
 });
 
 export { styles };
+
+export const reportHomeTabBarInset = 88;

@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text } from "react-native";
 import { typography } from "../themes/typography";
 import { colors } from "../themes/color";
+import { styles } from "../themes/styles";
 import ReportHomeScreen from "../screens/reports/ReportHomeScreen";
 import ReportCategoryScreen from "../screens/reports/ReportCategoryScreen";
 import ReportIncidentScreen from "../screens/reports/ReportIncidentScreen";
@@ -28,25 +29,11 @@ export default function ReportStack() {
         component={ReportHomeScreen}
         options={{
           headerTitle: () => (
-            <View
-              style={{
-                flexDirection: "column",
-                alignItems: "flex-start",
-                width: "100%",
-                headerBackTitle: "",
-              }}
-            >
-              <Text
-                style={[
-                  typography.h2,
-                  {
-                    color: colors.Primary_Charcoal,
-                  },
-                ]}
-              >
+            <View style={styles.reportStackHeaderTitleWrapper}>
+              <Text style={[typography.h2, styles.reportStackHeaderTitleText]}>
                 My Reports
               </Text>
-              <Text style={[typography.body, { color: colors.Dark_Grey }]}>
+              <Text style={[typography.body, styles.reportStackHeaderSubtitle]}>
                 View and track your incident reports
               </Text>
             </View>
@@ -60,7 +47,16 @@ export default function ReportStack() {
         component={ReportAssaultScreen}
       />
       <Stack.Screen name="Submit Report" component={ReportLostItemScreen} />
-      <Stack.Screen name="Report Submitted" component={ReportSubmittedScreen} />
+      <Stack.Screen
+        name="Report Submitted"
+        component={ReportSubmittedScreen}
+        options={{
+          presentation: "transparentModal",
+          headerShown: false,
+          animation: "fade",
+          contentStyle: styles.reportSubmittedScreenContent,
+        }}
+      />
     </Stack.Navigator>
   );
 }

@@ -17,7 +17,17 @@ export const colors = StyleSheet.create({
 
   Warning_line: "#DBA837",
   Warning_background: "#EDC65F",
+
+  Report_Sheet_Background: "#F1F5F2",
+  Report_Modal_Backdrop: "rgba(0, 0, 0, 0.45)",
 });
+
+export const reportStatusBackground = {
+  Opened: "#007AFF",
+  "In review": "#FF9500",
+  Resolved: "#34C759",
+  Closed: "#8E8E93",
+};
 
 export const lightTheme = StyleSheet.create({
   colors: {
