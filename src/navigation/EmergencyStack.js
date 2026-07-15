@@ -7,7 +7,10 @@ const Stack = createNativeStackNavigator();
 
 export default function EmergencyStack() {
   return (
-    <Stack.Navigator initialRouteName="EmergencyConnected">
+    <Stack.Navigator
+      initialRouteName="EmergencyConnected"
+      screenOptions={{ headerShadowVisible: false }}
+    >
       <Stack.Screen
         name="EmergencyConnected"
         component={EmergencyConnectedScreen}
