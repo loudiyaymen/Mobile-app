@@ -198,19 +198,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  confirmCardTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: colors.Primary_Charcoal,
-    marginBottom: 12,
-    textAlign: "center",
-  },
-  confirmCardSubtitle: {
-    fontSize: 16,
-    color: colors.Primary_Charcoal,
-    textAlign: "center",
-    marginBottom: 30,
-  },
   countdownCircleContainer: {
     marginBottom: 40,
   },
@@ -549,6 +536,106 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     backgroundColor: colors.primary_White,
   },
+  searchDropdown: {
+    marginTop: 6,
+    borderRadius: 12,
+    backgroundColor: colors.primary_White,
+    borderWidth: 1,
+    borderColor: "#DDE3DD",
+    overflow: "hidden",
+    shadowColor: colors.Primary_Charcoal,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  searchDropdownItem: {
+    minHeight: 44,
+    paddingHorizontal: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEF2EE",
+    backgroundColor: colors.primary_White,
+  },
+  searchDropdownText: {
+    flex: 1,
+    color: colors.Primary_Charcoal,
+  },
+  routeDistanceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  routeDistanceText: {
+    color: colors.Primary_Charcoal,
+  },
+  routeActionText: {
+    color: colors.Primary_Charcoal,
+    marginTop: -8,
+  },
+  routeProgressTrack: {
+    width: "100%",
+    height: 4,
+    borderRadius: 999,
+    backgroundColor: colors.Light_Grey,
+    overflow: "hidden",
+  },
+  routeProgressFill: {
+    height: "100%",
+    borderRadius: 999,
+    backgroundColor: colors.primary_AC_Green,
+  },
+  routeButtonPrimary: {
+    backgroundColor: colors.primary_AC_Green,
+    justifyContent: "center",
+    borderColor: colors.primary_AC_Green,
+  },
+  routeButtonSecondary: {
+    backgroundColor: colors.primary_White,
+    justifyContent: "center",
+    borderColor: colors.Secondary_New_Growth_Green,
+    paddingVertical: 8,
+  },
+  routeButtonEnd: {
+    backgroundColor: colors.primary_White,
+    justifyContent: "center",
+    borderColor: colors.SOS_Red,
+    paddingVertical: 8,
+  },
+  arrivalModalBackdrop: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+  },
+  arrivalModalScrim: {
+    flex: 1,
+  },
+  arrivalModalCard: {
+    backgroundColor: "#EFF4EC",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 24,
+    paddingTop: 28,
+    paddingBottom: 32,
+    alignItems: "center",
+    gap: 28,
+  },
+  arrivalModalIconCircle: {
+    width: 136,
+    height: 136,
+    borderRadius: 68,
+    backgroundColor: colors.primary_AC_Green,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  arrivalModalButton: {
+    backgroundColor: colors.primary_AC_Green,
+    borderColor: colors.primary_AC_Green,
+    justifyContent: "center",
+    minHeight: 64,
+  },
   mediaBox: {
     height: 200,
     borderWidth: 1,
@@ -624,6 +711,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 2,
   },
+  categoryButtonText: {
+    color: colors.primary_White,
+    ...typography.body,
+  },
+  categoryButtonDescription: {
+    color: colors.primary_White,
+    ...typography.secondaryBody,
+    marginTop: 4,
+  },
   lostFound: {
     flex: 1,
     padding: 12,
@@ -632,15 +728,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary_White,
     alignItems: "center",
   },
-  categoryButtonText: {
-    color: colors.primary_White,
-    fontWeight: "bold",
-  },
-  categoryButtonDescription: {
-    color: colors.primary_White,
-    paddingTop: 16,
-  },
-
   //section styles
   sectionTitle: {
     fontSize: 20,
