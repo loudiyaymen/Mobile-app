@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
   sosFabHoldHint: {
     marginBottom: 6,
-    fontSize: 12,
+    fontSize: 14,
     textAlign: "center",
     maxWidth: 140,
     color: colors.Dark_Grey,

@@ -1,11 +1,12 @@
 // Thank-you screen after user has contacted security
-
 import { useRef, useEffect } from "react";
 import { Text, View, Pressable, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { PhoneIcon } from "phosphor-react-native";
 import { styles } from "../../themes/styles";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../themes/color";
+import { typography } from "../../themes/typography";
 
 export default function EmergencyConnectedScreen() {
   const navigation = useNavigation();
@@ -32,29 +33,33 @@ export default function EmergencyConnectedScreen() {
       style={[styles.container, styles.callingContainer, fadeInAnimatedStyle]}
     >
       <View style={styles.callingContent}>
-        {/* Green phone icon */}
+        {/* Red phone icon */}
         <View style={styles.callingIconContainer}>
           <View
             style={[
               styles.callingIconCircle,
-              { backgroundColor: colors.primary_AC_Green },
+              { backgroundColor: colors.SOS_Red },
             ]}
           >
-            <Ionicons name="call" size={50} color={colors.primary_White} />
+            <PhoneIcon
+              name="call"
+              size={56}
+              color={colors.primary_White}
+              weight="fill"
+            />
           </View>
         </View>
-
-        <Text style={styles.callingTitle}>Thank you for contacting</Text>
         <Text
-          style={{
-            fontSize: 18,
-            color: colors.Primary_Charcoal,
-            fontWeight: "700",
-            marginBottom: 24,
-            textAlign: "center",
-          }}
+          style={[
+            typography.secondaryH5,
+            {
+              color: colors.Primary_Charcoal,
+              marginBottom: 24,
+              textAlign: "center",
+            },
+          ]}
         >
-          Algonquin College Security
+          Thank you for using Algonquin College Security
         </Text>
 
         <View
@@ -71,9 +76,9 @@ export default function EmergencyConnectedScreen() {
               marginBottom: 12,
             }}
           >
-            EMERGENCY TELEPHONES are located at most building stairwells and
-            entrances as well as in the parking lots. They are red or yellow
-            with a button to call for assistance.
+            Emergency Phones (red/yellow) are located in stairwells, entrances,
+            and parking lots. You can also report incidents via the app home
+            screen.
           </Text>
           <Text
             style={{
@@ -87,23 +92,11 @@ export default function EmergencyConnectedScreen() {
           >
             DIAL Ext. 5000 from any College phone.
           </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: colors.Primary_Charcoal,
-              lineHeight: 22,
-              textAlign: "center",
-            }}
-          >
-            You can also report any incident using the{" "}
-            <Text style={{ fontWeight: "600" }}>Report an Incident</Text>{" "}
-            feature on the app home screen.
-          </Text>
         </View>
 
         <Pressable
           style={{
-            backgroundColor: colors.Primary_Charcoal,
+            backgroundColor: colors.primary_AC_Green,
             borderRadius: 12,
             paddingVertical: 16,
             paddingHorizontal: 32,
@@ -114,11 +107,12 @@ export default function EmergencyConnectedScreen() {
           onPress={goBack}
         >
           <Text
-            style={{
-              color: colors.primary_White,
-              fontSize: 16,
-              fontWeight: "600",
-            }}
+            style={[
+              typography.secondaryH4,
+              {
+                color: colors.primary_White,
+              },
+            ]}
           >
             Return to Home
           </Text>
