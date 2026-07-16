@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 3,
-    borderColor: colors.SOS_Red,
+    borderColor: colors.primary_AC_Green,
     borderTopColor: "transparent",
     borderRightColor: "transparent",
   },
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     bottom: 105,
     right: 20,
     zIndex: 999,
-    alignItems: "center",
+    alignItems: "flex-end",
   },
   sosFabInner: {
     width: 80,
@@ -176,16 +176,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   sosFabHoldHint: {
-    marginBottom: 6,
-    fontSize: 14,
-    textAlign: "center",
-    maxWidth: 140,
+    position: "absolute",
+    top: -16,
+    left: -88,
+    width: 130,
+    fontSize: 12,
+    textAlign: "left",
     color: colors.Dark_Grey,
     fontWeight: "500",
   },
   sosFabHoldHintActive: {
     color: colors.Primary_Charcoal,
     fontWeight: "600",
+  },
+  sosFabHoldHintIdle: {
+    left: -25,
+    width: 130,
+    textAlign: "center",
   },
 
   // Confirm screen styles
