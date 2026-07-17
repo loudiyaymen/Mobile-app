@@ -33,9 +33,7 @@ const sharedTabBarBackgroundStyle = {
   borderTopRightRadius: 40,
 };
 
-const navHideOnScreens = [
-  "Navigate",
-];
+const navHideOnScreens = ["Navigate"];
 
 const reportHideOnScreens = [
   "Select Category",
@@ -45,10 +43,7 @@ const reportHideOnScreens = [
   "Report Submitted",
 ];
 
-const eventHideOnScreens = [
-  "Event Details",
-  "Event Register",
-];
+const eventHideOnScreens = ["Event Details", "Event Register"];
 
 function shouldHideTabBar(route, hideOnScreens) {
   const routeName = getFocusedRouteNameFromRoute(route);

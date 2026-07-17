@@ -1,9 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import MapScreen from "../screens/map/MapScreen";
 import { colors } from "../themes/color";
 import { typography } from "../themes/typography";
 import { headerStyle, headerOptions } from "../themes/header.styles";
+import { BellIcon } from "phosphor-react-native";
+import NotificationScreen from "../screens/emergency/NotificationScreen";
 import NavigateScreen from "../screens/map/NavigateScreen";
 
 const Stack = createNativeStackNavigator();
@@ -21,7 +23,7 @@ export default function MapStack() {
       <Stack.Screen
         name="Wayfinder"
         component={MapScreen}
-        options={{
+        options={({ navigation }) => ({
           headerTitle: () => (
             <View
               style={{
@@ -45,7 +47,12 @@ export default function MapStack() {
               </Text>
             </View>
           ),
-        }}
+          headerRight: () => (
+            <Pressable onPress={() => navigation.navigate("Notifications")}>
+              <BellIcon size={24} color={colors.primary_AC_Green} />
+            </Pressable>
+          ),
+        })}
       />
       <Stack.Screen
         name="Navigate"
@@ -75,6 +82,7 @@ export default function MapStack() {
           ),
         }}
       />
+      <Stack.Screen name="Notifications" component={NotificationScreen} />
     </Stack.Navigator>
   );
 }

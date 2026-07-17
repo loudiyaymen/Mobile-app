@@ -1,5 +1,6 @@
 // meant for handling fetch requests to the backend for events
 
+// For demo purposes
 export const fetchEventsByTab = async () => {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts"); // placeholder API for demo purposes
@@ -20,5 +21,23 @@ export const fetchEventsByTab = async () => {
   } catch (error) {
     console.error("Fetch error:", error);
     return { official: [], student: [] };
+  }
+};
+
+import * as Notifications from "expo-notifications";
+
+export const scheduleEventReminder = async (event) => {
+  const eventTime = new Date(event.startTime);
+  const triggerTime = new Date(eventTime.getTime() - 60 * 60 * 1000); // 1 hour before
+
+  if (triggerTime > new Date()) {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Upcoming Event! 🗓️",
+        body: `${event.title} starts in 1 hour.`,
+        data: { type: "EVENT_REMINDER", eventId: event.id },
+      },
+      trigger: triggerTime,
+    });
   }
 };

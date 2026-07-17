@@ -1,8 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { typography } from "../themes/typography";
 import { colors } from "../themes/color";
 import { styles } from "../themes/styles";
+import { BellIcon } from "phosphor-react-native";
+import NotificationScreen from "../screens/emergency/NotificationScreen";
 import ReportHomeScreen from "../screens/reports/ReportHomeScreen";
 import ReportCategoryScreen from "../screens/reports/ReportCategoryScreen";
 import ReportIncidentScreen from "../screens/reports/ReportIncidentScreen";
@@ -27,7 +29,7 @@ export default function ReportStack() {
       <Stack.Screen
         name="My Reports"
         component={ReportHomeScreen}
-        options={{
+        options={({ navigation }) => ({
           headerTitle: () => (
             <View style={styles.reportStackHeaderTitleWrapper}>
               <Text style={[typography.h2, styles.reportStackHeaderTitleText]}>
@@ -38,8 +40,14 @@ export default function ReportStack() {
               </Text>
             </View>
           ),
-        }}
+          headerRight: () => (
+            <Pressable onPress={() => navigation.navigate("Notifications")}>
+              <BellIcon size={24} color={colors.primary_AC_Green} />
+            </Pressable>
+          ),
+        })}
       />
+      <Stack.Screen name="Notifications" component={NotificationScreen} />
       <Stack.Screen name="Select Category" component={ReportCategoryScreen} />
       <Stack.Screen name="Incident Report" component={ReportIncidentScreen} />
       <Stack.Screen

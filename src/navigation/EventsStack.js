@@ -1,9 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import EventsScreen from "../screens/events/EventsScreen";
 import { colors } from "../themes/color";
 import { typography } from "../themes/typography";
+import { BellIcon } from "phosphor-react-native";
 import { headerOptions, headerStyle } from "../themes/header.styles";
+import NotificationScreen from "../screens/emergency/NotificationScreen";
 import EventDetailsScreen from "../screens/events/EventDetailsScreen";
 import EventRegisterScreen from "../screens/events/EventRegisterScreen";
 
@@ -22,7 +24,7 @@ export default function EventsStack() {
       <Stack.Screen
         name="Events"
         component={EventsScreen}
-        options={{
+        options={({ navigation }) => ({
           headerTitle: () => (
             <View
               style={{
@@ -46,8 +48,14 @@ export default function EventsStack() {
               </Text>
             </View>
           ),
-        }}
+          headerRight: () => (
+            <Pressable onPress={() => navigation.navigate("Notifications")}>
+              <BellIcon size={24} color={colors.primary_AC_Green} />
+            </Pressable>
+          ),
+        })}
       />
+      <Stack.Screen name="Notifications" component={NotificationScreen} />
       <Stack.Screen name="Event Details" component={EventDetailsScreen} />
       <Stack.Screen name="Event Register" component={EventRegisterScreen} />
     </Stack.Navigator>
