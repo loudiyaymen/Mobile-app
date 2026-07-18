@@ -2,6 +2,7 @@
 
 import React from "react";
 import { View, Text, Pressable, TextInput, Alert, Modal } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
@@ -26,6 +27,8 @@ export default function NavigateScreen() {
   const [currentStepIndex, setCurrentStepIndex] = React.useState(0);
   const [activeSearchField, setActiveSearchField] = React.useState(null);
   const [showArrivalModal, setShowArrivalModal] = React.useState(false);
+
+  const navigation = useNavigation();
 
   const campusLocations = React.useMemo(
     () => [
@@ -213,6 +216,7 @@ export default function NavigateScreen() {
   };
 
   const handleCloseArrivalModal = () => {
+    navigation.popToTop();
     setShowArrivalModal(false);
   };
 
@@ -223,7 +227,7 @@ export default function NavigateScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.navigationCard}>
+      <View style={styles.chooseNavigationCard}>
         <View>
           <Text style={typography.h4}>Plan route</Text>
           <Text style={[typography.caption, { color: colors.Primary_Charcoal }]}>
@@ -311,7 +315,7 @@ export default function NavigateScreen() {
             weight="bold"
           />
           <Text
-            style={[typography.secondaryBody, { color: colors.primary_White }]}
+            style={[typography.h4, { color: colors.primary_White }]}
           >
             {isNavigating ? "Restart navigation" : "Start navigation"}
           </Text>
@@ -340,14 +344,14 @@ export default function NavigateScreen() {
           </View>
 
           <Pressable
-            style={[styles.buttonContainer, styles.routeButtonPrimary]}
+            style={[styles.buttonContainer, styles.routeButtonPrimary, typography.secondaryBody]}
             onPress={
               currentStepIndex === routeSteps.length - 1
                 ? handleFinishNavigation
                 : handleNextStep
             }
           >
-            <Text style={[typography.secondaryBody, { color: colors.primary_White }]}>
+            <Text style={[typography.h4, { color: colors.primary_White }]}>
               {currentStepIndex === routeSteps.length - 1 ? "Finish" : "Next"}
             </Text>
           </Pressable>
@@ -359,7 +363,7 @@ export default function NavigateScreen() {
           >
             <Text
               style={[
-                typography.secondaryBody,
+                typography.h4,
                 {
                   color:
                     currentStepIndex === 0
@@ -376,16 +380,16 @@ export default function NavigateScreen() {
             style={[styles.buttonContainer, styles.routeButtonEnd]}
             onPress={handleEndNavigation}
           >
-            <Text style={[typography.secondaryBody, { color: colors.SOS_Red }]}>
+            <Text style={[typography.h4, { color: colors.SOS_Red }]}>
               End navigation
             </Text>
           </Pressable>
         </View>
       ) : (
-        <View style={[styles.navigationCard, { gap: 12 }]}>
+        <View style={[styles.chooseNavigationCard, { gap: 12 }]}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
             <LightbulbIcon size={20} weight="bold" />
-            <Text style={typography.h4}>Amenities</Text>
+            <Text style={typography.h3}>Amenities</Text>
           </View>
           <View>{amenitiesItems}</View>
         </View>
@@ -422,7 +426,7 @@ export default function NavigateScreen() {
               onPress={handleCloseArrivalModal}
             >
               <Text style={[typography.h4, { color: colors.primary_White }]}>
-                Back to Wayfinder
+                Complete Navigation
               </Text>
             </Pressable>
           </View>
