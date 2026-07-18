@@ -177,17 +177,23 @@ const styles = StyleSheet.create({
   },
   sosFabHoldHint: {
     position: "absolute",
-    top: -16,
+    top: -36,
     left: -88,
     width: 130,
-    fontSize: 12,
+    fontSize: 14,
     textAlign: "left",
     color: colors.Dark_Grey,
     fontWeight: "500",
+
+    backgroundColor: colors.primary_White,
+    paddingVertical: 4,
+    borderRadius: 12,
+    overflow: "hidden",
   },
   sosFabHoldHintActive: {
     color: colors.Primary_Charcoal,
     fontWeight: "600",
+    textAlign: "center",
   },
   sosFabHoldHintIdle: {
     left: -25,

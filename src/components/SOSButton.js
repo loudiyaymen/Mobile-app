@@ -31,11 +31,9 @@ export default function SOSButton() {
       await Linking.openURL(url);
     } catch (err) {
       console.warn("Could not open dialer:", err);
-      Alert.alert(
-        "Open dialer failed",
-        `Please try again ${SECURITY_PHONE}.`,
-        [{ text: "OK" }],
-      );
+      Alert.alert("Open dialer failed", `Please try again ${SECURITY_PHONE}.`, [
+        { text: "OK" },
+      ]);
     }
     navigate("Emergency", { screen: "EmergencyConnected" });
   };
@@ -126,7 +124,7 @@ export default function SOSButton() {
             !isPressing && styles.sosFabHoldHintIdle,
           ]}
         >
-          {isPressing ? "Keep holding…" : "Hold for 3 seconds"}
+          {isPressing ? "Keep holding…" : "Hold for 3 secs"}
         </Text>
         {isPressing && (
           <View style={styles.progressCircleContainer}>
