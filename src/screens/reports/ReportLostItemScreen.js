@@ -1,4 +1,3 @@
-// Reporting found and lost items screen
 import { useState } from "react";
 import {
   View,
@@ -20,6 +19,8 @@ import * as ImagePicker from "expo-image-picker";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
+import { submitReport } from "../../services/reportService";
+import { useSettings } from "../../context/SettingsContext";
 
 export default function ReportLostItemScreen() {
   const navigation = useNavigation();
@@ -31,6 +32,8 @@ export default function ReportLostItemScreen() {
   const [media, setMedia] = useState(null);
   const [anonymous, setAnonymous] = useState(false);
   const [updates, setUpdates] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { settings } = useSettings();
 
   const handlePickMedia = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -49,25 +52,48 @@ export default function ReportLostItemScreen() {
       setMedia(result.assets[0].uri);
     }
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name || !email || !details) {
       Alert.alert("Missing Fields", "Please fill in required fields.");
       return;
     }
-    const reportData = {
-      id: Date.now().toString(),
-      type: "lostItem",
-      name,
-      email,
-      details,
-      media,
-      locationText,
-    };
 
-    navigation.navigate("Report Submitted", { reportData });
+    try {
+      setIsSubmitting(true);
+
+      const created = await submitReport({
+        type: "lostItem",
+        description: details,
+        campusName: settings.campus,
+        photoUri: media,
+        locationText,
+        incidentAt: null,
+        isAnonymous: anonymous,
+        emailUpdates: updates,
+      });
+
+      const reportData = {
+        id: created.id || Date.now().toString(),
+        type: "lostItem",
+        name,
+        email,
+        details,
+        media,
+        locationText,
+        status: created.status || "Opened",
+        referenceCode: created.referenceCode || created.id,
+        createdAt: created.createdAt,
+      };
+
+      navigation.navigate("Report Submitted", { reportData });
+    } catch (error) {
+      Alert.alert("Submission failed", error.message || "Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   const isFormValid =
-    name.trim() !== "" && email !== null && details.trim() !== "";
+    name.trim() !== "" && email.trim() !== "" && details.trim() !== "";
 
   return (
     <View style={styles.container}>
@@ -156,21 +182,22 @@ export default function ReportLostItemScreen() {
 
         <Pressable
           onPress={handleSubmit}
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmitting}
           style={[
             styles.reportButton,
             { alignSelf: "center" },
             {
-              backgroundColor: isFormValid
-                ? colors.primary_AC_Green
-                : colors.Dark_Grey,
+              backgroundColor:
+                isFormValid && !isSubmitting
+                  ? colors.primary_AC_Green
+                  : colors.Dark_Grey,
             },
           ]}
         >
           <Text
             style={[typography.secondaryH4, { color: colors.primary_White }]}
           >
-            Submit Report
+            {isSubmitting ? "Submitting..." : "Submit Report"}
           </Text>
         </Pressable>
       </ScrollView>

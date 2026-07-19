@@ -1,7 +1,5 @@
 import { StyleSheet } from "react-native";
 
-// Algonquin College Brand Colors
-// Separate from styles and extend Color based on Figma design system
 export const colors = StyleSheet.create({
   primary_AC_Green: "#006341",
   primary_White: "#FFFFFF",

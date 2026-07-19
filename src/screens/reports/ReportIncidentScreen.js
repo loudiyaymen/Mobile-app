@@ -21,6 +21,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
+import { submitReport } from "../../services/reportService";
+import { useSettings } from "../../context/SettingsContext";
 
 export default function ReportIncidentScreen() {
   const navigation = useNavigation();
@@ -32,6 +34,8 @@ export default function ReportIncidentScreen() {
   const [media, setMedia] = useState(null);
   const [anonymous, setAnonymous] = useState(false);
   const [emailUpdates, setEmailUpdates] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { settings } = useSettings();
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
@@ -64,25 +68,58 @@ export default function ReportIncidentScreen() {
     }
   };
 
-  // VALIDATION + SUBMIT
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!locationText || !date || !details) {
       Alert.alert("Missing Fields", "Please fill in required fields.");
       return;
     }
-    const reportData = {
-      id: Date.now().toString(),
-      type: "Incident",
-      location: locationText,
-      date,
-      time,
-      details,
-      media,
-      anonymous,
-      emailUpdates,
-    };
 
-    navigation.navigate("Report Submitted", { reportData });
+    try {
+      setIsSubmitting(true);
+
+      const created = await submitReport({
+        type: "Incident",
+        description: details,
+        campusName: settings.campus,
+        photoUri: media,
+        locationText,
+        incidentAt:
+          date && time
+            ? new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+                time.getHours(),
+                time.getMinutes(),
+                0,
+                0,
+              ).toISOString()
+            : null,
+        isAnonymous: anonymous,
+        emailUpdates,
+      });
+
+      const reportData = {
+        id: created.id || Date.now().toString(),
+        type: "Incident",
+        location: locationText,
+        date,
+        time,
+        details,
+        media,
+        anonymous,
+        emailUpdates,
+        status: created.status || "Opened",
+        referenceCode: created.referenceCode || created.id,
+        createdAt: created.createdAt,
+      };
+
+      navigation.navigate("Report Submitted", { reportData });
+    } catch (error) {
+      Alert.alert("Submission failed", error.message || "Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   const isFormValid =
     locationText.trim() !== "" &&
@@ -98,7 +135,6 @@ export default function ReportIncidentScreen() {
           { paddingBlockEnd: 48, paddingHorizontal: 16 },
         ]}
       >
-        {/* LOCATION */}
         <Text style={[typography.h4, styles.label]}>Location *</Text>
         <View style={styles.shadowContainer}>
           <View style={styles.inputRow}>
@@ -116,7 +152,6 @@ export default function ReportIncidentScreen() {
           </View>
         </View>
 
-        {/* DATE */}
         <Text style={[typography.h4, styles.label]}>Date *</Text>
         <View style={styles.shadowContainer}>
           <Pressable
@@ -148,7 +183,6 @@ export default function ReportIncidentScreen() {
           onCancel={() => setDatePickerVisibility(false)}
         />
 
-        {/* TIME */}
         <Text style={[typography.h4, styles.label]}>Time</Text>
         <View style={styles.shadowContainer}>
           <Pressable
@@ -185,7 +219,6 @@ export default function ReportIncidentScreen() {
           is24Hour={false}
         />
 
-        {/* DETAILS */}
         <Text style={[typography.h4, styles.label]}>Incident details *</Text>
         <View style={styles.shadowContainer}>
           <TextInput
@@ -197,7 +230,6 @@ export default function ReportIncidentScreen() {
           />
         </View>
 
-        {/* MEDIA */}
         <Text style={[typography.h4, styles.label]}>Attachments</Text>
         <Pressable onPress={handlePickMedia} style={styles.mediaBox}>
           <CameraIcon
@@ -217,24 +249,24 @@ export default function ReportIncidentScreen() {
           />
         )}
 
-        {/* SUBMIT */}
         <Pressable
           onPress={handleSubmit}
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmitting}
           style={[
             styles.reportButton,
             { alignSelf: "center" },
             {
-              backgroundColor: isFormValid
-                ? colors.primary_AC_Green
-                : colors.Dark_Grey,
+              backgroundColor:
+                isFormValid && !isSubmitting
+                  ? colors.primary_AC_Green
+                  : colors.Dark_Grey,
             },
           ]}
         >
           <Text
             style={[typography.secondaryH4, { color: colors.primary_White }]}
           >
-            Submit Report
+            {isSubmitting ? "Submitting..." : "Submit Report"}
           </Text>
         </Pressable>
       </ScrollView>

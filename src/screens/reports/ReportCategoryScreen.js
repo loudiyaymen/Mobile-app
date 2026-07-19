@@ -1,5 +1,3 @@
-// Report category selection screen
-
 import { View, Text, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "../../themes/styles";

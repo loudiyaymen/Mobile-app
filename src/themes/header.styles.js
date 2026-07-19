@@ -5,7 +5,7 @@ export const headerStyle = {
   borderBottomWidth: 0,
   shadowOpacity: 0,
   elevation: 0,
-  height: 100, //ignored on iOS
+  height: 100,
 };
 
 export const headerOptions = {
@@ -14,7 +14,16 @@ export const headerOptions = {
   headerBackTitle: "Back",
   headerBackTitleVisible: true,
   headerTitleContainerStyle: {
-    paddingBottom: 10,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+  },
+  headerLeftContainerStyle: {
+    paddingLeft: 24,
+    paddingVertical: 16,
+  },
+  headerRightContainerStyle: {
+    paddingRight: 24,
+    paddingVertical: 16,
   },
   headerTitleStyle: {
     color: colors.Primary_Charcoal,

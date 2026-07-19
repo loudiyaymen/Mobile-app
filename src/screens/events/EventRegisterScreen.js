@@ -1,37 +1,67 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, TextInput, Pressable, Alert, Modal } from "react-native";
+import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   CalendarIcon,
   UserIcon,
   ClockIcon,
   EnvelopeIcon,
-  MapPinSimpleIcon,
-  CheckCircleIcon,
 } from "phosphor-react-native";
+import { registerForEvent } from "../../services/eventService";
 
 export default function EventRegisterScreen() {
   const route = useRoute();
   const { event } = route.params ?? {};
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [visible, setVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
 
   const isFormValid = useMemo(() => {
     return name.trim().length > 0 && email.trim().length > 0;
   }, [name, email]);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    if (event?.isRegistered) {
+      Alert.alert(
+        "Already registered",
+        "You are already registered for this event.",
+      );
+      navigation.navigate("Registration Details", { event });
+      return;
+    }
+
     if (isFormValid) {
-      setVisible(!visible);
-      // put API call here to register user for event
+      try {
+        setIsSubmitting(true);
+        await registerForEvent(event?.id);
+
+        navigation.navigate("Registration Details", {
+          event: { ...event, isRegistered: true },
+          registration: {
+            name: name.trim(),
+            email: email.trim(),
+          },
+        });
+      } catch (error) {
+        const message = String(error?.message || "");
+        if (message.toLowerCase().includes("already registered")) {
+          Alert.alert(
+            "Already registered",
+            "You are already registered for this event.",
+          );
+          navigation.navigate("Registration Details", { event });
+          return;
+        }
+
+        Alert.alert("Registration failed", message || "Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
     } else {
       Alert.alert("Invalid Input", "Please fill in all required fields.");
     }
@@ -65,10 +95,9 @@ export default function EventRegisterScreen() {
             </View>
           </View>
         </View>
-        {/* Name */}
         <Text style={[typography.h4, styles.label]}>Name *</Text>
         <View style={styles.shadowContainer}>
-          <Pressable style={styles.inputRow}>
+          <View style={styles.inputRow}>
             <UserIcon
               size={26}
               color={colors.Primary_Charcoal}
@@ -82,12 +111,11 @@ export default function EventRegisterScreen() {
               value={name}
               onChangeText={setName}
             />
-          </Pressable>
+          </View>
         </View>
-        {/* Email */}
         <Text style={[typography.h4, styles.label]}>Email *</Text>
         <View style={styles.shadowContainer}>
-          <Pressable style={styles.inputRow}>
+          <View style={styles.inputRow}>
             <EnvelopeIcon
               size={26}
               color={colors.Primary_Charcoal}
@@ -104,7 +132,7 @@ export default function EventRegisterScreen() {
               value={email}
               onChangeText={setEmail}
             />
-          </Pressable>
+          </View>
         </View>
         <Pressable
           style={[
@@ -116,6 +144,7 @@ export default function EventRegisterScreen() {
             },
           ]}
           key={event.id}
+          disabled={!isFormValid || isSubmitting}
           onPress={handleRegister}
         >
           <Text
@@ -125,71 +154,6 @@ export default function EventRegisterScreen() {
           </Text>
         </Pressable>
       </View>
-      <Modal
-        visible={visible}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setVisible(false)}
-      >
-        <View style={styles.modalRoot}>
-          <Pressable
-            style={styles.modalBackdrop}
-            onPress={() => setVisible(false)}
-          />
-          <View>
-            <View
-              style={[styles.overlay, { paddingBottom: insets.bottom + 16 }]}
-            >
-              <CheckCircleIcon
-                size={100}
-                color={colors.primary_AC_Green}
-                weight="fill"
-                style={{ marginBottom: 16 }}
-              />
-              <Text style={[typography.h3, { color: colors.primary_AC_Green }]}>
-                Success!
-              </Text>
-              <Text style={typography.h4}>{event?.title ?? "Event"}</Text>
-              <View style={styles.infoContainer}>
-                <View style={styles.iconTextGroup}>
-                  <MapPinSimpleIcon size={20} color={colors.Primary_Charcoal} />
-                  <Text style={typography.body}>
-                    {event?.location ?? "Algonquin College"}
-                  </Text>
-                </View>
-                <View style={styles.iconTextGroup}>
-                  <CalendarIcon size={20} color={colors.Primary_Charcoal} />
-                  <Text style={typography.body}>
-                    {event?.date ?? "17th March 2026"}
-                  </Text>
-                </View>
-                <View style={styles.iconTextGroup}>
-                  <ClockIcon size={20} color={colors.Primary_Charcoal} />
-                  <Text style={typography.body}>
-                    {event?.time ?? "4:00 PM"}
-                  </Text>
-                </View>
-              </View>
-              <Pressable
-                style={styles.closeOverlayButton}
-                onPress={() => {
-                  setVisible(false);
-                  navigation.popToTop();
-                }}
-              >
-                <Text
-                  style={[
-                    typography.secondaryBody,
-                    { color: colors.primary_White },
-                  ]}
-                >
-                  Back to Events
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }

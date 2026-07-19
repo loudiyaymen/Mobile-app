@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Check } from "phosphor-react-native";
 import { colors } from "../../themes/color";
 import { styles } from "../../themes/styles";
+import { typography } from "../../themes/typography";
 
 function generateReferenceCode() {
   const year = new Date().getFullYear();
@@ -19,7 +20,9 @@ export default function ReportSubmittedScreen() {
   const { reportData } = route.params;
   const insets = useSafeAreaInsets();
 
-  const [referenceCode] = useState(generateReferenceCode);
+  const [referenceCode] = useState(
+    reportData?.referenceCode || generateReferenceCode,
+  );
   const [saved, setSaved] = useState(false);
   const saveStarted = useRef(false);
 
@@ -39,9 +42,11 @@ export default function ReportSubmittedScreen() {
 
         const newReport = {
           ...reportData,
+          name: undefined,
+          email: undefined,
           referenceCode,
-          status: "Opened",
-          createdAt: new Date().toISOString(),
+          status: reportData?.status || "Opened",
+          createdAt: reportData?.createdAt || new Date().toISOString(),
         };
 
         reports.unshift(newReport);
@@ -77,14 +82,45 @@ export default function ReportSubmittedScreen() {
           <Check size={40} color={colors.primary_White} weight="bold" />
         </View>
 
-        <Text style={styles.reportSubmittedTitle}>Report submitted</Text>
-        <Text style={styles.reportSubmittedSubtitle}>
+        <Text
+          style={[
+            typography.secondaryH3,
+            {
+              color: colors.primary_AC_Green,
+              marginBottom: 8,
+              textAlign: "center",
+            },
+          ]}
+        >
+          Report submitted
+        </Text>
+        <Text
+          style={[
+            typography.secondaryBody,
+            {
+              color: colors.Dark_Grey,
+              textAlign: "center",
+              marginBottom: 20,
+            },
+          ]}
+        >
           Your report has been received
         </Text>
 
         <View style={styles.reportSubmittedRefBox}>
-          <Text style={styles.reportSubmittedRefLabel}>Reference number</Text>
-          <Text style={styles.reportSubmittedRefValue}>{referenceCode}</Text>
+          <Text
+            style={[
+              typography.secondaryCaption,
+              { color: colors.Grey, marginBottom: 4 },
+            ]}
+          >
+            Reference number
+          </Text>
+          <Text
+            style={[typography.secondaryH5, { color: colors.Primary_Charcoal }]}
+          >
+            {referenceCode}
+          </Text>
         </View>
 
         <Pressable

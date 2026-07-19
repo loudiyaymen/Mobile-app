@@ -22,13 +22,30 @@ export default function EventsScreen() {
   const [activeTab, setActiveTab] = useState("allEvents");
   const [loading, setLoading] = useState(true);
 
+  const groupedEvents = React.useMemo(() => {
+    const rows = eventGroups[activeTab] ?? [];
+    const map = new Map();
+
+    rows.forEach((event) => {
+      const type = String(event?.eventType || event?.type || "General").trim();
+      const key = type.length > 0 ? type : "General";
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(event);
+    });
+
+    return Array.from(map.entries()).map(([type, events]) => ({
+      type,
+      events,
+    }));
+  }, [activeTab, eventGroups]);
+
   useFocusEffect(
     React.useCallback(() => {
       async function loadData() {
         const result = await fetchEventsByTab();
         setEventGroups({
           allEvents: result?.allEvents ?? result?.official ?? [],
-          // myEvents: , // This would be populated based on the user's registered events
+          myEvents: result?.myEvents ?? [],
         });
         setLoading(false);
       }
@@ -118,72 +135,40 @@ export default function EventsScreen() {
         </Pressable>
       </View>
       <ScrollView>
-        <View style={styles.labelContainer}>
-          <Text style={typography.h3}>Security Events</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.eventsContainer}
-        >
-          {(eventGroups[activeTab] ?? []).map((event) => (
-            <Pressable
-              key={event.id}
-              onPress={() => navigation.navigate("Event Details", { event })}
-            >
-              <Card
-                key={event.id}
-                image={event.image}
-                title={event.title}
-                description={event.description}
-              />
-            </Pressable>
-          ))}
-        </ScrollView>
-        <View style={styles.labelContainer}>
-          <Text style={typography.h3}>Scavenger Hunts</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.eventsContainer}
-        >
-          {(eventGroups[activeTab] ?? []).map((event) => (
-            <Pressable
-              key={event.id}
-              onPress={() => navigation.navigate("Event Details", { event })}
-            >
-              <Card
-                key={event.id}
-                image={event.image}
-                title={event.title}
-                description={event.description}
-              />
-            </Pressable>
-          ))}
-        </ScrollView>
-        <View style={styles.labelContainer}>
-          <Text style={typography.h3}>Academic Events</Text>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.eventsContainer}
-        >
-          {(eventGroups[activeTab] ?? []).map((event) => (
-            <Pressable
-              key={event.id}
-              onPress={() => navigation.navigate("Event Details", { event })}
-            >
-              <Card
-                key={event.id}
-                image={event.image}
-                title={event.title}
-                description={event.description}
-              />
-            </Pressable>
-          ))}
-        </ScrollView>
+        {groupedEvents.length === 0 ? (
+          <View style={[styles.labelContainer, { marginTop: 30 }]}>
+            <Text style={typography.h5}>No events available.</Text>
+          </View>
+        ) : (
+          groupedEvents.map((group) => (
+            <View key={group.type}>
+              <View style={styles.labelContainer}>
+                <Text style={typography.h3}>{group.type}</Text>
+              </View>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.eventsContainer}
+              >
+                {group.events.map((event) => (
+                  <Pressable
+                    key={event.id}
+                    onPress={() =>
+                      navigation.navigate("Event Details", { event })
+                    }
+                  >
+                    <Card
+                      key={event.id}
+                      image={event.image}
+                      title={event.title}
+                      description={event.description}
+                    />
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );

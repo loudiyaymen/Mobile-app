@@ -1,5 +1,3 @@
-// Used to navigate around campus - will be a simple mockup for now with hardcoded routes and amenities, but can be expanded in the future to integrate with a mapping API and real-time location data
-
 import React from "react";
 import { View, Text, Pressable, TextInput, Alert, Modal } from "react-native";
 import { styles } from "../../themes/styles";
@@ -226,20 +224,20 @@ export default function NavigateScreen() {
       <View style={styles.navigationCard}>
         <View>
           <Text style={typography.h4}>Plan route</Text>
-          <Text style={[typography.caption, { color: colors.Primary_Charcoal }]}>
+          <Text
+            style={[typography.caption, { color: colors.Primary_Charcoal }]}
+          >
             Choose your starting point and destination
           </Text>
         </View>
 
         <View style={styles.fieldsRow}>
-          {/* Dots and line */}
           <View style={styles.timeline}>
             <View style={styles.timelineDot} />
             <View style={styles.timelineLine} />
             <View style={styles.timelineDot} />
           </View>
 
-          {/* Inputs */}
           <View style={styles.inputsColumn}>
             <TextInput
               style={styles.input}
@@ -266,9 +264,15 @@ export default function NavigateScreen() {
                   <Pressable
                     key={location}
                     style={styles.searchDropdownItem}
-                    onPress={() => handleSelectSuggestion(activeSearchField, location)}
+                    onPress={() =>
+                      handleSelectSuggestion(activeSearchField, location)
+                    }
                   >
-                    <StarIcon size={16} color={colors.Warning_line} weight="fill" />
+                    <StarIcon
+                      size={16}
+                      color={colors.Warning_line}
+                      weight="fill"
+                    />
                     <Text
                       style={[
                         typography.body,
@@ -284,7 +288,6 @@ export default function NavigateScreen() {
             ) : null}
           </View>
 
-          {/* Swap Icon */}
           <Pressable onPress={handleSwap}>
             <DeviceRotateIcon
               size={28}
@@ -294,7 +297,6 @@ export default function NavigateScreen() {
           </Pressable>
         </View>
 
-        {/* Button */}
         <Pressable
           style={[
             styles.buttonContainer,
@@ -322,9 +324,17 @@ export default function NavigateScreen() {
         <View style={styles.navigationCard}>
           <View style={styles.routeDistanceRow}>
             {activeStep.direction === "up" ? (
-              <ArrowUpIcon size={24} color={colors.Primary_Charcoal} weight="bold" />
+              <ArrowUpIcon
+                size={24}
+                color={colors.Primary_Charcoal}
+                weight="bold"
+              />
             ) : (
-              <ArrowRightIcon size={24} color={colors.Primary_Charcoal} weight="bold" />
+              <ArrowRightIcon
+                size={24}
+                color={colors.Primary_Charcoal}
+                weight="bold"
+              />
             )}
             <Text style={[typography.h1, styles.routeDistanceText]}>
               {activeStep.distance}
@@ -336,7 +346,12 @@ export default function NavigateScreen() {
           </Text>
 
           <View style={styles.routeProgressTrack}>
-            <View style={[styles.routeProgressFill, { width: `${progressPercent}%` }]} />
+            <View
+              style={[
+                styles.routeProgressFill,
+                { width: `${progressPercent}%` },
+              ]}
+            />
           </View>
 
           <Pressable
@@ -347,7 +362,12 @@ export default function NavigateScreen() {
                 : handleNextStep
             }
           >
-            <Text style={[typography.secondaryBody, { color: colors.primary_White }]}>
+            <Text
+              style={[
+                typography.secondaryBody,
+                { color: colors.primary_White },
+              ]}
+            >
               {currentStepIndex === routeSteps.length - 1 ? "Finish" : "Next"}
             </Text>
           </Pressable>

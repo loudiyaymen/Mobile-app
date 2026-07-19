@@ -28,14 +28,12 @@ export default function ReportAssaultScreen() {
           entirely yours.
         </Text>
       </View>
-      {/* Official report */}
       <Text style={[typography.h3, styles.label]}>Official Report Form</Text>
       <Pressable style={styles.reportButton} onPress={openOfficialReport}>
         <Text style={[typography.secondaryH5, { color: colors.primary_White }]}>
           Algonquin College Sexual Violence Report
         </Text>
       </Pressable>
-      {/* Support */}
       <Text style={[typography.h3, styles.label]}>
         Access the support you need
       </Text>

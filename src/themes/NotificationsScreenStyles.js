@@ -1,79 +1,99 @@
 import { StyleSheet } from "react-native";
 
-//As this is just a POC and also just the notifications modal screen, there is no need to import the brand colors
-
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#000",
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 2,
-  },
-  closeButton: {
-    padding: 5,
+    backgroundColor: "#EDEDED",
   },
   listContent: {
-    padding: 16,
+    flexGrow: 1,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 120,
+  },
+  actionRow: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 4,
+    alignItems: "flex-end",
+  },
+  clearAllButton: {
+    backgroundColor: "#D92D20",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  clearAllText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "700",
   },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 12,
+    borderRadius: 14,
     padding: 16,
-    borderWidth: 1,
-    borderColor: "#1e293b",
-    marginBottom: 16,
-    // Shadow for iOS
+    marginBottom: 14,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    // Elevation for Android
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
     elevation: 3,
   },
-  cardHeader: {
+  cardHeaderRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
-  cardIcon: {
-    marginRight: 10,
+  cardHeaderLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexShrink: 1,
+    gap: 10,
   },
   cardTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#000",
+    fontSize: 17,
+    fontWeight: "600",
+    color: "#1C2525",
+    flexShrink: 1,
   },
   cardBody: {
-    fontSize: 14,
-    color: "#000",
-    lineHeight: 20,
-    marginBottom: 8,
-    paddingLeft: 34,
+    fontSize: 17,
+    lineHeight: 28,
+    color: "#161616",
+    paddingLeft: 46,
+    paddingRight: 8,
   },
   cardTime: {
-    fontSize: 12,
+    fontSize: 14,
+    lineHeight: 20,
     color: "#666",
-    paddingLeft: 34,
+    marginLeft: 12,
   },
   emptyText: {
-    textAlign: "center",
-    marginTop: 50,
-    color: "#999",
+    marginTop: 20,
+    fontSize: 20,
+    color: "#101010",
+    fontWeight: "500",
+  },
+  emptyState: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: -90,
+  },
+  deleteAction: {
+    marginBottom: 14,
+    marginLeft: 8,
+    borderRadius: 14,
+    minWidth: 92,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#D92D20",
+  },
+  deleteActionText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "700",
   },
 });

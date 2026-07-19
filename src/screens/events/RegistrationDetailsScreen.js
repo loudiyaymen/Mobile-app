@@ -1,0 +1,190 @@
+import React, { useMemo, useRef, useState } from "react";
+import { View, Text, Pressable } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  CalendarIcon,
+  ClockIcon,
+  MapPinSimpleIcon,
+  WarningCircleIcon,
+  XIcon,
+  CaretRightIcon,
+  Check,
+} from "phosphor-react-native";
+import { colors } from "../../themes/color";
+import { typography } from "../../themes/typography";
+
+function ActionRow(props) {
+  const { icon, label, onPress, destructive } = props;
+  const isDestructive = destructive === true;
+
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 16,
+        paddingVertical: 16,
+      }}
+    >
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+        {icon}
+        <Text
+          style={[
+            typography.h3,
+            {
+              color: isDestructive
+                ? colors.Primary_Charcoal
+                : colors.Primary_Charcoal,
+            },
+          ]}
+        >
+          {label}
+        </Text>
+      </View>
+      <CaretRightIcon size={28} color={colors.Primary_Charcoal} />
+    </Pressable>
+  );
+}
+
+export default function RegistrationDetailsScreen() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const event = route && route.params ? route.params.event : undefined;
+  const [showToast, setShowToast] = useState(false);
+  const cancelTimerRef = useRef(null);
+
+  const eventTitle = event?.title ?? "Event";
+  const eventDate = event?.date ?? "17th March 2026";
+  const eventTime = event?.time ?? "4:00 PM";
+  const eventLocation = event?.location ?? "Jack Doyle Athletics Centre";
+
+  const dateText = useMemo(() => eventDate, [eventDate]);
+
+  const handleCancelRegistration = () => {
+    setShowToast(true);
+    if (cancelTimerRef.current) {
+      clearTimeout(cancelTimerRef.current);
+    }
+    cancelTimerRef.current = setTimeout(() => {
+      setShowToast(false);
+      navigation.popToTop();
+    }, 2200);
+  };
+
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.Light_Grey }}>
+      <View style={{ paddingHorizontal: 22, paddingTop: 18 }}>
+        <Text
+          style={[
+            typography.h2,
+            { color: colors.Primary_Charcoal, marginBottom: 12 },
+          ]}
+        >
+          Date and time
+        </Text>
+        <View style={{ gap: 14 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <CalendarIcon size={34} color={colors.Primary_Charcoal} />
+            <Text style={[typography.h3, { color: colors.Primary_Charcoal }]}>
+              {dateText}
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <ClockIcon size={34} color={colors.Primary_Charcoal} />
+            <Text style={[typography.h3, { color: colors.Primary_Charcoal }]}>
+              {eventTime}
+            </Text>
+          </View>
+        </View>
+
+        <Text
+          style={[
+            typography.h2,
+            { color: colors.Primary_Charcoal, marginTop: 28, marginBottom: 10 },
+          ]}
+        >
+          Location
+        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <MapPinSimpleIcon size={34} color={colors.Primary_Charcoal} />
+          <Text
+            style={[typography.h3, { color: colors.Primary_Charcoal, flex: 1 }]}
+          >
+            {eventLocation}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            marginTop: 28,
+            borderRadius: 18,
+            backgroundColor: "#EDEDED",
+            overflow: "hidden",
+          }}
+        >
+          <ActionRow
+            icon={
+              <WarningCircleIcon size={32} color={colors.Primary_Charcoal} />
+            }
+            label="Event details"
+            onPress={() => navigation.navigate("Event Details", { event })}
+          />
+          <View
+            style={{
+              marginLeft: 60,
+              borderBottomWidth: 1,
+              borderBottomColor: "#D9D9D9",
+            }}
+          />
+          <ActionRow
+            icon={<XIcon size={32} color={colors.Primary_Charcoal} />}
+            label="Cancel registration"
+            onPress={handleCancelRegistration}
+            destructive
+          />
+        </View>
+
+        <Text
+          style={[
+            typography.caption,
+            { color: colors.Dark_Grey, marginTop: 14 },
+          ]}
+        >
+          {eventTitle}
+        </Text>
+      </View>
+
+      {showToast ? (
+        <View
+          pointerEvents="none"
+          style={{
+            position: "absolute",
+            bottom: 22,
+            left: 22,
+            right: 22,
+            backgroundColor: "#2F8F1F",
+            borderRadius: 18,
+            paddingVertical: 14,
+            paddingHorizontal: 18,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            shadowColor: colors.Primary_Charcoal,
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.25,
+            shadowRadius: 5,
+            elevation: 6,
+          }}
+        >
+          <Check size={28} color={colors.primary_White} weight="bold" />
+          <Text style={[typography.h3, { color: colors.primary_White }]}>
+            Cancellation complete
+          </Text>
+        </View>
+      ) : null}
+    </View>
+  );
+}

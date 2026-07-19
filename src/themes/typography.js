@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
+const BASE_TEXT_SIZE_OPTIONS = [14, 16, 18, 20, 22, 24];
+const DEFAULT_TEXT_SIZE_INDEX = 1;
 
-export const typography = StyleSheet.create({
-  // Primary Styles (Metropolis)
+const BASE_STYLES = {
   h1: {
     fontSize: 32,
     lineHeight: 40,
@@ -37,36 +37,82 @@ export const typography = StyleSheet.create({
     lineHeight: 15.6,
     fontFamily: "Metropolis-Regular",
   },
-
-  // Secondary Styles (Arial)
   secondaryH3: {
     fontSize: 20,
     lineHeight: 27,
     fontFamily: "Arial",
-    fontWeight: 700,
+    fontWeight: "700",
   },
   secondaryH4: {
     fontSize: 18,
     lineHeight: 25.2,
     fontFamily: "Arial",
-    fontWeight: 600,
+    fontWeight: "600",
   },
   secondaryH5: {
     fontSize: 16,
     lineHeight: 22.4,
     fontFamily: "Arial",
-    fontWeight: 600,
+    fontWeight: "600",
   },
   secondaryBody: {
     fontSize: 16,
     lineHeight: 24,
     fontFamily: "Arial",
-    fontWeight: 400,
+    fontWeight: "400",
   },
   secondaryCaption: {
     fontSize: 12,
     lineHeight: 16.8,
     fontFamily: "Arial",
-    fontWeight: 400,
+    fontWeight: "400",
   },
+};
+
+let currentTextSizeIndex = DEFAULT_TEXT_SIZE_INDEX;
+
+function getScaleFromIndex(index) {
+  const safeIndex = Math.max(
+    0,
+    Math.min(BASE_TEXT_SIZE_OPTIONS.length - 1, index),
+  );
+  const selectedSize =
+    BASE_TEXT_SIZE_OPTIONS[safeIndex] ||
+    BASE_TEXT_SIZE_OPTIONS[DEFAULT_TEXT_SIZE_INDEX];
+  const baseSize = BASE_TEXT_SIZE_OPTIONS[DEFAULT_TEXT_SIZE_INDEX];
+  return selectedSize / baseSize;
+}
+
+function scaleValue(value, scale) {
+  return Math.round(value * scale * 10) / 10;
+}
+
+function buildStyle(style) {
+  const scale = getScaleFromIndex(currentTextSizeIndex);
+  return {
+    ...style,
+    fontSize: scaleValue(style.fontSize, scale),
+    lineHeight: scaleValue(style.lineHeight, scale),
+  };
+}
+
+export function setTypographyTextSizeIndex(index) {
+  currentTextSizeIndex = Number.isInteger(index)
+    ? index
+    : DEFAULT_TEXT_SIZE_INDEX;
+}
+
+export function getTypographyTextSizeIndex() {
+  return currentTextSizeIndex;
+}
+
+export const typography = {};
+
+Object.keys(BASE_STYLES).forEach((key) => {
+  Object.defineProperty(typography, key, {
+    enumerable: true,
+    get() {
+      return buildStyle(BASE_STYLES[key]);
+    },
+  });
 });

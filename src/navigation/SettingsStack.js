@@ -1,52 +1,55 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text } from "react-native";
-import { typography } from "../themes/typography";
-import { colors } from "../themes/color";
+import { View } from "react-native";
 import SettingsScreen from "../screens/settings/SettingsScreen";
 import { headerOptions, headerStyle } from "../themes/header.styles";
+import NotificationHeaderButton from "../components/NotificationHeaderButton";
+import CampusScreen from "../screens/settings/CampusScreen";
+import AppearanceScreen from "../screens/settings/AppearanceScreen";
+import AccessibilityScreen from "../screens/settings/AccessibilityScreen";
+import EmergencyContactsScreen from "../screens/settings/EmergencyContactsScreen";
+import AlertTypesScreen from "../screens/settings/AlertTypesScreen";
+import PushPreferencesScreen from "../screens/settings/PushPreferencesScreen";
+import PermissionsScreen from "../screens/settings/PermissionsScreen";
+import LegalScreen from "../screens/settings/LegalScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function SettingsStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Settings"
-      screenOptions={{
+      initialRouteName="Settings Home"
+      screenOptions={({ navigation }) => ({
         ...headerOptions,
         headerStyle,
         headerShadowVisible: false,
-      }}
+        headerBackVisible: true,
+        headerRight: () => (
+          <View style={{ paddingRight: 24, paddingVertical: 16 }}>
+            <NotificationHeaderButton
+              onPress={() => navigation.getParent()?.navigate("Notifications")}
+            />
+          </View>
+        ),
+      })}
     >
       <Stack.Screen
-        name="Settings"
+        name="Settings Home"
         component={SettingsScreen}
         options={{
-          headerTitle: () => (
-            <View
-              style={{
-                flexDirection: "column",
-                alignItems: "flex-start",
-                width: "100%",
-              }}
-            >
-              <Text
-                style={[
-                  typography.h2,
-                  {
-                    fontWeight: "bold",
-                    color: colors.Primary_Charcoal,
-                  },
-                ]}
-              >
-                Settings
-              </Text>
-              <Text style={[typography.body, { color: colors.Dark_Grey }]}>
-                Manage your preferences
-              </Text>
-            </View>
-          ),
+          headerShown: false,
         }}
       />
+      <Stack.Screen name="Campus" component={CampusScreen} />
+      <Stack.Screen name="Appearance" component={AppearanceScreen} />
+      <Stack.Screen name="Accessibility" component={AccessibilityScreen} />
+      <Stack.Screen
+        name="Emergency Contacts"
+        component={EmergencyContactsScreen}
+      />
+      <Stack.Screen name="Alert Types" component={AlertTypesScreen} />
+      <Stack.Screen name="Push Preferences" component={PushPreferencesScreen} />
+      <Stack.Screen name="Permissions" component={PermissionsScreen} />
+      <Stack.Screen name="Legal" component={LegalScreen} />
     </Stack.Navigator>
   );
 }

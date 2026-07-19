@@ -4,7 +4,6 @@ import { typography } from "./typography";
 import { overlay } from "react-native-paper";
 
 const styles = StyleSheet.create({
-  // Container styles
   container: {
     flex: 1,
     backgroundColor: colors.primary_White,
@@ -43,7 +42,6 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     borderRadius: 12,
     backgroundColor: colors.primary_White,
-    // ios
     shadowColor: colors.Primary_Charcoal,
     shadowOffset: {
       width: 0,
@@ -51,7 +49,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.15,
     shadowRadius: 5,
-    //Android
     elevation: 3,
     overflow: "visible",
   },
@@ -92,7 +89,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
 
-  // Home screen styles
   homeTitleContainer: {
     flex: 1,
     justifyContent: "center",
@@ -106,7 +102,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  // FAB styles
   fabContainer: {
     position: "absolute",
     right: 20,
@@ -184,6 +179,11 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: colors.Dark_Grey,
     fontWeight: "500",
+    backgroundColor: colors.primary_White,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    overflow: "hidden",
   },
   sosFabHoldHintActive: {
     color: colors.Primary_Charcoal,
@@ -195,7 +195,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // Confirm screen styles
   confirmScreenBackground: {
     flex: 1,
     backgroundColor: "#F5F5F5",
@@ -268,7 +267,6 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
 
-  // Button container
   buttonContainer: {
     width: "100%",
     flexDirection: "row",
@@ -317,7 +315,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
-  // Button base styles
   button: {
     paddingVertical: 16,
     paddingHorizontal: 32,
@@ -386,7 +383,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  // Calling Security screen styles
   callingContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -510,6 +506,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary_AC_Green,
     borderRadius: 12,
     paddingHorizontal: 12,
+    paddingVertical: 8,
     minHeight: 56,
     backgroundColor: colors.primary_White,
   },
@@ -552,7 +549,9 @@ const styles = StyleSheet.create({
 
   inputField: {
     flex: 1,
-    height: 24,
+    minHeight: 24,
+    paddingVertical: 0,
+    textAlignVertical: "center",
     fontSize: 16,
     fontFamily: "Metropolis-Regular",
     color: colors.Primary_Charcoal,
@@ -760,7 +759,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary_White,
     alignItems: "center",
   },
-  //section styles
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
@@ -939,7 +937,6 @@ const styles = StyleSheet.create({
     color: colors.primary_White,
   },
 
-  // Report Incident screen styles
   label: {
     marginTop: 12,
     marginBottom: 4,

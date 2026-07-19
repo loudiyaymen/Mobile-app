@@ -1,5 +1,3 @@
-// Event details screen
-
 import React from "react";
 import { ScrollView, View, Text } from "react-native";
 import { Image, Pressable } from "react-native";
@@ -21,6 +19,7 @@ export default function EventDetailsScreen() {
   const { event } = route.params ?? {};
   const imageUri = event?.image;
   const navigation = useNavigation();
+  const alreadyRegistered = Boolean(event?.isRegistered);
 
   return (
     <View style={[styles.container]}>
@@ -28,9 +27,7 @@ export default function EventDetailsScreen() {
         <Image source={{ uri: imageUri }} style={styles.eventImage} />
       ) : null}
       <ScrollView style={styles.detailsContent}>
-        {/* Main Header Container */}
         <View style={styles.headerContainer}>
-          {/* Top Row */}
           <View style={styles.infoRow}>
             <Text style={[typography.h5, { flex: 1 }]}>
               {event?.title ?? "Event"}
@@ -43,7 +40,6 @@ export default function EventDetailsScreen() {
             </View>
           </View>
 
-          {/* Bottom Row */}
           <View style={styles.infoRow}>
             <View style={styles.iconTextGroup}>
               <CalendarIcon size={20} color={colors.Primary_Charcoal} />
@@ -78,12 +74,16 @@ export default function EventDetailsScreen() {
 
       <View style={{ marginHorizontal: 16 }}>
         <Pressable
-          style={styles.registerButton}
+          style={[
+            styles.registerButton,
+            alreadyRegistered ? { opacity: 0.6 } : null,
+          ]}
           key={event.id}
+          disabled={alreadyRegistered}
           onPress={() => navigation.navigate("Event Register", { event })}
         >
           <Text style={[typography.body, { color: colors.primary_White }]}>
-            Register
+            {alreadyRegistered ? "Registered" : "Register"}
           </Text>
         </Pressable>
       </View>

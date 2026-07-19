@@ -7,6 +7,7 @@ import { FileTextIcon, PlusCircleIcon } from "phosphor-react-native";
 import { styles, reportHomeTabBarInset } from "../../themes/styles";
 import { colors, reportStatusBackground } from "../../themes/color";
 import { typography } from "../../themes/typography";
+import { fetchMyReports } from "../../services/reportService";
 
 function formatReportDate(isoOrDate) {
   const d = new Date(isoOrDate);
@@ -36,9 +37,7 @@ function getDescriptionPreview(item) {
 }
 
 function getStatusLabel(item) {
-  return item.status && String(item.status).trim()
-    ? item.status
-    : "Opened";
+  return item.status && String(item.status).trim() ? item.status : "Opened";
 }
 
 export default function ReportHomeScreen() {
@@ -59,12 +58,17 @@ export default function ReportHomeScreen() {
   );
 
   const loadReports = async () => {
-    const stored = await AsyncStorage.getItem("reports");
-    if (stored) {
-      setReports(JSON.parse(stored));
-    } else {
-      setReports([]);
+    try {
+      const liveReports = await fetchMyReports();
+      setReports(liveReports);
+      await AsyncStorage.setItem("reports", JSON.stringify(liveReports));
+      return;
+    } catch (error) {
+      console.warn("Falling back to local report cache", error);
     }
+
+    const stored = await AsyncStorage.getItem("reports");
+    setReports(stored ? JSON.parse(stored) : []);
   };
 
   useFocusEffect(
@@ -119,18 +123,38 @@ export default function ReportHomeScreen() {
           return (
             <View style={styles.reportRow}>
               <View style={styles.reportRowTopRow}>
-                <Text style={styles.reportRowTypeTitle}>
+                <Text
+                  style={[
+                    typography.h4,
+                    {
+                      color: colors.Primary_Charcoal,
+                      flex: 1,
+                      paddingRight: 12,
+                    },
+                  ]}
+                >
                   {getReportTypeLabel(item.type)}
                 </Text>
-                <Text style={styles.reportRowDateText}>
+                <Text style={[typography.caption, { color: colors.Grey }]}>
                   {formatReportDate(item.createdAt)}
                 </Text>
               </View>
-              <Text style={styles.reportRowDescription} numberOfLines={2}>
+              <Text
+                style={[
+                  typography.body,
+                  { color: colors.Dark_Grey, marginBottom: 10 },
+                ]}
+                numberOfLines={2}
+              >
                 {getDescriptionPreview(item)}
               </Text>
               <View style={styles.reportRowBottomRow}>
-                <Text style={styles.reportRowRefText}>
+                <Text
+                  style={[
+                    typography.body,
+                    { color: colors.Dark_Grey, flex: 1, paddingRight: 12 },
+                  ]}
+                >
                   {item.referenceCode || "—"}
                 </Text>
                 <View
@@ -139,7 +163,14 @@ export default function ReportHomeScreen() {
                     { backgroundColor: pillBg },
                   ]}
                 >
-                  <Text style={styles.reportRowStatusPillText}>{status}</Text>
+                  <Text
+                    style={[
+                      typography.caption,
+                      { fontWeight: "700", color: colors.primary_White },
+                    ]}
+                  >
+                    {status}
+                  </Text>
                 </View>
               </View>
             </View>

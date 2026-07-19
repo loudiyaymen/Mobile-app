@@ -1,4 +1,3 @@
-// Thank-you screen after user has contacted security
 import { useRef, useEffect } from "react";
 import { Text, View, Pressable, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -33,7 +32,6 @@ export default function EmergencyConnectedScreen() {
       style={[styles.container, styles.callingContainer, fadeInAnimatedStyle]}
     >
       <View style={styles.callingContent}>
-        {/* Red phone icon */}
         <View style={styles.callingIconContainer}>
           <View
             style={[
