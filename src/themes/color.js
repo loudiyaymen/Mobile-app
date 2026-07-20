@@ -21,10 +21,11 @@ export const colors = StyleSheet.create({
 });
 
 export const reportStatusBackground = {
-  Opened: "#007AFF",
-  "In review": "#FF9500",
-  Resolved: "#34C759",
-  Closed: "#8E8E93",
+  Submitted: "#5F8FA8",
+  Opened: "#5F8FA8",
+  "In review": "#B9925A",
+  Resolved: "#5C9B72",
+  Closed: "#7B8188",
 };
 
 export const lightTheme = StyleSheet.create({

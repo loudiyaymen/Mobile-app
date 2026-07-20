@@ -1,4 +1,5 @@
-import { Pressable, Switch, Text, View } from "react-native";
+import { Switch, Text, View } from "react-native";
+import Slider from "@react-native-community/slider";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
 import { TEXT_SIZE_OPTIONS, useSettings } from "../../context/SettingsContext";
@@ -108,39 +109,17 @@ export default function AccessibilityScreen() {
           <Text style={[typography.h3, { color: colors.Primary_Charcoal }]}>
             A
           </Text>
-          <View style={{ flex: 1, marginHorizontal: 12 }}>
-            <View
-              style={{
-                height: 10,
-                borderRadius: 8,
-                backgroundColor: "#B0C0AF",
-              }}
-            />
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginTop: 8,
-              }}
-            >
-              {TEXT_SIZE_OPTIONS.map((size, index) => (
-                <Pressable
-                  key={size}
-                  onPress={() => setTextSizeIndex(index)}
-                  style={{
-                    width: index === settings.textSizeIndex ? 18 : 9,
-                    height: index === settings.textSizeIndex ? 18 : 9,
-                    borderRadius: index === settings.textSizeIndex ? 9 : 4.5,
-                    marginTop: index === settings.textSizeIndex ? -4 : 1,
-                    backgroundColor:
-                      index === settings.textSizeIndex
-                        ? colors.primary_AC_Green
-                        : "#C8C8C8",
-                  }}
-                />
-              ))}
-            </View>
-          </View>
+          <Slider
+            style={{ flex: 1, marginHorizontal: 12, height: 30 }}
+            minimumValue={0}
+            maximumValue={TEXT_SIZE_OPTIONS.length - 1}
+            step={1}
+            value={settings.textSizeIndex}
+            onValueChange={(value) => setTextSizeIndex(Math.round(value))}
+            minimumTrackTintColor={colors.primary_AC_Green}
+            maximumTrackTintColor="#C8C8C8"
+            thumbTintColor={colors.primary_AC_Green}
+          />
           <Text
             style={{
               color: colors.Primary_Charcoal,

@@ -12,6 +12,7 @@ import {
 } from "phosphor-react-native";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
+import { cancelEventRegistration } from "../../services/eventService";
 
 function ActionRow(props) {
   const { icon, label, onPress, destructive } = props;
@@ -32,7 +33,7 @@ function ActionRow(props) {
         {icon}
         <Text
           style={[
-            typography.h3,
+            typography.body,
             {
               color: isDestructive
                 ? colors.Primary_Charcoal
@@ -62,15 +63,31 @@ export default function RegistrationDetailsScreen() {
 
   const dateText = useMemo(() => eventDate, [eventDate]);
 
-  const handleCancelRegistration = () => {
-    setShowToast(true);
-    if (cancelTimerRef.current) {
-      clearTimeout(cancelTimerRef.current);
-    }
-    cancelTimerRef.current = setTimeout(() => {
+  const handleCancelRegistration = async () => {
+    try {
+      await cancelEventRegistration(event?.id);
+      setShowToast(true);
+      if (cancelTimerRef.current) {
+        clearTimeout(cancelTimerRef.current);
+      }
+      cancelTimerRef.current = setTimeout(() => {
+        setShowToast(false);
+        navigation.navigate("Events Home", {
+          activeTab: "myEvents",
+          refreshKey: Date.now(),
+        });
+      }, 1400);
+    } catch (error) {
       setShowToast(false);
-      navigation.popToTop();
-    }, 2200);
+      console.error("Failed to cancel registration:", error);
+    }
+  };
+
+  const handleBackToEvents = () => {
+    navigation.navigate("Events Home", {
+      activeTab: "myEvents",
+      refreshKey: Date.now(),
+    });
   };
 
   return (
@@ -78,7 +95,7 @@ export default function RegistrationDetailsScreen() {
       <View style={{ paddingHorizontal: 22, paddingTop: 18 }}>
         <Text
           style={[
-            typography.h2,
+            typography.h4,
             { color: colors.Primary_Charcoal, marginBottom: 12 },
           ]}
         >
@@ -87,13 +104,13 @@ export default function RegistrationDetailsScreen() {
         <View style={{ gap: 14 }}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <CalendarIcon size={34} color={colors.Primary_Charcoal} />
-            <Text style={[typography.h3, { color: colors.Primary_Charcoal }]}>
+            <Text style={[typography.body, { color: colors.Primary_Charcoal }]}>
               {dateText}
             </Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <ClockIcon size={34} color={colors.Primary_Charcoal} />
-            <Text style={[typography.h3, { color: colors.Primary_Charcoal }]}>
+            <Text style={[typography.body, { color: colors.Primary_Charcoal }]}>
               {eventTime}
             </Text>
           </View>
@@ -101,7 +118,7 @@ export default function RegistrationDetailsScreen() {
 
         <Text
           style={[
-            typography.h2,
+            typography.h4,
             { color: colors.Primary_Charcoal, marginTop: 28, marginBottom: 10 },
           ]}
         >
@@ -110,7 +127,10 @@ export default function RegistrationDetailsScreen() {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <MapPinSimpleIcon size={34} color={colors.Primary_Charcoal} />
           <Text
-            style={[typography.h3, { color: colors.Primary_Charcoal, flex: 1 }]}
+            style={[
+              typography.body,
+              { color: colors.Primary_Charcoal, flex: 1 },
+            ]}
           >
             {eventLocation}
           </Text>
@@ -154,6 +174,23 @@ export default function RegistrationDetailsScreen() {
         >
           {eventTitle}
         </Text>
+
+        <Pressable
+          onPress={handleBackToEvents}
+          style={{
+            marginTop: 20,
+            backgroundColor: colors.primary_AC_Green,
+            borderRadius: 12,
+            paddingVertical: 12,
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={[typography.secondaryBody, { color: colors.primary_White }]}
+          >
+            Back to events
+          </Text>
+        </Pressable>
       </View>
 
       {showToast ? (
@@ -180,7 +217,7 @@ export default function RegistrationDetailsScreen() {
           }}
         >
           <Check size={28} color={colors.primary_White} weight="bold" />
-          <Text style={[typography.h3, { color: colors.primary_White }]}>
+          <Text style={[typography.body, { color: colors.primary_White }]}>
             Cancellation complete
           </Text>
         </View>

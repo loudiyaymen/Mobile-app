@@ -14,6 +14,14 @@ function generateReferenceCode() {
   return `REF-${year}-${suffix}`;
 }
 
+function getShortReference(referenceCode) {
+  const raw = String(referenceCode || "").trim();
+  if (!raw) return generateReferenceCode();
+  if (/^REF-/i.test(raw)) return raw;
+  const compact = raw.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+  return `REF-${compact.slice(0, 8)}`;
+}
+
 export default function ReportSubmittedScreen() {
   const navigation = useNavigation();
   const route = useRoute();
@@ -21,7 +29,7 @@ export default function ReportSubmittedScreen() {
   const insets = useSafeAreaInsets();
 
   const [referenceCode] = useState(
-    reportData?.referenceCode || generateReferenceCode,
+    getShortReference(reportData?.referenceCode),
   );
   const [saved, setSaved] = useState(false);
   const saveStarted = useRef(false);
@@ -45,7 +53,7 @@ export default function ReportSubmittedScreen() {
           name: undefined,
           email: undefined,
           referenceCode,
-          status: reportData?.status || "Opened",
+          status: reportData?.status || "Submitted",
           createdAt: reportData?.createdAt || new Date().toISOString(),
         };
 

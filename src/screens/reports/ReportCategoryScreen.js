@@ -12,7 +12,12 @@ export default function ReportCategoryScreen() {
       onPress={onPress}
       style={[
         styles.category,
-        { borderWidth: 1, borderColor: colors.Primary_Charcoal },
+        {
+          borderWidth: 1,
+          borderColor: colors.Primary_Charcoal,
+          minHeight: 112,
+          justifyContent: "left",
+        },
       ]}
     >
       <View>

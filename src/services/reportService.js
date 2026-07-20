@@ -31,11 +31,11 @@ function mapApiType(type) {
 }
 
 function mapApiStatus(status) {
-  if (status === "new") return "Opened";
+  if (status === "new") return "Submitted";
   if (status === "in_review") return "In Review";
   if (status === "resolved") return "Resolved";
   if (status === "dismissed") return "Dismissed";
-  return "Opened";
+  return "Submitted";
 }
 
 function normalizeApiReport(report) {

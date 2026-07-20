@@ -109,7 +109,7 @@ export default function ReportIncidentScreen() {
         media,
         anonymous,
         emailUpdates,
-        status: created.status || "Opened",
+        status: created.status || "Submitted",
         referenceCode: created.referenceCode || created.id,
         createdAt: created.createdAt,
       };

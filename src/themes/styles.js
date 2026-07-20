@@ -173,10 +173,11 @@ const styles = StyleSheet.create({
   sosFabHoldHint: {
     position: "absolute",
     top: -16,
-    left: -88,
+    left: "50%",
+    transform: [{ translateX: -65 }],
     width: 130,
     fontSize: 12,
-    textAlign: "left",
+    textAlign: "center",
     color: colors.Dark_Grey,
     fontWeight: "500",
     backgroundColor: colors.primary_White,
@@ -188,11 +189,6 @@ const styles = StyleSheet.create({
   sosFabHoldHintActive: {
     color: colors.Primary_Charcoal,
     fontWeight: "600",
-  },
-  sosFabHoldHintIdle: {
-    left: -25,
-    width: 130,
-    textAlign: "center",
   },
 
   confirmScreenBackground: {
@@ -817,7 +813,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   reportHomeListContent: {
-    paddingBottom: 120,
+    paddingBottom: 40,
   },
   reportRow: {
     paddingVertical: 18,

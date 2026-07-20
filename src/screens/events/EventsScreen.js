@@ -11,10 +11,17 @@ import { typography } from "../../themes/typography";
 import Card from "../../components/Cards";
 import { fetchEventsByTab } from "../../services/eventService";
 import { colors } from "../../themes/color";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import {
+  useNavigation,
+  useFocusEffect,
+  useRoute,
+} from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function EventsScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const insets = useSafeAreaInsets();
   const [eventGroups, setEventGroups] = useState({
     allEvents: [],
     myEvents: [],
@@ -53,6 +60,14 @@ export default function EventsScreen() {
       loadData();
     }, []),
   );
+
+  useEffect(() => {
+    const requestedTab = route?.params?.activeTab;
+    if (requestedTab === "allEvents" || requestedTab === "myEvents") {
+      setActiveTab(requestedTab);
+      navigation.setParams({ activeTab: undefined, refreshKey: undefined });
+    }
+  }, [route?.params?.activeTab, navigation]);
 
   if (loading) {
     return (
@@ -134,7 +149,9 @@ export default function EventsScreen() {
           </Text>
         </Pressable>
       </View>
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: insets.bottom + 108 }}
+      >
         {groupedEvents.length === 0 ? (
           <View style={[styles.labelContainer, { marginTop: 30 }]}>
             <Text style={typography.h5}>No events available.</Text>

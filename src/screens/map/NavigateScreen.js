@@ -1,8 +1,31 @@
 import React from "react";
-import { View, Text, Pressable, TextInput, Alert, Modal } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  Alert,
+  Modal,
+  ScrollView,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
+import buildingA from "../../assets/building_graphs/building_A_unified.json";
+import buildingB from "../../assets/building_graphs/building_B_unified.json";
+import buildingC from "../../assets/building_graphs/building_C_unified.json";
+import buildingCA from "../../assets/building_graphs/building_CA_unified.json";
+import buildingD from "../../assets/building_graphs/building_D_unified.json";
+import buildingE from "../../assets/building_graphs/building_E_unified.json";
+import buildingF from "../../assets/building_graphs/building_F_unified.json";
+import buildingH from "../../assets/building_graphs/building_H_unified.json";
+import buildingJ from "../../assets/building_graphs/building_J_unified.json";
+import buildingN from "../../assets/building_graphs/building_N_unified.json";
+import buildingP from "../../assets/building_graphs/building_P_unified.json";
+import buildingT from "../../assets/building_graphs/building_T_unified.json";
+import buildingV from "../../assets/building_graphs/building_V_unified.json";
+import buildingZ from "../../assets/building_graphs/building_Z_unified.json";
 import {
   DeviceRotateIcon,
   LightbulbIcon,
@@ -13,33 +36,351 @@ import {
   ArrowRightIcon,
   StarIcon,
   CheckIcon,
+  XIcon,
 } from "phosphor-react-native";
 import { NavigationArrowIcon } from "phosphor-react-native";
+
+const GRAPH_DATASETS = {
+  A: buildingA,
+  B: buildingB,
+  C: buildingC,
+  CA: buildingCA,
+  D: buildingD,
+  E: buildingE,
+  F: buildingF,
+  H: buildingH,
+  J: buildingJ,
+  N: buildingN,
+  P: buildingP,
+  T: buildingT,
+  V: buildingV,
+  Z: buildingZ,
+};
+
+const EXCLUDED_WORDS = [
+  "entrance",
+  "exit",
+  "washroom",
+  "restroom",
+  "toilet",
+  "stairs",
+  "elevator",
+  "hallway",
+  "intersection",
+  "bridge",
+  "path",
+];
+
+const AMENITY_LABEL_HINTS = {
+  "Marketplace Food Court": ["food court", "cafeteria"],
+  "Tim Hortons": ["tim hortons"],
+  Starbucks: ["starbucks"],
+  Connections: ["connections"],
+  "The Fix": ["the fix"],
+  "Health Services": ["health services", "health service"],
+};
+
+const WAYFINDER_FAVORITES_STORAGE_KEY = "wayfinder.favoriteRooms.v1";
+
+function titleCase(value) {
+  return value
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+}
+
+function parseRoomLabel(rawLabel) {
+  const normalized = String(rawLabel || "")
+    .replace(/_/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const roomPattern = normalized.match(
+    /(?:room|romm)?\s*([a-z])\s*([0-9]{2,}[a-z0-9-]*)\s*(.*)$/i,
+  );
+  if (roomPattern) {
+    const qualifier = normalized.match(/\b(left|right|upper|lower|main)\b/i);
+    const code = `${roomPattern[1].toUpperCase()}${roomPattern[2].toUpperCase()}`;
+    const suffix = roomPattern[3] ? roomPattern[3].trim() : "";
+    let label = `Room ${code}`;
+
+    if (suffix && !/^(left|right|upper|lower|main)$/i.test(suffix)) {
+      label = `${label} - ${titleCase(suffix)}`;
+    }
+    if (qualifier) {
+      label = `${label} (${titleCase(qualifier[1])})`;
+    }
+    return label;
+  }
+
+  return titleCase(normalized);
+}
+
+function isRoomNode(node) {
+  if (!node || !node.label) return false;
+  const type = String(node.type || "")
+    .toLowerCase()
+    .trim();
+  return type === "room_door";
+}
+
+function isAmenityNode(node) {
+  if (!node || !node.label) return false;
+  const type = String(node.type || "")
+    .toLowerCase()
+    .trim();
+  const label = String(node.label || "").toLowerCase();
+
+  if (!(type === "room_door" || type === "poi")) return false;
+  return !EXCLUDED_WORDS.some((word) => label.includes(word));
+}
+
+function shortestPath(graph, startNodeId, endNodeId) {
+  if (!graph[startNodeId] || !graph[endNodeId]) return [];
+
+  const distances = {};
+  const previous = {};
+  const unvisited = new Set(Object.keys(graph));
+
+  for (const nodeId of unvisited) distances[nodeId] = Infinity;
+  distances[startNodeId] = 0;
+
+  while (unvisited.size > 0) {
+    let currentNodeId = null;
+
+    for (const nodeId of unvisited) {
+      if (
+        currentNodeId === null ||
+        distances[nodeId] < distances[currentNodeId]
+      ) {
+        currentNodeId = nodeId;
+      }
+    }
+
+    if (currentNodeId === null) break;
+    if (distances[currentNodeId] === Infinity) break;
+    if (currentNodeId === endNodeId) break;
+
+    unvisited.delete(currentNodeId);
+
+    const neighbors = graph[currentNodeId].neighbors || {};
+    for (const [neighborId, edgeDistance] of Object.entries(neighbors)) {
+      if (!graph[neighborId] || !unvisited.has(neighborId)) continue;
+      const candidateDistance = distances[currentNodeId] + Number(edgeDistance);
+      if (candidateDistance < distances[neighborId]) {
+        distances[neighborId] = candidateDistance;
+        previous[neighborId] = currentNodeId;
+      }
+    }
+  }
+
+  const path = [];
+  let current = endNodeId;
+  while (current) {
+    path.unshift(current);
+    if (current === startNodeId) break;
+    current = previous[current];
+  }
+
+  if (path[0] !== startNodeId) return [];
+  return path;
+}
+
+function formatDistance(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return "0m";
+  return `${Math.max(1, Math.round(numeric))}m`;
+}
+
+function inferTurnInstruction(previousNode, currentNode, nextNode) {
+  if (!previousNode || !currentNode || !nextNode) {
+    return {
+      direction: "up",
+      text: `Continue to ${nextNode?.name || "next point"}.`,
+    };
+  }
+
+  const vectorAX = currentNode.x - previousNode.x;
+  const vectorAY = currentNode.y - previousNode.y;
+  const vectorBX = nextNode.x - currentNode.x;
+  const vectorBY = nextNode.y - currentNode.y;
+  const cross = vectorAX * vectorBY - vectorAY * vectorBX;
+
+  if (Math.abs(cross) < 1e-3) {
+    return { direction: "up", text: `Continue straight to ${nextNode.name}.` };
+  }
+  if (cross > 0) {
+    return { direction: "right", text: `Turn right toward ${nextNode.name}.` };
+  }
+  return { direction: "right", text: `Turn left toward ${nextNode.name}.` };
+}
+
+function getNodeDisplayName(node, fallbackId) {
+  if (node?.name && String(node.name).trim()) return String(node.name).trim();
+  if (node?.label && String(node.label).trim()) {
+    return parseRoomLabel(String(node.label));
+  }
+  return `Waypoint ${String(fallbackId || "")}`.trim();
+}
+
+function buildRouteStepsFromPath(graph, path, startName, destinationName) {
+  if (!Array.isArray(path) || path.length < 2) return [];
+
+  const steps = [];
+  for (let index = 0; index < path.length - 1; index += 1) {
+    const currentNodeId = path[index];
+    const nextNodeId = path[index + 1];
+    const currentNode = graph[currentNodeId];
+    const nextNode = graph[nextNodeId];
+    const nextNodeName = getNodeDisplayName(nextNode, index + 2);
+    const edgeDistance = currentNode?.neighbors?.[nextNodeId] || 0;
+
+    let instruction;
+    let direction;
+    if (index === 0) {
+      instruction = `Start at ${startName} and proceed to ${nextNodeName}.`;
+      direction = "up";
+    } else {
+      const previousNode = graph[path[index - 1]];
+      const turnStep = inferTurnInstruction(previousNode, currentNode, {
+        ...nextNode,
+        name: nextNodeName,
+      });
+      instruction = turnStep.text;
+      direction = turnStep.direction;
+    }
+
+    steps.push({
+      id: index + 1,
+      distance: formatDistance(edgeDistance),
+      instruction,
+      direction,
+    });
+  }
+
+  steps.push({
+    id: steps.length + 1,
+    distance: "1m",
+    instruction: `You have arrived at ${destinationName}.`,
+    direction: "right",
+  });
+
+  return steps;
+}
 
 export default function NavigateScreen() {
   const [startingPoint, setStartingPoint] = React.useState("");
   const [destination, setDestination] = React.useState("");
+  const [selectedStart, setSelectedStart] = React.useState(null);
+  const [selectedDestination, setSelectedDestination] = React.useState(null);
   const [isNavigating, setIsNavigating] = React.useState(false);
   const [routeSteps, setRouteSteps] = React.useState([]);
   const [currentStepIndex, setCurrentStepIndex] = React.useState(0);
   const [activeSearchField, setActiveSearchField] = React.useState(null);
+  const [hasTypedInActiveField, setHasTypedInActiveField] =
+    React.useState(false);
   const [showArrivalModal, setShowArrivalModal] = React.useState(false);
+  const [favoriteKeys, setFavoriteKeys] = React.useState(() => new Set());
+  const [favoritesLoaded, setFavoritesLoaded] = React.useState(false);
 
-  const campusLocations = React.useMemo(
-    () => [
-      "Student Commons - Building E",
-      "Room T127",
-      "AC Hub",
-      "Room D354",
-      "Tim Hortons - Building A",
-      "Marketplace Food Court",
-      "Health Services",
-      "Connections",
-      "The Fix",
-      "Library - Building C",
-    ],
-    [],
-  );
+  const locationOptions = React.useMemo(() => {
+    const options = [];
+
+    Object.entries(GRAPH_DATASETS).forEach(([graphId, graph]) => {
+      Object.entries(graph).forEach(([nodeId, node]) => {
+        if (!isRoomNode(node)) return;
+
+        const displayName = parseRoomLabel(node.label);
+        if (!displayName) return;
+
+        options.push({
+          key: `${graphId}:${nodeId}`,
+          graphId,
+          nodeId,
+          rawLabel: String(node.label || ""),
+          name: displayName,
+        });
+      });
+    });
+
+    const duplicateCountByName = options.reduce((accumulator, option) => {
+      accumulator[option.name] = (accumulator[option.name] || 0) + 1;
+      return accumulator;
+    }, {});
+
+    return options
+      .map((option) => ({
+        ...option,
+        name:
+          duplicateCountByName[option.name] > 1
+            ? `${option.name} (${option.graphId})`
+            : option.name,
+      }))
+      .sort((first, second) => first.name.localeCompare(second.name));
+  }, []);
+
+  const amenityTargetOptions = React.useMemo(() => {
+    const options = [];
+
+    Object.entries(GRAPH_DATASETS).forEach(([graphId, graph]) => {
+      Object.entries(graph).forEach(([nodeId, node]) => {
+        if (!isAmenityNode(node)) return;
+        options.push({
+          key: `${graphId}:${nodeId}`,
+          graphId,
+          nodeId,
+          rawLabel: String(node.label || ""),
+          name: parseRoomLabel(node.label),
+        });
+      });
+    });
+
+    return options;
+  }, []);
+
+  const optionByName = React.useMemo(() => {
+    const lookup = new Map();
+    locationOptions.forEach((option) => {
+      lookup.set(option.name, option);
+    });
+    return lookup;
+  }, [locationOptions]);
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    async function loadFavorites() {
+      try {
+        const raw = await AsyncStorage.getItem(WAYFINDER_FAVORITES_STORAGE_KEY);
+        if (!mounted || !raw) return;
+
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return;
+
+        const validKeys = new Set(locationOptions.map((option) => option.key));
+        const filtered = parsed.filter((key) => validKeys.has(key));
+        setFavoriteKeys(new Set(filtered));
+      } catch {
+      } finally {
+        if (mounted) setFavoritesLoaded(true);
+      }
+    }
+
+    loadFavorites();
+    return () => {
+      mounted = false;
+    };
+  }, [locationOptions]);
+
+  React.useEffect(() => {
+    if (!favoritesLoaded) return;
+    const favoriteList = Array.from(favoriteKeys);
+    AsyncStorage.setItem(
+      WAYFINDER_FAVORITES_STORAGE_KEY,
+      JSON.stringify(favoriteList),
+    ).catch(() => {});
+  }, [favoriteKeys, favoritesLoaded]);
 
   const amenitiesList = [
     { id: 1, name: "Marketplace Food Court", icon: ForkKnifeIcon },
@@ -61,104 +402,140 @@ export default function NavigateScreen() {
     </Pressable>
   ));
 
-  const buildRouteSteps = React.useCallback((to) => {
-    return [
-      {
-        id: 1,
-        distance: "80m",
-        instruction: "Head east on Campus Drive",
-        direction: "right",
-      },
-      {
-        id: 2,
-        distance: "60m",
-        instruction: "Continue straight",
-        direction: "up",
-      },
-      {
-        id: 3,
-        distance: "10m",
-        instruction: "Turn on T building",
-        direction: "right",
-      },
-      {
-        id: 4,
-        distance: "20m",
-        instruction: "Continue straight",
-        direction: "up",
-      },
-      {
-        id: 5,
-        distance: "1m",
-        instruction: `${to} will be on your right`,
-        direction: "right",
-      },
-    ];
-  }, []);
-
   const activeStep = routeSteps[currentStepIndex];
   const progressPercent = routeSteps.length
     ? ((currentStepIndex + 1) / routeSteps.length) * 100
     : 0;
   const activeSearchValue =
     activeSearchField === "start" ? startingPoint : destination;
+
+  const anchorGraphId =
+    selectedStart?.graphId || selectedDestination?.graphId || null;
+
   const filteredSuggestions = React.useMemo(() => {
-    const query = activeSearchValue.trim().toLowerCase();
-    if (!activeSearchField || query.length === 0) {
+    const query = hasTypedInActiveField
+      ? activeSearchValue.trim().toLowerCase()
+      : "";
+    if (!activeSearchField) {
       return [];
     }
 
-    return campusLocations
-      .filter((location) => location.toLowerCase().includes(query))
-      .slice(0, 5);
-  }, [activeSearchField, activeSearchValue, campusLocations]);
+    let scopedOptions = locationOptions;
+    if (anchorGraphId) {
+      if (activeSearchField === "destination" && selectedStart?.graphId) {
+        scopedOptions = locationOptions.filter(
+          (option) => option.graphId === selectedStart.graphId,
+        );
+      } else if (
+        activeSearchField === "start" &&
+        selectedDestination?.graphId
+      ) {
+        scopedOptions = locationOptions.filter(
+          (option) => option.graphId === selectedDestination.graphId,
+        );
+      }
+    }
+
+    if (activeSearchField === "start" && selectedDestination) {
+      scopedOptions = scopedOptions.filter(
+        (option) => option.key !== selectedDestination.key,
+      );
+    }
+    if (activeSearchField === "destination" && selectedStart) {
+      scopedOptions = scopedOptions.filter(
+        (option) => option.key !== selectedStart.key,
+      );
+    }
+
+    const filtered = !query
+      ? scopedOptions
+      : scopedOptions.filter((option) =>
+          option.name.toLowerCase().includes(query),
+        );
+
+    return filtered.sort((first, second) => {
+      const firstFav = favoriteKeys.has(first.key) ? 1 : 0;
+      const secondFav = favoriteKeys.has(second.key) ? 1 : 0;
+      if (firstFav !== secondFav) return secondFav - firstFav;
+      return first.name.localeCompare(second.name);
+    });
+  }, [
+    activeSearchField,
+    activeSearchValue,
+    hasTypedInActiveField,
+    locationOptions,
+    selectedStart,
+    selectedDestination,
+    anchorGraphId,
+    favoriteKeys,
+  ]);
 
   const handleSwap = () => {
-    setStartingPoint(destination);
-    setDestination(startingPoint);
+    if (!selectedStart || !selectedDestination) {
+      setStartingPoint(destination);
+      setDestination(startingPoint);
+      setSelectedStart(selectedDestination);
+      setSelectedDestination(selectedStart);
+      return;
+    }
+
+    setStartingPoint(selectedDestination.name);
+    setDestination(selectedStart.name);
+    setSelectedStart(selectedDestination);
+    setSelectedDestination(selectedStart);
   };
 
   const handleSearchChange = (field, value) => {
+    setHasTypedInActiveField(true);
     if (field === "start") {
       setStartingPoint(value);
+      setSelectedStart(null);
     } else {
       setDestination(value);
+      setSelectedDestination(null);
     }
     setActiveSearchField(field);
   };
 
-  const handleSelectSuggestion = (field, value) => {
+  const handleSelectSuggestion = (field, option) => {
     if (field === "start") {
-      setStartingPoint(value);
+      setStartingPoint(option.name);
+      setSelectedStart(option);
     } else {
-      setDestination(value);
+      setDestination(option.name);
+      setSelectedDestination(option);
     }
     setActiveSearchField(null);
+    setHasTypedInActiveField(false);
   };
 
-  const handleSearchBlur = () => {
-    setTimeout(() => {
-      setActiveSearchField(null);
-    }, 120);
+  const handleInputFocus = (field) => {
+    setActiveSearchField(field);
+    setHasTypedInActiveField(false);
   };
 
-  const isSameLocation = (from, to) => {
-    return from.trim().toLowerCase() === to.trim().toLowerCase();
+  const toggleFavorite = (option) => {
+    setFavoriteKeys((previous) => {
+      const next = new Set(previous);
+      if (next.has(option.key)) {
+        next.delete(option.key);
+      } else {
+        next.add(option.key);
+      }
+      return next;
+    });
   };
 
-  const startNavigationSession = (from, to) => {
-    const fromValue = from.trim();
-    const toValue = to.trim();
-
-    if (!fromValue || !toValue) {
+  const startNavigationSession = (startSelection, destinationSelection) => {
+    if (!startSelection || !destinationSelection) {
       Alert.alert(
         "Missing route details",
-        "Please enter both a starting point and destination.",
+        "Please choose a start and destination from the dropdown list.",
       );
       return;
     }
 
-    if (isSameLocation(fromValue, toValue)) {
+    if (startSelection.key === destinationSelection.key) {
       Alert.alert(
         "Invalid route",
         "Starting point and destination cannot be the same.",
@@ -166,16 +543,64 @@ export default function NavigateScreen() {
       return;
     }
 
-    setStartingPoint(fromValue);
-    setDestination(toValue);
-    const steps = buildRouteSteps(toValue);
+    if (startSelection.graphId !== destinationSelection.graphId) {
+      Alert.alert(
+        "Route unavailable",
+        "Start and destination must be in the same building for now.",
+      );
+      return;
+    }
+
+    const graph = GRAPH_DATASETS[startSelection.graphId];
+    const path = shortestPath(
+      graph,
+      startSelection.nodeId,
+      destinationSelection.nodeId,
+    );
+    if (!path.length) {
+      Alert.alert(
+        "Route unavailable",
+        "No path was found between those two points in this building.",
+      );
+      return;
+    }
+
+    const graphWithDisplayNames = { ...graph };
+    path.forEach((nodeId) => {
+      const option = locationOptions.find(
+        (candidate) =>
+          candidate.graphId === startSelection.graphId &&
+          candidate.nodeId === nodeId,
+      );
+      if (option) {
+        graphWithDisplayNames[nodeId] = {
+          ...graphWithDisplayNames[nodeId],
+          name: option.name,
+        };
+      }
+    });
+
+    setStartingPoint(startSelection.name);
+    setDestination(destinationSelection.name);
+    const steps = buildRouteStepsFromPath(
+      graphWithDisplayNames,
+      path,
+      startSelection.name,
+      destinationSelection.name,
+    );
     setRouteSteps(steps);
     setCurrentStepIndex(0);
     setIsNavigating(true);
   };
 
   const handleStartNavigation = () => {
-    startNavigationSession(startingPoint, destination);
+    const resolvedStart =
+      selectedStart || optionByName.get(startingPoint.trim());
+    const resolvedDestination =
+      selectedDestination || optionByName.get(destination.trim());
+    setSelectedStart(resolvedStart || null);
+    setSelectedDestination(resolvedDestination || null);
+    startNavigationSession(resolvedStart, resolvedDestination);
   };
 
   const handleNextStep = () => {
@@ -198,7 +623,10 @@ export default function NavigateScreen() {
     setCurrentStepIndex(0);
     setStartingPoint("");
     setDestination("");
+    setSelectedStart(null);
+    setSelectedDestination(null);
     setActiveSearchField(null);
+    setHasTypedInActiveField(false);
   };
 
   const handleEndNavigation = () => {
@@ -215,8 +643,88 @@ export default function NavigateScreen() {
   };
 
   const handleAmenityPress = (amenity) => {
-    setDestination(amenity.name);
+    const hints = AMENITY_LABEL_HINTS[amenity.name] || [
+      amenity.name.toLowerCase(),
+    ];
+
+    const candidates = amenityTargetOptions.filter((option) =>
+      hints.some((hint) => option.rawLabel.toLowerCase().includes(hint)),
+    );
+
+    const amenityOption = candidates[0];
+
+    if (!amenityOption) {
+      Alert.alert(
+        "Unavailable",
+        "This amenity is not available in the selected building graph.",
+      );
+      return;
+    }
+
+    const targetField = activeSearchField === "start" ? "start" : "destination";
+    if (targetField === "start") {
+      setStartingPoint(amenityOption.name);
+      setSelectedStart(amenityOption);
+      setDestination("");
+      setSelectedDestination(null);
+    } else {
+      setDestination(amenityOption.name);
+      setSelectedDestination(amenityOption);
+      setStartingPoint("");
+      setSelectedStart(null);
+    }
+
+    setIsNavigating(false);
+    setRouteSteps([]);
+    setCurrentStepIndex(0);
     setActiveSearchField(null);
+    setHasTypedInActiveField(false);
+  };
+
+  const renderSuggestionsDropdown = () => {
+    if (filteredSuggestions.length === 0) return null;
+
+    return (
+      <View style={styles.searchDropdown}>
+        <ScrollView
+          style={{ maxHeight: 240 }}
+          nestedScrollEnabled
+          keyboardShouldPersistTaps="handled"
+        >
+          {filteredSuggestions.map((location) => {
+            const isFavorite = favoriteKeys.has(location.key);
+            return (
+              <View key={location.key} style={styles.searchDropdownItem}>
+                <Pressable onPress={() => toggleFavorite(location)} hitSlop={8}>
+                  <StarIcon
+                    size={16}
+                    color={isFavorite ? colors.Warning_line : colors.Dark_Grey}
+                    weight={isFavorite ? "fill" : "regular"}
+                  />
+                </Pressable>
+
+                <Pressable
+                  style={{ flex: 1, paddingVertical: 10 }}
+                  onPress={() =>
+                    handleSelectSuggestion(activeSearchField, location)
+                  }
+                >
+                  <Text
+                    style={[
+                      typography.body,
+                      styles.searchDropdownText,
+                      { color: colors.Primary_Charcoal },
+                    ]}
+                  >
+                    {location.name}
+                  </Text>
+                </Pressable>
+              </View>
+            );
+          })}
+        </ScrollView>
+      </View>
+    );
   };
 
   return (
@@ -244,54 +752,28 @@ export default function NavigateScreen() {
               placeholder="Starting Point"
               placeholderTextColor={colors.Primary_Charcoal}
               value={startingPoint}
-              onFocus={() => setActiveSearchField("start")}
-              onBlur={handleSearchBlur}
+              onFocus={() => handleInputFocus("start")}
               onChangeText={(value) => handleSearchChange("start", value)}
             />
+            {activeSearchField === "start" ? renderSuggestionsDropdown() : null}
+
             <TextInput
               style={[styles.input, { marginBottom: 0 }]}
               placeholder="Destination"
               placeholderTextColor={colors.Primary_Charcoal}
               value={destination}
-              onFocus={() => setActiveSearchField("destination")}
-              onBlur={handleSearchBlur}
+              onFocus={() => handleInputFocus("destination")}
               onChangeText={(value) => handleSearchChange("destination", value)}
             />
-
-            {filteredSuggestions.length > 0 ? (
-              <View style={styles.searchDropdown}>
-                {filteredSuggestions.map((location) => (
-                  <Pressable
-                    key={location}
-                    style={styles.searchDropdownItem}
-                    onPress={() =>
-                      handleSelectSuggestion(activeSearchField, location)
-                    }
-                  >
-                    <StarIcon
-                      size={16}
-                      color={colors.Warning_line}
-                      weight="fill"
-                    />
-                    <Text
-                      style={[
-                        typography.body,
-                        styles.searchDropdownText,
-                        { color: colors.Primary_Charcoal },
-                      ]}
-                    >
-                      {location}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            ) : null}
+            {activeSearchField === "destination"
+              ? renderSuggestionsDropdown()
+              : null}
           </View>
 
-          <Pressable onPress={handleSwap}>
+          <Pressable onPress={handleSwap} disabled={isNavigating}>
             <DeviceRotateIcon
               size={28}
-              color={colors.primary_AC_Green}
+              color={isNavigating ? colors.Grey : colors.primary_AC_Green}
               weight="bold"
             />
           </Pressable>
@@ -322,23 +804,35 @@ export default function NavigateScreen() {
 
       {isNavigating && activeStep ? (
         <View style={styles.navigationCard}>
-          <View style={styles.routeDistanceRow}>
-            {activeStep.direction === "up" ? (
-              <ArrowUpIcon
-                size={24}
-                color={colors.Primary_Charcoal}
-                weight="bold"
-              />
-            ) : (
-              <ArrowRightIcon
-                size={24}
-                color={colors.Primary_Charcoal}
-                weight="bold"
-              />
-            )}
-            <Text style={[typography.h1, styles.routeDistanceText]}>
-              {activeStep.distance}
-            </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={styles.routeDistanceRow}>
+              {activeStep.direction === "up" ? (
+                <ArrowUpIcon
+                  size={24}
+                  color={colors.Primary_Charcoal}
+                  weight="bold"
+                />
+              ) : (
+                <ArrowRightIcon
+                  size={24}
+                  color={colors.Primary_Charcoal}
+                  weight="bold"
+                />
+              )}
+              <Text style={[typography.h1, styles.routeDistanceText]}>
+                {activeStep.distance}
+              </Text>
+            </View>
+
+            <Pressable onPress={handleEndNavigation} hitSlop={8}>
+              <XIcon size={22} color={colors.Dark_Grey} weight="bold" />
+            </Pressable>
           </View>
 
           <Text style={[typography.body, styles.routeActionText]}>
@@ -389,15 +883,6 @@ export default function NavigateScreen() {
               ]}
             >
               Back
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={[styles.buttonContainer, styles.routeButtonEnd]}
-            onPress={handleEndNavigation}
-          >
-            <Text style={[typography.secondaryBody, { color: colors.SOS_Red }]}>
-              End navigation
             </Text>
           </Pressable>
         </View>

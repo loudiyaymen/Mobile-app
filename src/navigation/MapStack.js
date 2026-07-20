@@ -21,13 +21,11 @@ export default function MapStack() {
         headerBackVisible: false,
         headerLeft: ({ canGoBack, tintColor }) =>
           canGoBack ? (
-            <View style={{ paddingLeft: 24, paddingVertical: 16 }}>
-              <HeaderBackButton
-                tintColor={tintColor ?? colors.Primary_Charcoal}
-                labelVisible={false}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
+            <HeaderBackButton
+              tintColor={tintColor ?? colors.Primary_Charcoal}
+              labelVisible={false}
+              onPress={() => navigation.goBack()}
+            />
           ) : null,
         headerRight: () => (
           <View style={{ paddingRight: 24, paddingVertical: 16 }}>
@@ -48,7 +46,6 @@ export default function MapStack() {
                 flexDirection: "column",
                 alignItems: "flex-start",
                 width: "100%",
-                paddingHorizontal: 24,
                 paddingVertical: 16,
               }}
             >
@@ -75,7 +72,7 @@ export default function MapStack() {
         options={{
           headerTitle: () => (
             <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
-              <View style={{ paddingHorizontal: 24, paddingVertical: 16 }}>
+              <View style={{ paddingVertical: 16 }}>
                 <Text
                   style={[
                     typography.h2,

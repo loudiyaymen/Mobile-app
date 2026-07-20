@@ -80,7 +80,7 @@ export default function ReportLostItemScreen() {
         details,
         media,
         locationText,
-        status: created.status || "Opened",
+        status: created.status || "Submitted",
         referenceCode: created.referenceCode || created.id,
         createdAt: created.createdAt,
       };

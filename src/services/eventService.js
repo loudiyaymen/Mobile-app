@@ -1,5 +1,13 @@
-import { apiFetch } from "./apiClient";
+import { apiFetch, resolveApiBaseUrl } from "./apiClient";
 import { getOrCreateDeviceId } from "./deviceIdentityService";
+
+function resolveImageUrl(url) {
+  if (!url) return null;
+  if (/^https?:\/\//i.test(url)) return url;
+  const origin = resolveApiBaseUrl().replace(/\/api\/v1$/, "");
+  const normalizedPath = url.startsWith("/") ? url : `/${url}`;
+  return `${origin}${normalizedPath}`;
+}
 
 function formatDateParts(isoDate) {
   const d = new Date(isoDate);
@@ -36,7 +44,7 @@ function normalizeEvent(item) {
     description:
       item?.description ||
       "Join us for this upcoming event and stay connected with campus safety updates.",
-    image: item?.event_image_url || null,
+    image: resolveImageUrl(item?.event_image_url),
     organizer:
       item?.host_type === "student" ? "Student organizer" : "Algonquin College",
     date: when.date,
@@ -65,7 +73,9 @@ export async function fetchEventsByTab() {
     const allRows = Array.isArray(allResponse?.data) ? allResponse.data : [];
     const myRows = Array.isArray(myResponse?.data) ? myResponse.data : [];
 
-    const myEvents = myRows.map(normalizeEvent);
+    const myEvents = myRows
+      .map(normalizeEvent)
+      .filter((event) => Boolean(event.id));
     const myEventIds = new Set(myEvents.map((event) => event.id));
     const allEvents = allRows.map((item) => {
       const normalized = normalizeEvent(item);
@@ -98,6 +108,21 @@ export async function registerForEvent(eventId) {
 
   return apiFetch(`/events/${id}/register`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ device_id: deviceId }),
+  });
+}
+
+export async function cancelEventRegistration(eventId) {
+  const id = String(eventId || "").trim();
+  if (!id) {
+    throw new Error("Event id is required");
+  }
+
+  const deviceId = await getOrCreateDeviceId();
+
+  return apiFetch(`/events/${id}/register`, {
+    method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ device_id: deviceId }),
   });

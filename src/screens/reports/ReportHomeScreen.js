@@ -37,7 +37,15 @@ function getDescriptionPreview(item) {
 }
 
 function getStatusLabel(item) {
-  return item.status && String(item.status).trim() ? item.status : "Opened";
+  return item.status && String(item.status).trim() ? item.status : "Submitted";
+}
+
+function getShortReference(referenceCode) {
+  const raw = String(referenceCode || "").trim();
+  if (!raw) return "-";
+  if (/^REF-/i.test(raw)) return raw;
+  const compact = raw.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+  return `REF-${compact.slice(0, 8)}`;
 }
 
 export default function ReportHomeScreen() {
@@ -92,7 +100,7 @@ export default function ReportHomeScreen() {
         </View>
 
         <Pressable
-          style={styles.reportButton}
+          style={[styles.reportButton, { marginTop: 14 }]}
           onPress={() => navigation.navigate("Select Category")}
         >
           <PlusCircleIcon name="add" size={24} color={colors.primary_White} />
@@ -107,7 +115,7 @@ export default function ReportHomeScreen() {
       style={[
         styles.container,
         styles.reportHomeListWrapper,
-        { paddingBottom: insets.bottom + reportHomeTabBarInset },
+        { paddingBottom: insets.bottom + 33 },
       ]}
     >
       <FlatList
@@ -118,7 +126,7 @@ export default function ReportHomeScreen() {
         renderItem={({ item }) => {
           const status = getStatusLabel(item);
           const pillBg =
-            reportStatusBackground[status] || reportStatusBackground.Opened;
+            reportStatusBackground[status] || reportStatusBackground.Submitted;
 
           return (
             <View style={styles.reportRow}>
@@ -155,7 +163,7 @@ export default function ReportHomeScreen() {
                     { color: colors.Dark_Grey, flex: 1, paddingRight: 12 },
                   ]}
                 >
-                  {item.referenceCode || "—"}
+                  {getShortReference(item.referenceCode)}
                 </Text>
                 <View
                   style={[
@@ -178,7 +186,7 @@ export default function ReportHomeScreen() {
         }}
       />
       <Pressable
-        style={styles.reportButton}
+        style={[styles.reportButton, { marginTop: 14 }]}
         onPress={() => navigation.navigate("Select Category")}
       >
         <PlusCircleIcon name="add" size={24} color={colors.primary_White} />

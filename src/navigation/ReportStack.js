@@ -27,13 +27,11 @@ export default function ReportStack() {
         headerBackVisible: false,
         headerLeft: ({ canGoBack, tintColor }) =>
           canGoBack ? (
-            <View style={{ paddingLeft: 24, paddingVertical: 16 }}>
-              <HeaderBackButton
-                tintColor={tintColor ?? colors.Primary_Charcoal}
-                labelVisible={false}
-                onPress={() => navigation.goBack()}
-              />
-            </View>
+            <HeaderBackButton
+              tintColor={tintColor ?? colors.Primary_Charcoal}
+              labelVisible={false}
+              onPress={() => navigation.goBack()}
+            />
           ) : null,
         headerRight: () => (
           <View style={{ paddingRight: 24, paddingVertical: 16 }}>
@@ -52,7 +50,7 @@ export default function ReportStack() {
             <View
               style={[
                 styles.reportStackHeaderTitleWrapper,
-                { paddingHorizontal: 24, paddingVertical: 16 },
+                { paddingVertical: 16 },
               ]}
             >
               <Text style={[typography.h2, styles.reportStackHeaderTitleText]}>
