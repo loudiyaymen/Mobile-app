@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -270,21 +270,20 @@ function buildRouteStepsFromPath(graph, path, startName, destinationName) {
 }
 
 export default function NavigateScreen() {
-  const [startingPoint, setStartingPoint] = React.useState("");
-  const [destination, setDestination] = React.useState("");
-  const [selectedStart, setSelectedStart] = React.useState(null);
-  const [selectedDestination, setSelectedDestination] = React.useState(null);
-  const [isNavigating, setIsNavigating] = React.useState(false);
-  const [routeSteps, setRouteSteps] = React.useState([]);
-  const [currentStepIndex, setCurrentStepIndex] = React.useState(0);
-  const [activeSearchField, setActiveSearchField] = React.useState(null);
-  const [hasTypedInActiveField, setHasTypedInActiveField] =
-    React.useState(false);
-  const [showArrivalModal, setShowArrivalModal] = React.useState(false);
-  const [favoriteKeys, setFavoriteKeys] = React.useState(() => new Set());
-  const [favoritesLoaded, setFavoritesLoaded] = React.useState(false);
+  const [startingPoint, setStartingPoint] = useState("");
+  const [destination, setDestination] = useState("");
+  const [selectedStart, setSelectedStart] = useState(null);
+  const [selectedDestination, setSelectedDestination] = useState(null);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [routeSteps, setRouteSteps] = useState([]);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [activeSearchField, setActiveSearchField] = useState(null);
+  const [hasTypedInActiveField, setHasTypedInActiveField] = useState(false);
+  const [showArrivalModal, setShowArrivalModal] = useState(false);
+  const [favoriteKeys, setFavoriteKeys] = useState(() => new Set());
+  const [favoritesLoaded, setFavoritesLoaded] = useState(false);
 
-  const locationOptions = React.useMemo(() => {
+  const locationOptions = useMemo(() => {
     const options = [];
 
     Object.entries(GRAPH_DATASETS).forEach(([graphId, graph]) => {
@@ -320,7 +319,7 @@ export default function NavigateScreen() {
       .sort((first, second) => first.name.localeCompare(second.name));
   }, []);
 
-  const amenityTargetOptions = React.useMemo(() => {
+  const amenityTargetOptions = useMemo(() => {
     const options = [];
 
     Object.entries(GRAPH_DATASETS).forEach(([graphId, graph]) => {
@@ -339,7 +338,7 @@ export default function NavigateScreen() {
     return options;
   }, []);
 
-  const optionByName = React.useMemo(() => {
+  const optionByName = useMemo(() => {
     const lookup = new Map();
     locationOptions.forEach((option) => {
       lookup.set(option.name, option);
@@ -347,7 +346,7 @@ export default function NavigateScreen() {
     return lookup;
   }, [locationOptions]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     async function loadFavorites() {
@@ -373,7 +372,7 @@ export default function NavigateScreen() {
     };
   }, [locationOptions]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!favoritesLoaded) return;
     const favoriteList = Array.from(favoriteKeys);
     AsyncStorage.setItem(
@@ -412,7 +411,7 @@ export default function NavigateScreen() {
   const anchorGraphId =
     selectedStart?.graphId || selectedDestination?.graphId || null;
 
-  const filteredSuggestions = React.useMemo(() => {
+  const filteredSuggestions = useMemo(() => {
     const query = hasTypedInActiveField
       ? activeSearchValue.trim().toLowerCase()
       : "";

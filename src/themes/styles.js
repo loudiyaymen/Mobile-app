@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   sosFabOverlayWrapper: {
     position: "absolute",
-    bottom: 105,
+    bottom: 114,
     right: 20,
     zIndex: 999,
     alignItems: "flex-end",
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   sosFabHoldHint: {
     position: "absolute",
-    top: -16,
+    top: -24,
     left: "50%",
     transform: [{ translateX: -65 }],
     width: 130,

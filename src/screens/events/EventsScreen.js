@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   View,
   Text,
@@ -29,7 +29,7 @@ export default function EventsScreen() {
   const [activeTab, setActiveTab] = useState("allEvents");
   const [loading, setLoading] = useState(true);
 
-  const groupedEvents = React.useMemo(() => {
+  const groupedEvents = useMemo(() => {
     const rows = eventGroups[activeTab] ?? [];
     const map = new Map();
 
@@ -47,7 +47,7 @@ export default function EventsScreen() {
   }, [activeTab, eventGroups]);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       async function loadData() {
         const result = await fetchEventsByTab();
         setEventGroups({

@@ -2,11 +2,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DEVICE_ID_KEY = "device_id";
 
-function generateUuidLike() {
-  const bytes = new Uint8Array(16);
-  for (let i = 0; i < 16; i += 1) {
+function fillRandomBytes(bytes) {
+  const cryptoApi = globalThis.crypto;
+  if (cryptoApi && typeof cryptoApi.getRandomValues === "function") {
+    cryptoApi.getRandomValues(bytes);
+    return;
+  }
+
+  for (let i = 0; i < bytes.length; i += 1) {
     bytes[i] = Math.floor(Math.random() * 256);
   }
+}
+
+function generateUuidFromBytes() {
+  const bytes = new Uint8Array(16);
+  fillRandomBytes(bytes);
 
   bytes[6] = (bytes[6] & 0x0f) | 0x40;
   bytes[8] = (bytes[8] & 0x3f) | 0x80;
@@ -19,6 +29,14 @@ function generateUuidLike() {
     hex.slice(8, 10).join(""),
     hex.slice(10, 16).join(""),
   ].join("-");
+}
+
+function generateUuidLike() {
+  const cryptoApi = globalThis.crypto;
+  if (cryptoApi && typeof cryptoApi.randomUUID === "function") {
+    return cryptoApi.randomUUID();
+  }
+  return generateUuidFromBytes();
 }
 
 export async function getOrCreateDeviceId() {
