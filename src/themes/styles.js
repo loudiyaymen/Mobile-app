@@ -506,6 +506,14 @@ const styles = StyleSheet.create({
     minHeight: 56,
     backgroundColor: colors.primary_White,
   },
+  inputRowError: {
+    borderColor: colors.SOS_Red,
+  },
+  fieldErrorText: {
+    color: colors.SOS_Red,
+    marginTop: 6,
+    paddingHorizontal: 4,
+  },
   fieldsRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -679,6 +687,34 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+  },
+  mediaPreviewBox: {
+    marginBottom: 14,
+    borderRadius: 12,
+    backgroundColor: colors.primary_White,
+    borderWidth: 1,
+    borderColor: "#DDE3DD",
+    padding: 10,
+  },
+  mediaPreviewImage: {
+    width: "100%",
+    height: 240,
+    borderRadius: 10,
+    backgroundColor: "#F4F4F4",
+  },
+  mediaRemoveButton: {
+    alignSelf: "flex-end",
+    marginTop: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: colors.SOS_Red,
+    backgroundColor: "rgba(179, 0, 0, 0.08)",
+  },
+  mediaRemoveButtonText: {
+    color: colors.SOS_Red,
+    fontWeight: "600",
   },
   checkboxRow: {
     flexDirection: "row",

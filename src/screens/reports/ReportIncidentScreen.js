@@ -23,6 +23,7 @@ import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
 import { submitReport } from "../../services/reportService";
 import { useSettings } from "../../context/SettingsContext";
+import { isNonEmptyString } from "../../utils/validation";
 
 export default function ReportIncidentScreen() {
   const navigation = useNavigation();
@@ -35,6 +36,7 @@ export default function ReportIncidentScreen() {
   const [anonymous, setAnonymous] = useState(false);
   const [emailUpdates, setEmailUpdates] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
   const { settings } = useSettings();
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -42,12 +44,24 @@ export default function ReportIncidentScreen() {
 
   const handleDateConfirm = (selectedDate) => {
     setDatePickerVisibility(false);
-    if (selectedDate) setDate(selectedDate);
+    if (selectedDate) {
+      setDate(selectedDate);
+      setErrors((currentErrors) => ({
+        ...currentErrors,
+        date: undefined,
+      }));
+    }
   };
 
   const handleTimeConfirm = (selectedTime) => {
     setTimePickerVisibility(false);
-    if (selectedTime) setTime(selectedTime);
+    if (selectedTime) {
+      setTime(selectedTime);
+      setErrors((currentErrors) => ({
+        ...currentErrors,
+        time: undefined,
+      }));
+    }
   };
 
   const handlePickMedia = async () => {
@@ -68,11 +82,29 @@ export default function ReportIncidentScreen() {
     }
   };
 
+  const handleRemoveMedia = () => {
+    setMedia(null);
+  };
+
   const handleSubmit = async () => {
-    if (!locationText || !date || !details) {
-      Alert.alert("Missing Fields", "Please fill in required fields.");
+    const nextErrors = {
+      locationText: isNonEmptyString(locationText)
+        ? undefined
+        : "Location is required.",
+      date: date ? undefined : "Select a date.",
+      time: time ? undefined : "Select a time.",
+      details: isNonEmptyString(details)
+        ? undefined
+        : "Incident details are required.",
+    };
+
+    if (Object.values(nextErrors).some(Boolean)) {
+      setErrors(nextErrors);
+      Alert.alert("Missing Fields", "Please complete the highlighted fields.");
       return;
     }
+
+    setErrors({});
 
     try {
       setIsSubmitting(true);
@@ -147,16 +179,31 @@ export default function ReportIncidentScreen() {
               style={[typography.body, styles.textInput]}
               placeholder="e.g., ACCE Building, Floor 2"
               value={locationText}
-              onChangeText={setLocationText}
+              onChangeText={(value) => {
+                setLocationText(value);
+                if (errors.locationText) {
+                  setErrors((currentErrors) => ({
+                    ...currentErrors,
+                    locationText: isNonEmptyString(value)
+                      ? undefined
+                      : currentErrors.locationText,
+                  }));
+                }
+              }}
             />
           </View>
         </View>
+        {errors.locationText ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.locationText}
+          </Text>
+        ) : null}
 
         <Text style={[typography.h4, styles.label]}>Date *</Text>
         <View style={styles.shadowContainer}>
           <Pressable
             onPress={() => setDatePickerVisibility(true)}
-            style={styles.inputRow}
+            style={[styles.inputRow, errors.date ? styles.inputRowError : null]}
           >
             <CalendarBlankIcon
               name="calendar"
@@ -182,12 +229,17 @@ export default function ReportIncidentScreen() {
           onConfirm={handleDateConfirm}
           onCancel={() => setDatePickerVisibility(false)}
         />
+        {errors.date ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.date}
+          </Text>
+        ) : null}
 
         <Text style={[typography.h4, styles.label]}>Time</Text>
         <View style={styles.shadowContainer}>
           <Pressable
             onPress={() => setTimePickerVisibility(true)}
-            style={styles.inputRow}
+            style={[styles.inputRow, errors.time ? styles.inputRowError : null]}
           >
             <ClockIcon name="time" size={24} color={colors.Primary_Charcoal} />
             <TextInput
@@ -218,17 +270,39 @@ export default function ReportIncidentScreen() {
           buttonTextColorIOS={colors.primary_AC_Green}
           is24Hour={false}
         />
+        {errors.time ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.time}
+          </Text>
+        ) : null}
 
         <Text style={[typography.h4, styles.label]}>Incident details *</Text>
         <View style={styles.shadowContainer}>
           <TextInput
             placeholder="Describe the situation (e.g., suspicious activity near E-Building entrance)"
-            style={[styles.textArea, typography.body]}
+            style={[
+              styles.textArea,
+              typography.body,
+              errors.details ? styles.inputRowError : null,
+            ]}
             multiline={true}
             value={details}
-            onChangeText={setDetails}
+            onChangeText={(value) => {
+              setDetails(value);
+              if (errors.details && isNonEmptyString(value)) {
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  details: undefined,
+                }));
+              }
+            }}
           />
         </View>
+        {errors.details ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.details}
+          </Text>
+        ) : null}
 
         <Text style={[typography.h4, styles.label]}>Attachments</Text>
         <Pressable onPress={handlePickMedia} style={styles.mediaBox}>
@@ -243,10 +317,19 @@ export default function ReportIncidentScreen() {
         </Pressable>
 
         {media && (
-          <Image
-            source={{ uri: media }}
-            style={{ width: "100%", height: 200, marginBottom: 20 }}
-          />
+          <View style={styles.mediaPreviewBox}>
+            <Image
+              source={{ uri: media }}
+              style={styles.mediaPreviewImage}
+              resizeMode="contain"
+            />
+            <Pressable
+              onPress={handleRemoveMedia}
+              style={styles.mediaRemoveButton}
+            >
+              <Text style={styles.mediaRemoveButtonText}>Remove photo</Text>
+            </Pressable>
+          </View>
         )}
 
         <Pressable

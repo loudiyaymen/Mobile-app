@@ -21,6 +21,7 @@ import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
 import { submitReport } from "../../services/reportService";
 import { useSettings } from "../../context/SettingsContext";
+import { isNonEmptyString, isValidEmail } from "../../utils/validation";
 
 export default function ReportLostItemScreen() {
   const navigation = useNavigation();
@@ -33,6 +34,7 @@ export default function ReportLostItemScreen() {
   const [anonymous, setAnonymous] = useState(false);
   const [updates, setUpdates] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
   const { settings } = useSettings();
 
   const handlePickMedia = async () => {
@@ -52,11 +54,25 @@ export default function ReportLostItemScreen() {
       setMedia(result.assets[0].uri);
     }
   };
+
+  const handleRemoveMedia = () => {
+    setMedia(null);
+  };
+
   const handleSubmit = async () => {
-    if (!name || !email || !details) {
-      Alert.alert("Missing Fields", "Please fill in required fields.");
+    const nextErrors = {
+      name: isNonEmptyString(name) ? undefined : "Name is required.",
+      email: isValidEmail(email) ? undefined : "Enter a valid email address.",
+      details: isNonEmptyString(details) ? undefined : "Details are required.",
+    };
+
+    if (Object.values(nextErrors).some(Boolean)) {
+      setErrors(nextErrors);
+      Alert.alert("Missing Fields", "Please complete the highlighted fields.");
       return;
     }
+
+    setErrors({});
 
     try {
       setIsSubmitting(true);
@@ -111,10 +127,23 @@ export default function ReportLostItemScreen() {
               style={[typography.body, styles.textInput]}
               placeholder="Enter your name"
               value={name}
-              onChangeText={setName}
+              onChangeText={(value) => {
+                setName(value);
+                if (errors.name && isNonEmptyString(value)) {
+                  setErrors((currentErrors) => ({
+                    ...currentErrors,
+                    name: undefined,
+                  }));
+                }
+              }}
             />
           </View>
         </View>
+        {errors.name ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.name}
+          </Text>
+        ) : null}
 
         <Text style={[typography.h4, styles.label]}>Email *</Text>
         <View style={styles.shadowContainer}>
@@ -128,21 +157,56 @@ export default function ReportLostItemScreen() {
               style={[typography.body, styles.textInput]}
               placeholder="Enter your Email"
               value={email}
-              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              autoCorrect={false}
+              textContentType="emailAddress"
+              autoComplete="email"
+              onChangeText={(value) => {
+                setEmail(value);
+                if (errors.email && isValidEmail(value)) {
+                  setErrors((currentErrors) => ({
+                    ...currentErrors,
+                    email: undefined,
+                  }));
+                }
+              }}
             />
           </View>
         </View>
+        {errors.email ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.email}
+          </Text>
+        ) : null}
 
         <Text style={[typography.h4, styles.label]}>Incident details *</Text>
         <View style={styles.shadowContainer}>
           <TextInput
             placeholder="Describe the situation (e.g., suspicious activity near E-Building entrance)"
-            style={[styles.textArea, typography.body]}
+            style={[
+              styles.textArea,
+              typography.body,
+              errors.details ? styles.inputRowError : null,
+            ]}
             multiline={true}
             value={details}
-            onChangeText={setDetails}
+            onChangeText={(value) => {
+              setDetails(value);
+              if (errors.details && isNonEmptyString(value)) {
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  details: undefined,
+                }));
+              }
+            }}
           />
         </View>
+        {errors.details ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.details}
+          </Text>
+        ) : null}
 
         <Text style={[typography.h4, styles.label]}>Location </Text>
         <View style={styles.shadowContainer}>
@@ -174,10 +238,19 @@ export default function ReportLostItemScreen() {
         </Pressable>
 
         {media && (
-          <Image
-            source={{ uri: media }}
-            style={{ width: "100%", height: 200, marginBottom: 20 }}
-          />
+          <View style={styles.mediaPreviewBox}>
+            <Image
+              source={{ uri: media }}
+              style={styles.mediaPreviewImage}
+              resizeMode="contain"
+            />
+            <Pressable
+              onPress={handleRemoveMedia}
+              style={styles.mediaRemoveButton}
+            >
+              <Text style={styles.mediaRemoveButtonText}>Remove photo</Text>
+            </Pressable>
+          </View>
         )}
 
         <Pressable

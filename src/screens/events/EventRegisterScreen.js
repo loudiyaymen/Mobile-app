@@ -11,6 +11,7 @@ import {
   EnvelopeIcon,
 } from "phosphor-react-native";
 import { registerForEvent } from "../../services/eventService";
+import { isNonEmptyString, isValidEmail } from "../../utils/validation";
 
 export default function EventRegisterScreen() {
   const route = useRoute();
@@ -18,12 +19,23 @@ export default function EventRegisterScreen() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const navigation = useNavigation();
 
   const isFormValid = useMemo(() => {
-    return name.trim().length > 0 && email.trim().length > 0;
+    return isNonEmptyString(name) && isValidEmail(email);
   }, [name, email]);
+
+  const clearFieldError = (fieldName, value, validator) => {
+    if (!errors[fieldName]) return;
+    if (validator(value)) {
+      setErrors((currentErrors) => ({
+        ...currentErrors,
+        [fieldName]: undefined,
+      }));
+    }
+  };
 
   const handleRegister = async () => {
     if (event?.isRegistered) {
@@ -35,35 +47,47 @@ export default function EventRegisterScreen() {
       return;
     }
 
-    if (isFormValid) {
-      try {
-        setIsSubmitting(true);
-        await registerForEvent(event?.id);
+    const nextErrors = {
+      name: isNonEmptyString(name) ? undefined : "Name is required.",
+      email: isValidEmail(email) ? undefined : "Enter a valid email address.",
+    };
 
-        navigation.navigate("Registration Details", {
-          event: { ...event, isRegistered: true },
-          registration: {
-            name: name.trim(),
-            email: email.trim(),
-          },
-        });
-      } catch (error) {
-        const message = String(error?.message || "");
-        if (message.toLowerCase().includes("already registered")) {
-          Alert.alert(
-            "Already registered",
-            "You are already registered for this event.",
-          );
-          navigation.navigate("Registration Details", { event });
-          return;
-        }
+    if (Object.values(nextErrors).some(Boolean)) {
+      setErrors(nextErrors);
+      Alert.alert("Invalid Input", "Please complete the highlighted fields.");
+      return;
+    }
 
-        Alert.alert("Registration failed", message || "Please try again.");
-      } finally {
-        setIsSubmitting(false);
+    setErrors({});
+
+    try {
+      setIsSubmitting(true);
+      await registerForEvent(event?.id, {
+        name: name.trim(),
+        email: email.trim(),
+      });
+
+      navigation.navigate("Registration Details", {
+        event: { ...event, isRegistered: true },
+        registration: {
+          name: name.trim(),
+          email: email.trim(),
+        },
+      });
+    } catch (error) {
+      const message = String(error?.message || "");
+      if (message.toLowerCase().includes("already registered")) {
+        Alert.alert(
+          "Already registered",
+          "You are already registered for this event.",
+        );
+        navigation.navigate("Registration Details", { event });
+        return;
       }
-    } else {
-      Alert.alert("Invalid Input", "Please fill in all required fields.");
+
+      Alert.alert("Registration failed", message || "Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -109,10 +133,18 @@ export default function EventRegisterScreen() {
               autoCapitalize="words"
               autoCorrect={false}
               value={name}
-              onChangeText={setName}
+              onChangeText={(value) => {
+                setName(value);
+                clearFieldError("name", value, isNonEmptyString);
+              }}
             />
           </View>
         </View>
+        {errors.name ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.name}
+          </Text>
+        ) : null}
         <Text style={[typography.h4, styles.label]}>Email *</Text>
         <View style={styles.shadowContainer}>
           <View style={styles.inputRow}>
@@ -130,10 +162,18 @@ export default function EventRegisterScreen() {
               textContentType="emailAddress"
               autoComplete="email"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(value) => {
+                setEmail(value);
+                clearFieldError("email", value, isValidEmail);
+              }}
             />
           </View>
         </View>
+        {errors.email ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.email}
+          </Text>
+        ) : null}
         <Pressable
           style={[
             styles.registerButton,

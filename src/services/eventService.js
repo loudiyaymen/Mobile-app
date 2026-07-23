@@ -98,18 +98,24 @@ export async function fetchEventsByTab() {
   }
 }
 
-export async function registerForEvent(eventId) {
+export async function registerForEvent(eventId, participant = {}) {
   const id = String(eventId || "").trim();
   if (!id) {
     throw new Error("Event id is required");
   }
 
   const deviceId = await getOrCreateDeviceId();
+  const name = String(participant.name || "").trim();
+  const email = String(participant.email || "").trim();
 
   return apiFetch(`/events/${id}/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ device_id: deviceId }),
+    body: JSON.stringify({
+      device_id: deviceId,
+      name,
+      email,
+    }),
   });
 }
 
