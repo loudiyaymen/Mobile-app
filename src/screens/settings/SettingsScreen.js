@@ -9,7 +9,6 @@ const sections = [
     title: "Preferences & Personalization",
     rows: [
       { label: "Campus", icon: "map-outline", route: "Campus" },
-      { label: "Appearance", icon: "moon-outline", route: "Appearance" },
       {
         label: "Accessibility",
         icon: "accessibility-outline",
@@ -83,13 +82,11 @@ export default function SettingsScreen({ navigation }) {
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: colors.Light_Grey }}
+      style={{ flex: 1, backgroundColor: colors.primary_White }}
       contentContainerStyle={{ paddingBottom: 36 }}
     >
       <View
         style={{
-          borderBottomWidth: 1,
-          borderBottomColor: "#A8A8A8",
           paddingHorizontal: 24,
           paddingTop: insets.top + 16,
           paddingBottom: 16,

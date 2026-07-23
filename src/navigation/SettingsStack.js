@@ -4,7 +4,6 @@ import SettingsScreen from "../screens/settings/SettingsScreen";
 import { headerOptions, headerStyle } from "../themes/header.styles";
 import NotificationHeaderButton from "../components/NotificationHeaderButton";
 import CampusScreen from "../screens/settings/CampusScreen";
-import AppearanceScreen from "../screens/settings/AppearanceScreen";
 import AccessibilityScreen from "../screens/settings/AccessibilityScreen";
 import EmergencyContactsScreen from "../screens/settings/EmergencyContactsScreen";
 import AlertTypesScreen from "../screens/settings/AlertTypesScreen";
@@ -40,7 +39,6 @@ export default function SettingsStack() {
         }}
       />
       <Stack.Screen name="Campus" component={CampusScreen} />
-      <Stack.Screen name="Appearance" component={AppearanceScreen} />
       <Stack.Screen name="Accessibility" component={AccessibilityScreen} />
       <Stack.Screen
         name="Emergency Contacts"
