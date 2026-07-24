@@ -3,6 +3,7 @@ import Slider from "@react-native-community/slider";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
 import { TEXT_SIZE_OPTIONS, useSettings } from "../../context/SettingsContext";
+import { settingsStyles } from "./settingsStyles";
 
 const colorModes = [
   { id: "none", title: "None", subtitle: "Default app colors" },
@@ -64,22 +65,16 @@ export default function AccessibilityScreen() {
     TEXT_SIZE_OPTIONS[settings.textSizeIndex] || TEXT_SIZE_OPTIONS[1];
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.Light_Grey, padding: 12 }}>
+    <View style={settingsStyles.screen}>
       <View
         style={{
+          ...settingsStyles.card,
           marginTop: 12,
           backgroundColor: "#EDEDED",
-          borderRadius: 16,
-          paddingHorizontal: 14,
-          paddingVertical: 14,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
+          ...settingsStyles.row,
         }}
       >
-        <Text
-          style={[typography.h3, { color: colors.Primary_Charcoal, flex: 1 }]}
-        >
+        <Text style={[typography.h3, settingsStyles.label, { flex: 1 }]}>
           Are you a person with a disability?
         </Text>
         <Switch

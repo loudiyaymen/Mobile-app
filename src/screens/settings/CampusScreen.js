@@ -5,6 +5,7 @@ import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
 import { useSettings } from "../../context/SettingsContext";
 import { fetchCampuses } from "../../services/reportService";
+import { settingsStyles } from "./settingsStyles";
 
 function normalizeCampusRows(rows = []) {
   return rows
@@ -22,21 +23,12 @@ function CampusRow({ label, selected, disabled, onPress }) {
     <Pressable
       onPress={onPress}
       disabled={disabled}
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 18,
-        paddingVertical: 20,
-        backgroundColor: disabled ? "#B7B7B7" : "#EDEDED",
-      }}
+      style={[settingsStyles.row, disabled && { opacity: 0.5 }]}
     >
       <Text
         style={[
           typography.h4,
-          {
-            color: disabled ? "#666666" : colors.Primary_Charcoal,
-          },
+          disabled ? { color: "#666666" } : settingsStyles.label,
         ]}
       >
         {label}
@@ -109,10 +101,9 @@ export default function CampusScreen() {
     return (
       <View
         style={{
-          flex: 1,
+          ...settingsStyles.screen,
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: colors.Light_Grey,
         }}
       >
         <ActivityIndicator size="small" color={colors.primary_AC_Green} />
@@ -121,8 +112,8 @@ export default function CampusScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.Light_Grey, padding: 16 }}>
-      <View style={{ borderRadius: 14, overflow: "hidden" }}>
+    <View style={settingsStyles.screen}>
+      <View style={settingsStyles.card}>
         {campuses.map((campus, index) => (
           <CampusRow
             key={campus.campusId || campus.name}

@@ -18,6 +18,7 @@ export default function EventRegisterScreen() {
   const { event } = route.params ?? {};
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [emailTouched, setEmailTouched] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -49,7 +50,9 @@ export default function EventRegisterScreen() {
 
     const nextErrors = {
       name: isNonEmptyString(name) ? undefined : "Name is required.",
-      email: isValidEmail(email) ? undefined : "Enter a valid email address.",
+      email: isValidEmail(email)
+        ? undefined
+        : "Enter a valid email in the format name@example.com.",
     };
 
     if (Object.values(nextErrors).some(Boolean)) {
@@ -121,7 +124,9 @@ export default function EventRegisterScreen() {
         </View>
         <Text style={[typography.h4, styles.label]}>Name *</Text>
         <View style={styles.shadowContainer}>
-          <View style={styles.inputRow}>
+          <View
+            style={[styles.inputRow, errors.name ? styles.inputRowError : null]}
+          >
             <UserIcon
               size={26}
               color={colors.Primary_Charcoal}
@@ -147,7 +152,12 @@ export default function EventRegisterScreen() {
         ) : null}
         <Text style={[typography.h4, styles.label]}>Email *</Text>
         <View style={styles.shadowContainer}>
-          <View style={styles.inputRow}>
+          <View
+            style={[
+              styles.inputRow,
+              errors.email ? styles.inputRowError : null,
+            ]}
+          >
             <EnvelopeIcon
               size={26}
               color={colors.Primary_Charcoal}
@@ -162,8 +172,28 @@ export default function EventRegisterScreen() {
               textContentType="emailAddress"
               autoComplete="email"
               value={email}
+              onBlur={() => {
+                setEmailTouched(true);
+                if (!isValidEmail(email)) {
+                  setErrors((currentErrors) => ({
+                    ...currentErrors,
+                    email:
+                      "Enter a valid email in the format name@example.com.",
+                  }));
+                }
+              }}
               onChangeText={(value) => {
                 setEmail(value);
+                if (emailTouched) {
+                  setErrors((currentErrors) => ({
+                    ...currentErrors,
+                    email: isValidEmail(value)
+                      ? undefined
+                      : "Enter a valid email in the format name@example.com.",
+                  }));
+                  return;
+                }
+
                 clearFieldError("email", value, isValidEmail);
               }}
             />

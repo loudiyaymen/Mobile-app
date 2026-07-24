@@ -187,12 +187,6 @@ function shortestPath(graph, startNodeId, endNodeId) {
   return path;
 }
 
-function formatDistance(value) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return "0m";
-  return `${Math.max(1, Math.round(numeric))}m`;
-}
-
 function inferTurnInstruction(previousNode, currentNode, nextNode) {
   if (!previousNode || !currentNode || !nextNode) {
     return {
@@ -253,7 +247,6 @@ function buildRouteStepsFromPath(graph, path, startName, destinationName) {
 
     steps.push({
       id: index + 1,
-      distance: formatDistance(edgeDistance),
       instruction,
       direction,
     });
@@ -261,7 +254,6 @@ function buildRouteStepsFromPath(graph, path, startName, destinationName) {
 
   steps.push({
     id: steps.length + 1,
-    distance: "1m",
     instruction: `You have arrived at ${destinationName}.`,
     direction: "right",
   });
@@ -810,7 +802,9 @@ export default function NavigateScreen() {
               justifyContent: "space-between",
             }}
           >
-            <View style={styles.routeDistanceRow}>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
               {activeStep.direction === "up" ? (
                 <ArrowUpIcon
                   size={24}
@@ -824,9 +818,6 @@ export default function NavigateScreen() {
                   weight="bold"
                 />
               )}
-              <Text style={[typography.h1, styles.routeDistanceText]}>
-                {activeStep.distance}
-              </Text>
             </View>
 
             <Pressable onPress={handleEndNavigation} hitSlop={8}>

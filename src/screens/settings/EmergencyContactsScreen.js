@@ -2,6 +2,7 @@ import { Alert, Linking, Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
+import { settingsStyles } from "./settingsStyles";
 
 const contacts = [
   { name: "Campus Security", phone: "613-727-4723" },
@@ -24,28 +25,19 @@ async function callContact(phone) {
 
 export default function EmergencyContactsScreen() {
   return (
-    <View style={{ flex: 1, backgroundColor: colors.Light_Grey, padding: 12 }}>
-      <View style={{ borderRadius: 14, overflow: "hidden" }}>
+    <View style={settingsStyles.screen}>
+      <View style={settingsStyles.card}>
         {contacts.map((contact, index) => (
           <View key={contact.phone}>
             <Pressable
               onPress={() => callContact(contact.phone)}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingHorizontal: 16,
-                paddingVertical: 16,
-                backgroundColor: "#EDEDED",
-              }}
+              style={settingsStyles.row}
             >
               <View>
-                <Text
-                  style={[typography.h4, { color: colors.Primary_Charcoal }]}
-                >
+                <Text style={[typography.h4, settingsStyles.label]}>
                   {contact.name}
                 </Text>
-                <Text style={[typography.h5, { color: colors.Dark_Grey }]}>
+                <Text style={[typography.h5, settingsStyles.secondaryLabel]}>
                   {contact.phone}
                 </Text>
               </View>
@@ -56,13 +48,7 @@ export default function EmergencyContactsScreen() {
               />
             </Pressable>
             {index !== contacts.length - 1 && (
-              <View
-                style={{
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#DFDFDF",
-                  marginLeft: 16,
-                }}
-              />
+              <View style={settingsStyles.divider} />
             )}
           </View>
         ))}

@@ -2,6 +2,7 @@ import { Alert, Linking, Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
+import { settingsStyles } from "./settingsStyles";
 
 const legalLinks = [
   {
@@ -25,22 +26,15 @@ async function openLink(url) {
 
 export default function LegalScreen() {
   return (
-    <View style={{ flex: 1, backgroundColor: colors.Light_Grey, padding: 12 }}>
-      <View style={{ borderRadius: 14, overflow: "hidden" }}>
+    <View style={settingsStyles.screen}>
+      <View style={settingsStyles.card}>
         {legalLinks.map((item, index) => (
           <View key={item.title}>
             <Pressable
               onPress={() => openLink(item.url)}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                backgroundColor: "#EDEDED",
-                paddingHorizontal: 16,
-                paddingVertical: 14,
-              }}
+              style={settingsStyles.row}
             >
-              <Text style={[typography.h4, { color: colors.Primary_Charcoal }]}>
+              <Text style={[typography.h4, settingsStyles.label]}>
                 {item.title}
               </Text>
               <Ionicons
@@ -50,13 +44,7 @@ export default function LegalScreen() {
               />
             </Pressable>
             {index !== legalLinks.length - 1 && (
-              <View
-                style={{
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#DFDFDF",
-                  marginLeft: 16,
-                }}
-              />
+              <View style={settingsStyles.divider} />
             )}
           </View>
         ))}

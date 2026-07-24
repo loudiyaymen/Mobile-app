@@ -1,6 +1,7 @@
 import { Alert, Linking, Pressable, Text, View } from "react-native";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
+import { settingsStyles } from "./settingsStyles";
 
 async function openDeviceSettings() {
   try {
@@ -15,19 +16,23 @@ async function openDeviceSettings() {
 
 export default function PermissionsScreen() {
   return (
-    <View style={{ flex: 1, backgroundColor: colors.Light_Grey, padding: 12 }}>
+    <View style={settingsStyles.screen}>
       <View
         style={{
-          backgroundColor: "#EDEDED",
-          borderRadius: 14,
+          ...settingsStyles.card,
           padding: 16,
+          backgroundColor: "#EDEDED",
         }}
       >
-        <Text style={[typography.h4, { color: colors.Primary_Charcoal }]}>
+        <Text style={[typography.h4, settingsStyles.label]}>
           App Permissions
         </Text>
         <Text
-          style={[typography.body, { color: colors.Dark_Grey, marginTop: 8 }]}
+          style={[
+            typography.body,
+            settingsStyles.secondaryLabel,
+            { marginTop: 8 },
+          ]}
         >
           Manage notifications, location, camera, and microphone permissions
           from your device settings.
@@ -36,11 +41,14 @@ export default function PermissionsScreen() {
           onPress={openDeviceSettings}
           style={{
             marginTop: 14,
-            alignSelf: "flex-start",
+            alignSelf: "stretch",
             backgroundColor: colors.primary_AC_Green,
-            borderRadius: 10,
+            borderRadius: 14,
             paddingHorizontal: 14,
-            paddingVertical: 10,
+            paddingVertical: 14,
+            minHeight: 56,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Text style={[typography.h5, { color: colors.primary_White }]}>

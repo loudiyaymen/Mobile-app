@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ export default function EventsScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const insets = useSafeAreaInsets();
+  const isLoadingRef = useRef(false);
   const [eventGroups, setEventGroups] = useState({
     allEvents: [],
     myEvents: [],
@@ -46,19 +47,34 @@ export default function EventsScreen() {
     }));
   }, [activeTab, eventGroups]);
 
+  const loadEvents = useCallback(async () => {
+    if (isLoadingRef.current) return;
+
+    isLoadingRef.current = true;
+    try {
+      const result = await fetchEventsByTab();
+      setEventGroups({
+        allEvents: result?.allEvents ?? result?.official ?? [],
+        myEvents: result?.myEvents ?? [],
+      });
+      setLoading(false);
+    } finally {
+      isLoadingRef.current = false;
+    }
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
-      async function loadData() {
-        const result = await fetchEventsByTab();
-        setEventGroups({
-          allEvents: result?.allEvents ?? result?.official ?? [],
-          myEvents: result?.myEvents ?? [],
-        });
-        setLoading(false);
-      }
+      loadEvents();
 
-      loadData();
-    }, []),
+      const intervalId = setInterval(() => {
+        loadEvents();
+      }, 15000);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    }, [loadEvents]),
   );
 
   useEffect(() => {

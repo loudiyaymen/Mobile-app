@@ -598,14 +598,6 @@ const styles = StyleSheet.create({
     flex: 1,
     color: colors.Primary_Charcoal,
   },
-  routeDistanceRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  routeDistanceText: {
-    color: colors.Primary_Charcoal,
-  },
   routeActionText: {
     color: colors.Primary_Charcoal,
     marginTop: -8,
