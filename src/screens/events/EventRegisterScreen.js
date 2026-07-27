@@ -13,6 +13,10 @@ import {
 import { registerForEvent } from "../../services/eventService";
 import { isNonEmptyString, isValidEmail } from "../../utils/validation";
 
+function sanitizeName(value) {
+  return String(value || "").replace(/[^A-Za-z\s]/g, "");
+}
+
 export default function EventRegisterScreen() {
   const route = useRoute();
   const { event } = route.params ?? {};
@@ -49,7 +53,9 @@ export default function EventRegisterScreen() {
     }
 
     const nextErrors = {
-      name: isNonEmptyString(name) ? undefined : "Name is required.",
+      name: isNonEmptyString(name)
+        ? undefined
+        : "Name is required. Use letters and spaces only.",
       email: isValidEmail(email)
         ? undefined
         : "Enter a valid email in the format name@example.com.",
@@ -139,8 +145,18 @@ export default function EventRegisterScreen() {
               autoCorrect={false}
               value={name}
               onChangeText={(value) => {
-                setName(value);
-                clearFieldError("name", value, isNonEmptyString);
+                const sanitized = sanitizeName(value);
+                setName(sanitized);
+
+                if (sanitized !== value) {
+                  setErrors((currentErrors) => ({
+                    ...currentErrors,
+                    name: "Use letters and spaces only.",
+                  }));
+                  return;
+                }
+
+                clearFieldError("name", sanitized, isNonEmptyString);
               }}
             />
           </View>
