@@ -23,6 +23,61 @@ import { submitReport } from "../../services/reportService";
 import { useSettings } from "../../context/SettingsContext";
 import { isNonEmptyString, isValidEmail } from "../../utils/validation";
 
+const MAX_REPORT_DETAILS_LENGTH = 500;
+const MAX_REPORT_ATTACHMENT_SIZE_BYTES = 5 * 1024 * 1024;
+
+function validateReporterName(value) {
+  const trimmed = String(value || "").trim();
+
+  if (!trimmed) {
+    return "Name is required. Enter your first and last name.";
+  }
+
+  if (!/^[A-Za-z\s]+$/.test(trimmed)) {
+    return "Name can only contain letters and spaces.";
+  }
+
+  if (trimmed.length < 2) {
+    return "Name is too short. Enter at least 2 letters.";
+  }
+
+  return undefined;
+}
+
+function validateReporterEmail(value) {
+  return isValidEmail(value)
+    ? undefined
+    : "Enter a valid email address (example: name@domain.com).";
+}
+
+function validateLostItemDetails(value) {
+  const trimmed = String(value || "").trim();
+
+  if (!isNonEmptyString(trimmed)) {
+    return "Details are required. Include color, brand, and where you last saw the item.";
+  }
+
+  if (trimmed.length > MAX_REPORT_DETAILS_LENGTH) {
+    return `Details must be ${MAX_REPORT_DETAILS_LENGTH} characters or fewer.`;
+  }
+
+  return undefined;
+}
+
+function validateLocationIfProvided(value) {
+  const trimmed = String(value || "").trim();
+
+  if (!trimmed) {
+    return undefined;
+  }
+
+  if (trimmed.length < 3) {
+    return "Location is too short. Add at least 3 characters for clarity.";
+  }
+
+  return undefined;
+}
+
 export default function ReportLostItemScreen() {
   const navigation = useNavigation();
 
@@ -31,6 +86,7 @@ export default function ReportLostItemScreen() {
   const [details, setDetails] = useState("");
   const [locationText, setLocationText] = useState("");
   const [media, setMedia] = useState(null);
+  const [mediaSizeBytes, setMediaSizeBytes] = useState(null);
   const [anonymous, setAnonymous] = useState(false);
   const [updates, setUpdates] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,19 +107,49 @@ export default function ReportLostItemScreen() {
     });
 
     if (!result.canceled) {
-      setMedia(result.assets[0].uri);
+      const asset = result.assets?.[0];
+      const fileSize = Number(asset?.fileSize || 0);
+
+      if (
+        Number.isFinite(fileSize) &&
+        fileSize > MAX_REPORT_ATTACHMENT_SIZE_BYTES
+      ) {
+        setErrors((currentErrors) => ({
+          ...currentErrors,
+          media:
+            "Attachment must be 5MB or smaller. Use a smaller file or compress the image.",
+        }));
+        return;
+      }
+
+      setMedia(asset?.uri || null);
+      setMediaSizeBytes(
+        Number.isFinite(fileSize) && fileSize > 0 ? fileSize : null,
+      );
+      setErrors((currentErrors) => ({
+        ...currentErrors,
+        media: undefined,
+      }));
     }
   };
 
   const handleRemoveMedia = () => {
     setMedia(null);
+    setMediaSizeBytes(null);
   };
 
   const handleSubmit = async () => {
     const nextErrors = {
-      name: isNonEmptyString(name) ? undefined : "Name is required.",
-      email: isValidEmail(email) ? undefined : "Enter a valid email address.",
-      details: isNonEmptyString(details) ? undefined : "Details are required.",
+      name: validateReporterName(name),
+      email: validateReporterEmail(email),
+      details: validateLostItemDetails(details),
+      locationText: validateLocationIfProvided(locationText),
+      media:
+        media &&
+        typeof mediaSizeBytes === "number" &&
+        mediaSizeBytes > MAX_REPORT_ATTACHMENT_SIZE_BYTES
+          ? "Attachment must be 5MB or smaller. Use a smaller file or compress the image."
+          : undefined,
     };
 
     if (Object.values(nextErrors).some(Boolean)) {
@@ -82,6 +168,7 @@ export default function ReportLostItemScreen() {
         description: details,
         campusName: settings.campus,
         photoUri: media,
+        photoSizeBytes: mediaSizeBytes,
         locationText,
         incidentAt: null,
         isAnonymous: anonymous,
@@ -109,7 +196,10 @@ export default function ReportLostItemScreen() {
     }
   };
   const isFormValid =
-    name.trim() !== "" && email.trim() !== "" && details.trim() !== "";
+    !validateReporterName(name) &&
+    !validateReporterEmail(email) &&
+    !validateLostItemDetails(details) &&
+    !validateLocationIfProvided(locationText);
 
   return (
     <View style={styles.container}>
@@ -128,13 +218,24 @@ export default function ReportLostItemScreen() {
               placeholder="Enter your name"
               value={name}
               onChangeText={(value) => {
-                setName(value);
-                if (errors.name && isNonEmptyString(value)) {
-                  setErrors((currentErrors) => ({
-                    ...currentErrors,
-                    name: undefined,
-                  }));
-                }
+                const sanitized = String(value || "").replace(
+                  /[^A-Za-z\s]/g,
+                  "",
+                );
+                setName(sanitized);
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  name:
+                    sanitized !== value
+                      ? "Name can only contain letters and spaces."
+                      : validateReporterName(sanitized),
+                }));
+              }}
+              onBlur={() => {
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  name: validateReporterName(name),
+                }));
               }}
             />
           </View>
@@ -164,12 +265,16 @@ export default function ReportLostItemScreen() {
               autoComplete="email"
               onChangeText={(value) => {
                 setEmail(value);
-                if (errors.email && isValidEmail(value)) {
-                  setErrors((currentErrors) => ({
-                    ...currentErrors,
-                    email: undefined,
-                  }));
-                }
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  email: validateReporterEmail(value),
+                }));
+              }}
+              onBlur={() => {
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  email: validateReporterEmail(email),
+                }));
               }}
             />
           </View>
@@ -193,12 +298,16 @@ export default function ReportLostItemScreen() {
             value={details}
             onChangeText={(value) => {
               setDetails(value);
-              if (errors.details && isNonEmptyString(value)) {
-                setErrors((currentErrors) => ({
-                  ...currentErrors,
-                  details: undefined,
-                }));
-              }
+              setErrors((currentErrors) => ({
+                ...currentErrors,
+                details: validateLostItemDetails(value),
+              }));
+            }}
+            onBlur={() => {
+              setErrors((currentErrors) => ({
+                ...currentErrors,
+                details: validateLostItemDetails(details),
+              }));
             }}
           />
         </View>
@@ -207,6 +316,9 @@ export default function ReportLostItemScreen() {
             {errors.details}
           </Text>
         ) : null}
+        <Text style={[typography.caption, styles.secondaryLabel]}>
+          {`${String(details || "").trim().length}/${MAX_REPORT_DETAILS_LENGTH} characters`}
+        </Text>
 
         <Text style={[typography.h4, styles.label]}>Location </Text>
         <View style={styles.shadowContainer}>
@@ -220,10 +332,27 @@ export default function ReportLostItemScreen() {
               style={[typography.body, styles.textInput]}
               placeholder="e.g., ACCE Building, Floor 2"
               value={locationText}
-              onChangeText={setLocationText}
+              onChangeText={(value) => {
+                setLocationText(value);
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  locationText: validateLocationIfProvided(value),
+                }));
+              }}
+              onBlur={() => {
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  locationText: validateLocationIfProvided(locationText),
+                }));
+              }}
             />
           </View>
         </View>
+        {errors.locationText ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.locationText}
+          </Text>
+        ) : null}
 
         <Text style={[typography.h4, styles.label]}>Attachments</Text>
         <Pressable onPress={handlePickMedia} style={styles.mediaBox}>
@@ -252,6 +381,11 @@ export default function ReportLostItemScreen() {
             </Pressable>
           </View>
         )}
+        {errors.media ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.media}
+          </Text>
+        ) : null}
 
         <Pressable
           onPress={handleSubmit}

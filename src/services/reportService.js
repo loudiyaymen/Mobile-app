@@ -1,6 +1,8 @@
 import { apiFetch } from "./apiClient";
 import { getOrCreateDeviceId } from "./deviceIdentityService";
 
+const MAX_REPORT_ATTACHMENT_SIZE_BYTES = 5 * 1024 * 1024;
+
 let campusCache;
 
 function normalizeCampusName(value) {
@@ -100,6 +102,7 @@ export async function submitReport({
   description,
   campusName,
   photoUri,
+  photoSizeBytes,
   locationText,
   incidentAt,
   isAnonymous,
@@ -121,6 +124,16 @@ export async function submitReport({
   formData.append("incident_at", incidentAt ? String(incidentAt) : "");
   formData.append("is_anonymous", String(Boolean(isAnonymous)));
   formData.append("email_updates", String(Boolean(emailUpdates)));
+
+  if (
+    typeof photoSizeBytes === "number" &&
+    Number.isFinite(photoSizeBytes) &&
+    photoSizeBytes > MAX_REPORT_ATTACHMENT_SIZE_BYTES
+  ) {
+    throw new Error(
+      "Attachment must be 5MB or smaller. Choose a smaller image or compress it and try again.",
+    );
+  }
 
   if (photoUri) {
     formData.append("photo", {

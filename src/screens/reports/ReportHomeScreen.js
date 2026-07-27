@@ -8,6 +8,7 @@ import { styles, reportHomeTabBarInset } from "../../themes/styles";
 import { colors, reportStatusBackground } from "../../themes/color";
 import { typography } from "../../themes/typography";
 import { fetchMyReports } from "../../services/reportService";
+import NotificationHeaderButton from "../../components/NotificationHeaderButton";
 
 function formatReportDate(isoOrDate) {
   const d = new Date(isoOrDate);
@@ -87,25 +88,70 @@ export default function ReportHomeScreen() {
 
   if (reports.length === 0) {
     return (
-      <View style={[styles.container, styles.reportHomeEmptyContainer]}>
-        <FileTextIcon
-          name="EmptyReport"
-          size={75}
-          color={colors.Secondary_Dark_AC_Green}
-          style={styles.reportHomeEmptyIcon}
-        />
-
-        <View style={styles.headerContainer}>
-          <Text style={typography.h4}>No Reports Yet</Text>
+      <View style={[styles.container, { paddingBottom: insets.bottom + 33 }]}>
+        <View
+          style={{
+            width: "100%",
+            paddingHorizontal: 24,
+            paddingTop: insets.top + 16,
+            paddingBottom: 16,
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 12,
+          }}
+        >
+          <View style={{ flex: 1, paddingRight: 8 }}>
+            <Text style={[typography.h2, { color: colors.Primary_Charcoal }]}>
+              My Reports
+            </Text>
+            <Text
+              style={[
+                typography.h5,
+                {
+                  color: colors.Dark_Grey,
+                  marginTop: 6,
+                },
+              ]}
+            >
+              View and track your incident reports
+            </Text>
+          </View>
+          <View style={{ paddingTop: 2 }}>
+            <NotificationHeaderButton
+              onPress={() => navigation.getParent()?.navigate("Notifications")}
+            />
+          </View>
         </View>
 
-        <Pressable
-          style={[styles.reportButton, { marginTop: 14 }]}
-          onPress={() => navigation.navigate("Select Category")}
+        <View
+          style={{
+            flex: 1,
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 16,
+          }}
         >
-          <PlusCircleIcon name="add" size={24} color={colors.primary_White} />
-          <Text style={styles.callSecurityButtonText}>Submit new report</Text>
-        </Pressable>
+          <FileTextIcon
+            name="EmptyReport"
+            size={75}
+            color={colors.Secondary_Dark_AC_Green}
+            style={styles.reportHomeEmptyIcon}
+          />
+
+          <View style={styles.headerContainer}>
+            <Text style={typography.h4}>No Reports Yet</Text>
+          </View>
+
+          <Pressable
+            style={[styles.reportButton, { marginTop: 14 }]}
+            onPress={() => navigation.navigate("Select Category")}
+          >
+            <PlusCircleIcon name="add" size={24} color={colors.primary_White} />
+            <Text style={styles.callSecurityButtonText}>Submit new report</Text>
+          </Pressable>
+        </View>
       </View>
     );
   }
@@ -118,6 +164,41 @@ export default function ReportHomeScreen() {
         { paddingBottom: insets.bottom + 33 },
       ]}
     >
+      <View
+        style={{
+          width: "100%",
+          paddingHorizontal: 24,
+          paddingTop: insets.top + 16,
+          paddingBottom: 16,
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
+      >
+        <View style={{ flex: 1, paddingRight: 8 }}>
+          <Text style={[typography.h2, { color: colors.Primary_Charcoal }]}>
+            My Reports
+          </Text>
+          <Text
+            style={[
+              typography.h5,
+              {
+                color: colors.Dark_Grey,
+                marginTop: 6,
+              },
+            ]}
+          >
+            View and track your incident reports
+          </Text>
+        </View>
+        <View style={{ paddingTop: 2 }}>
+          <NotificationHeaderButton
+            onPress={() => navigation.getParent()?.navigate("Notifications")}
+          />
+        </View>
+      </View>
+
       <FlatList
         data={reports}
         style={styles.reportHomeFlatList}

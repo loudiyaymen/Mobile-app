@@ -25,6 +25,76 @@ import { submitReport } from "../../services/reportService";
 import { useSettings } from "../../context/SettingsContext";
 import { isNonEmptyString } from "../../utils/validation";
 
+const MAX_REPORT_DETAILS_LENGTH = 500;
+const MAX_REPORT_ATTACHMENT_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_REPORT_PAST_DAYS = 31;
+
+function validateLocation(value) {
+  return isNonEmptyString(value)
+    ? undefined
+    : "Location is required. Enter a building and room (e.g., ACCE Building, Floor 2).";
+}
+
+function validateIncidentDetails(value) {
+  const trimmed = String(value || "").trim();
+
+  if (!isNonEmptyString(trimmed)) {
+    return "Incident details are required. Describe what happened in clear, short sentences.";
+  }
+
+  if (trimmed.length > MAX_REPORT_DETAILS_LENGTH) {
+    return `Incident details must be ${MAX_REPORT_DETAILS_LENGTH} characters or fewer.`;
+  }
+
+  return undefined;
+}
+
+function validateDateInAllowedRange(dateValue) {
+  if (!dateValue) {
+    return "Select a date.";
+  }
+
+  const now = new Date();
+  const todayEnd = new Date(now);
+  todayEnd.setHours(23, 59, 59, 999);
+
+  const earliestAllowed = new Date(now);
+  earliestAllowed.setDate(earliestAllowed.getDate() - MAX_REPORT_PAST_DAYS);
+  earliestAllowed.setHours(0, 0, 0, 0);
+
+  if (dateValue > todayEnd) {
+    return "Date cannot be in the future. Choose today or an earlier date.";
+  }
+
+  if (dateValue < earliestAllowed) {
+    return "Date is too far in the past. Choose a date within the last month.";
+  }
+
+  return undefined;
+}
+
+function validateDateTimeNotFuture(dateValue, timeValue) {
+  if (!dateValue || !timeValue) {
+    return undefined;
+  }
+
+  const combinedDateTime = new Date(
+    dateValue.getFullYear(),
+    dateValue.getMonth(),
+    dateValue.getDate(),
+    timeValue.getHours(),
+    timeValue.getMinutes(),
+    0,
+    0,
+  );
+
+  if (combinedDateTime > new Date()) {
+    return "Incident date and time cannot be in the future. Choose an earlier time.";
+  }
+
+  return undefined;
+}
+
 export default function ReportIncidentScreen() {
   const navigation = useNavigation();
 
@@ -33,6 +103,7 @@ export default function ReportIncidentScreen() {
   const [time, setTime] = useState(null);
   const [details, setDetails] = useState("");
   const [media, setMedia] = useState(null);
+  const [mediaSizeBytes, setMediaSizeBytes] = useState(null);
   const [anonymous, setAnonymous] = useState(false);
   const [emailUpdates, setEmailUpdates] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,9 +117,12 @@ export default function ReportIncidentScreen() {
     setDatePickerVisibility(false);
     if (selectedDate) {
       setDate(selectedDate);
+      const dateError = validateDateInAllowedRange(selectedDate);
+      const dateTimeError = validateDateTimeNotFuture(selectedDate, time);
       setErrors((currentErrors) => ({
         ...currentErrors,
-        date: undefined,
+        date: dateError || dateTimeError,
+        time: time ? dateTimeError || undefined : currentErrors.time,
       }));
     }
   };
@@ -57,9 +131,15 @@ export default function ReportIncidentScreen() {
     setTimePickerVisibility(false);
     if (selectedTime) {
       setTime(selectedTime);
+      const dateTimeError = validateDateTimeNotFuture(date, selectedTime);
       setErrors((currentErrors) => ({
         ...currentErrors,
-        time: undefined,
+        time: dateTimeError || undefined,
+        date: !date
+          ? "Select a date."
+          : currentErrors.date === "Select a date."
+            ? undefined
+            : dateTimeError || undefined,
       }));
     }
   };
@@ -78,24 +158,51 @@ export default function ReportIncidentScreen() {
     });
 
     if (!result.canceled) {
-      setMedia(result.assets[0].uri);
+      const asset = result.assets?.[0];
+      const fileSize = Number(asset?.fileSize || 0);
+
+      if (
+        Number.isFinite(fileSize) &&
+        fileSize > MAX_REPORT_ATTACHMENT_SIZE_BYTES
+      ) {
+        setErrors((currentErrors) => ({
+          ...currentErrors,
+          media:
+            "Attachment must be 5MB or smaller. Use a smaller file or compress the image.",
+        }));
+        return;
+      }
+
+      setMedia(asset?.uri || null);
+      setMediaSizeBytes(
+        Number.isFinite(fileSize) && fileSize > 0 ? fileSize : null,
+      );
+      setErrors((currentErrors) => ({
+        ...currentErrors,
+        media: undefined,
+      }));
     }
   };
 
   const handleRemoveMedia = () => {
     setMedia(null);
+    setMediaSizeBytes(null);
   };
 
   const handleSubmit = async () => {
+    const dateError = validateDateInAllowedRange(date);
+    const dateTimeError = validateDateTimeNotFuture(date, time);
     const nextErrors = {
-      locationText: isNonEmptyString(locationText)
-        ? undefined
-        : "Location is required.",
-      date: date ? undefined : "Select a date.",
-      time: time ? undefined : "Select a time.",
-      details: isNonEmptyString(details)
-        ? undefined
-        : "Incident details are required.",
+      locationText: validateLocation(locationText),
+      date: dateError || dateTimeError,
+      time: !time ? "Select a time." : dateTimeError || undefined,
+      details: validateIncidentDetails(details),
+      media:
+        media &&
+        typeof mediaSizeBytes === "number" &&
+        mediaSizeBytes > MAX_REPORT_ATTACHMENT_SIZE_BYTES
+          ? "Attachment must be 5MB or smaller. Use a smaller file or compress the image."
+          : undefined,
     };
 
     if (Object.values(nextErrors).some(Boolean)) {
@@ -114,6 +221,7 @@ export default function ReportIncidentScreen() {
         description: details,
         campusName: settings.campus,
         photoUri: media,
+        photoSizeBytes: mediaSizeBytes,
         locationText,
         incidentAt:
           date && time
@@ -154,10 +262,11 @@ export default function ReportIncidentScreen() {
     }
   };
   const isFormValid =
-    locationText.trim() !== "" &&
-    date !== null &&
+    !validateLocation(locationText) &&
+    !validateDateInAllowedRange(date) &&
+    !validateDateTimeNotFuture(date, time) &&
     time !== null &&
-    details.trim() !== "";
+    !validateIncidentDetails(details);
 
   return (
     <View style={styles.container}>
@@ -181,14 +290,16 @@ export default function ReportIncidentScreen() {
               value={locationText}
               onChangeText={(value) => {
                 setLocationText(value);
-                if (errors.locationText) {
-                  setErrors((currentErrors) => ({
-                    ...currentErrors,
-                    locationText: isNonEmptyString(value)
-                      ? undefined
-                      : currentErrors.locationText,
-                  }));
-                }
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  locationText: validateLocation(value),
+                }));
+              }}
+              onBlur={() => {
+                setErrors((currentErrors) => ({
+                  ...currentErrors,
+                  locationText: validateLocation(locationText),
+                }));
               }}
             />
           </View>
@@ -289,12 +400,16 @@ export default function ReportIncidentScreen() {
             value={details}
             onChangeText={(value) => {
               setDetails(value);
-              if (errors.details && isNonEmptyString(value)) {
-                setErrors((currentErrors) => ({
-                  ...currentErrors,
-                  details: undefined,
-                }));
-              }
+              setErrors((currentErrors) => ({
+                ...currentErrors,
+                details: validateIncidentDetails(value),
+              }));
+            }}
+            onBlur={() => {
+              setErrors((currentErrors) => ({
+                ...currentErrors,
+                details: validateIncidentDetails(details),
+              }));
             }}
           />
         </View>
@@ -303,6 +418,9 @@ export default function ReportIncidentScreen() {
             {errors.details}
           </Text>
         ) : null}
+        <Text style={[typography.caption, styles.secondaryLabel]}>
+          {`${String(details || "").trim().length}/${MAX_REPORT_DETAILS_LENGTH} characters`}
+        </Text>
 
         <Text style={[typography.h4, styles.label]}>Attachments</Text>
         <Pressable onPress={handlePickMedia} style={styles.mediaBox}>
@@ -331,6 +449,11 @@ export default function ReportIncidentScreen() {
             </Pressable>
           </View>
         )}
+        {errors.media ? (
+          <Text style={[typography.caption, styles.fieldErrorText]}>
+            {errors.media}
+          </Text>
+        ) : null}
 
         <Pressable
           onPress={handleSubmit}

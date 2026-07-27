@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Linking } from "react-native";
+import { View, Text, Pressable, Linking, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styles } from "../../themes/styles";
 import { colors } from "../../themes/color";
@@ -7,14 +7,38 @@ import { typography } from "../../themes/typography";
 export default function ReportAssaultScreen() {
   const insets = useSafeAreaInsets();
 
+  const openExternalUrl = async (url, label) => {
+    try {
+      const canOpen = await Linking.canOpenURL(url);
+      if (!canOpen) {
+        Alert.alert(
+          "Unable to Open Link",
+          `We couldn't open ${label}. Please copy this URL into your browser: ${url}`,
+        );
+        return;
+      }
+
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert(
+        "Unable to Open Link",
+        `Please try again. If the issue continues, open this URL manually: ${url}`,
+      );
+    }
+  };
+
   const openOfficialReport = () => {
-    Linking.openURL(
+    openExternalUrl(
       "https://www.algonquincollege.com/safety-security-services/sexual-assaultviolence-reporting/",
+      "the official report form",
     );
   };
 
   const openSupportServices = () => {
-    Linking.openURL("https://www.algonquincollege.com/projectlighthouse/");
+    openExternalUrl(
+      "https://www.algonquincollege.com/projectlighthouse/",
+      "Project Lighthouse",
+    );
   };
 
   return (
