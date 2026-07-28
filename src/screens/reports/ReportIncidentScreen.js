@@ -8,12 +8,14 @@ import {
   ScrollView,
   Image,
   Platform,
+  Modal,
 } from "react-native";
 import {
   MapPinIcon,
   CalendarBlankIcon,
   ClockIcon,
   CameraIcon,
+  XIcon,
 } from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
@@ -112,6 +114,7 @@ export default function ReportIncidentScreen() {
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+  const [isPhotoViewerOpen, setIsPhotoViewerOpen] = useState(false);
 
   const handleDateConfirm = (selectedDate) => {
     setDatePickerVisibility(false);
@@ -444,19 +447,51 @@ export default function ReportIncidentScreen() {
 
         {media && (
           <View style={styles.mediaPreviewBox}>
-            <Image
-              source={{ uri: media }}
-              style={styles.mediaPreviewImage}
-              resizeMode="contain"
-            />
             <Pressable
-              onPress={handleRemoveMedia}
-              style={styles.mediaRemoveButton}
+              onPress={() => setIsPhotoViewerOpen(true)}
+              style={{ position: "relative" }}
             >
-              <Text style={styles.mediaRemoveButtonText}>Remove photo</Text>
+              <Image
+                source={{ uri: media }}
+                style={styles.mediaPreviewImage}
+                resizeMode="contain"
+              />
+              <Pressable
+                onPress={(e) => {
+                  e.stopPropagation();
+                  handleRemoveMedia();
+                }}
+                style={styles.mediaRemoveButtonIcon}
+              >
+                <XIcon size={20} color={colors.primary_White} weight="bold" />
+              </Pressable>
             </Pressable>
           </View>
         )}
+
+        <Modal
+          visible={isPhotoViewerOpen}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setIsPhotoViewerOpen(false)}
+        >
+          <Pressable
+            style={styles.photoViewerOverlay}
+            onPress={() => setIsPhotoViewerOpen(false)}
+          >
+            <Image
+              source={{ uri: media }}
+              style={styles.photoViewerImage}
+              resizeMode="contain"
+            />
+            <Pressable
+              onPress={() => setIsPhotoViewerOpen(false)}
+              style={styles.photoViewerCloseButton}
+            >
+              <XIcon size={28} color={colors.primary_White} weight="bold" />
+            </Pressable>
+          </Pressable>
+        </Modal>
         {errors.media ? (
           <Text style={[typography.caption, styles.fieldErrorText]}>
             {errors.media}
