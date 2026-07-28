@@ -17,6 +17,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import NotificationHeaderButton from "../../components/NotificationHeaderButton";
 
 export default function EventsScreen() {
   const navigation = useNavigation();
@@ -98,8 +99,42 @@ export default function EventsScreen() {
     <View style={styles.container}>
       <View
         style={{
+          paddingHorizontal: 24,
+          paddingTop: insets.top + 16,
+          paddingBottom: 16,
           flexDirection: "row",
-          marginVertical: 15,
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
+      >
+        <View style={{ flex: 1, paddingRight: 8 }}>
+          <Text style={[typography.h2, { color: colors.Primary_Charcoal }]}>
+            Events
+          </Text>
+          <Text
+            style={[
+              typography.h5,
+              {
+                color: colors.Dark_Grey,
+                marginTop: 6,
+              },
+            ]}
+          >
+            Discover and join campus activities
+          </Text>
+        </View>
+        <View style={{ paddingTop: 2 }}>
+          <NotificationHeaderButton
+            onPress={() => navigation.getParent()?.navigate("Notifications")}
+          />
+        </View>
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          marginBottom: 15,
           justifyContent: "center",
         }}
       >

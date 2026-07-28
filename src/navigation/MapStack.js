@@ -40,30 +40,7 @@ export default function MapStack() {
         name="Wayfinder"
         component={MapScreen}
         options={{
-          headerTitle: () => (
-            <View
-              style={{
-                flexDirection: "column",
-                alignItems: "flex-start",
-                width: "100%",
-                paddingVertical: 16,
-              }}
-            >
-              <Text
-                style={[
-                  typography.h2,
-                  {
-                    color: colors.Primary_Charcoal,
-                  },
-                ]}
-              >
-                Wayfinder
-              </Text>
-              <Text style={[typography.body, { color: colors.Dark_Grey }]}>
-                Plan your navigation route or scan a QR code
-              </Text>
-            </View>
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen

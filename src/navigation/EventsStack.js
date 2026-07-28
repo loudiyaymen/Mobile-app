@@ -42,30 +42,7 @@ export default function EventsStack() {
         name="Events Home"
         component={EventsScreen}
         options={{
-          headerTitle: () => (
-            <View
-              style={{
-                flexDirection: "column",
-                alignItems: "flex-start",
-                width: "100%",
-                paddingVertical: 16,
-              }}
-            >
-              <Text
-                style={[
-                  typography.h2,
-                  {
-                    color: colors.Primary_Charcoal,
-                  },
-                ]}
-              >
-                Events
-              </Text>
-              <Text style={[typography.body, { color: colors.Dark_Grey }]}>
-                Discover and join campus activities
-              </Text>
-            </View>
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen name="Event Details" component={EventDetailsScreen} />

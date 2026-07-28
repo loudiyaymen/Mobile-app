@@ -46,21 +46,7 @@ export default function ReportStack() {
         name="My Reports"
         component={ReportHomeScreen}
         options={{
-          headerTitle: () => (
-            <View
-              style={[
-                styles.reportStackHeaderTitleWrapper,
-                { paddingVertical: 16 },
-              ]}
-            >
-              <Text style={[typography.h2, styles.reportStackHeaderTitleText]}>
-                My Reports
-              </Text>
-              <Text style={[typography.body, styles.reportStackHeaderSubtitle]}>
-                View and track your incident reports
-              </Text>
-            </View>
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen name="Select Category" component={ReportCategoryScreen} />
