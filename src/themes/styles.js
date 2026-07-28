@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { colors } from "./color";
 import { typography } from "./typography";
 import { overlay } from "react-native-paper";
@@ -173,8 +173,9 @@ const styles = StyleSheet.create({
   sosFabHoldHint: {
     position: "absolute",
     top: -24,
-    left: "50%",
-    transform: [{ translateX: -65 }],
+    left: Platform.OS === "ios" ? undefined : "50%",
+    right: Platform.OS === "ios" ? 0 : undefined,
+    transform: Platform.OS === "ios" ? [] : [{ translateX: -65 }],
     width: 130,
     fontSize: 12,
     textAlign: "center",

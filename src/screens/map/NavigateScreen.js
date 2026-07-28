@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
@@ -26,6 +27,7 @@ import buildingP from "../../assets/building_graphs/building_P_unified.json";
 import buildingT from "../../assets/building_graphs/building_T_unified.json";
 import buildingV from "../../assets/building_graphs/building_V_unified.json";
 import buildingZ from "../../assets/building_graphs/building_Z_unified.json";
+import { fetchNavigationGraphs } from "../../services/navigationService";
 import {
   DeviceRotateIcon,
   LightbulbIcon,
@@ -40,7 +42,7 @@ import {
 } from "phosphor-react-native";
 import { NavigationArrowIcon } from "phosphor-react-native";
 
-const GRAPH_DATASETS = {
+const LOCAL_GRAPH_DATASETS = {
   A: buildingA,
   B: buildingB,
   C: buildingC,
@@ -274,11 +276,64 @@ export default function NavigateScreen() {
   const [showArrivalModal, setShowArrivalModal] = useState(false);
   const [favoriteKeys, setFavoriteKeys] = useState(() => new Set());
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
+  const [graphDatasets, setGraphDatasets] = useState(
+    () => LOCAL_GRAPH_DATASETS,
+  );
+
+  const syncNavigationGraphs = useCallback(async () => {
+    try {
+      const graphs = await fetchNavigationGraphs();
+      const nextGraphDatasets = {};
+
+      graphs.forEach((graphEntry) => {
+        const buildingCode = String(
+          graphEntry?.buildingCode || graphEntry?.building_code || "",
+        )
+          .trim()
+          .toUpperCase();
+
+        if (!buildingCode) return;
+
+        nextGraphDatasets[buildingCode] =
+          graphEntry?.graphData || graphEntry?.graph_data || {};
+      });
+
+      if (Object.keys(nextGraphDatasets).length > 0) {
+        setGraphDatasets((current) => ({
+          ...current,
+          ...nextGraphDatasets,
+        }));
+      }
+    } catch {
+      setGraphDatasets((current) =>
+        Object.keys(current).length > 0 ? current : LOCAL_GRAPH_DATASETS,
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    syncNavigationGraphs();
+
+    const refreshInterval = setInterval(() => {
+      syncNavigationGraphs();
+    }, 20000);
+
+    return () => {
+      clearInterval(refreshInterval);
+    };
+  }, [syncNavigationGraphs]);
+
+  useFocusEffect(
+    useCallback(() => {
+      syncNavigationGraphs();
+      return undefined;
+    }, [syncNavigationGraphs]),
+  );
 
   const locationOptions = useMemo(() => {
     const options = [];
 
-    Object.entries(GRAPH_DATASETS).forEach(([graphId, graph]) => {
+    Object.entries(graphDatasets).forEach(([graphId, graph]) => {
       Object.entries(graph).forEach(([nodeId, node]) => {
         if (!isRoomNode(node)) return;
 
@@ -309,12 +364,12 @@ export default function NavigateScreen() {
             : option.name,
       }))
       .sort((first, second) => first.name.localeCompare(second.name));
-  }, []);
+  }, [graphDatasets]);
 
   const amenityTargetOptions = useMemo(() => {
     const options = [];
 
-    Object.entries(GRAPH_DATASETS).forEach(([graphId, graph]) => {
+    Object.entries(graphDatasets).forEach(([graphId, graph]) => {
       Object.entries(graph).forEach(([nodeId, node]) => {
         if (!isAmenityNode(node)) return;
         options.push({
@@ -328,7 +383,7 @@ export default function NavigateScreen() {
     });
 
     return options;
-  }, []);
+  }, [graphDatasets]);
 
   const optionByName = useMemo(() => {
     const lookup = new Map();
@@ -542,7 +597,7 @@ export default function NavigateScreen() {
       return;
     }
 
-    const graph = GRAPH_DATASETS[startSelection.graphId];
+    const graph = graphDatasets[startSelection.graphId];
     const path = shortestPath(
       graph,
       startSelection.nodeId,
