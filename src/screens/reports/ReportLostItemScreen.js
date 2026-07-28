@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
   Image,
+  Platform,
 } from "react-native";
 import {
   MapPinIcon,
@@ -101,10 +102,18 @@ export default function ReportLostItemScreen() {
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
+    const pickerOptions = {
       mediaTypes: ImagePicker.All,
       quality: 0.7,
-    });
+      allowsMultiple: false,
+      ...(Platform.OS === "ios" && {
+        allowsEditing: false,
+        presentationStyle: "fullScreen",
+        exif: false,
+      }),
+    };
+
+    const result = await ImagePicker.launchImageLibraryAsync(pickerOptions);
 
     if (!result.canceled) {
       const asset = result.assets?.[0];
