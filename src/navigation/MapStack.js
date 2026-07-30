@@ -52,7 +52,7 @@ export default function MapStack() {
               <View style={{ paddingVertical: 16 }}>
                 <Text
                   style={[
-                    typography.h2,
+                    typography.h3,
                     {
                       color: colors.Primary_Charcoal,
                     },
@@ -62,8 +62,8 @@ export default function MapStack() {
                 </Text>
                 <Text
                   style={[
-                    typography.body,
-                    { fontSize: 14, color: colors.Dark_Grey, flexShrink: 1 },
+                    typography.caption,
+                    { color: colors.Dark_Grey, flexShrink: 1 },
                   ]}
                 >
                   Choose your starting point and destination

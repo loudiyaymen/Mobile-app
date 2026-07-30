@@ -41,6 +41,7 @@ const reportHideOnScreens = [
   "Sexual Assault Report",
   "Submit Report",
   "Report Submitted",
+  "Report Details",
 ];
 
 const eventHideOnScreens = [

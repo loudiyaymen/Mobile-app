@@ -299,17 +299,28 @@ export default function ReportIncidentScreen() {
               style={[typography.body, styles.textInput]}
               placeholder="e.g., ACCE Building, Floor 2"
               value={locationText}
+              maxLength={20}
               onChangeText={(value) => {
                 setLocationText(value);
+                const trimmed = String(value || "").trim();
+                const error =
+                  trimmed.length > 0 && trimmed.length < 3
+                    ? "Location must be at least 3 characters."
+                    : validateLocation(value);
                 setErrors((currentErrors) => ({
                   ...currentErrors,
-                  locationText: validateLocation(value),
+                  locationText: error,
                 }));
               }}
               onBlur={() => {
+                const trimmed = String(locationText || "").trim();
+                const error =
+                  trimmed.length > 0 && trimmed.length < 3
+                    ? "Location must be at least 3 characters."
+                    : validateLocation(locationText);
                 setErrors((currentErrors) => ({
                   ...currentErrors,
-                  locationText: validateLocation(locationText),
+                  locationText: error,
                 }));
               }}
             />

@@ -17,14 +17,17 @@ export const headerOptions = {
   headerTitleContainerStyle: {
     paddingHorizontal: 24,
     paddingVertical: Platform.OS === "ios" ? 10 : 16,
+    paddingTop: Platform.OS === "ios" ? 20 : 16,
   },
   headerLeftContainerStyle: {
     paddingLeft: 24,
     paddingVertical: Platform.OS === "ios" ? 10 : 16,
+    paddingTop: Platform.OS === "ios" ? 20 : 16,
   },
   headerRightContainerStyle: {
     paddingRight: 24,
     paddingVertical: Platform.OS === "ios" ? 10 : 16,
+    paddingTop: Platform.OS === "ios" ? 20 : 16,
   },
   headerTitleStyle: {
     color: colors.Primary_Charcoal,

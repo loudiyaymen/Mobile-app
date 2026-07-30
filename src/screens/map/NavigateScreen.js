@@ -684,9 +684,12 @@ export default function NavigateScreen() {
     setShowArrivalModal(true);
   };
 
-  const handleCloseArrivalModal = () => {
+  const handleArrivalModalClose = () => {
     setShowArrivalModal(false);
+    navigation.navigate("Wayfinder");
   };
+
+
 
   const handleAmenityPress = (amenity) => {
     const hints = AMENITY_LABEL_HINTS[amenity.name] || [
@@ -969,7 +972,7 @@ export default function NavigateScreen() {
 
             <Pressable
               style={[styles.buttonContainer, styles.arrivalModalButton]}
-              onPress={handleCloseArrivalModal}
+              onPress={handleArrivalModalClose}
             >
               <Text style={[typography.h4, { color: colors.primary_White }]}>
                 Back to Wayfinder

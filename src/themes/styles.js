@@ -172,10 +172,9 @@ const styles = StyleSheet.create({
   },
   sosFabHoldHint: {
     position: "absolute",
-    top: -24,
-    left: Platform.OS === "ios" ? undefined : "50%",
-    right: Platform.OS === "ios" ? 0 : undefined,
-    transform: Platform.OS === "ios" ? [] : [{ translateX: -65 }],
+    top: -40,
+    left: "50%",
+    transform: [{ translateX: -65 }],
     width: 130,
     fontSize: 12,
     textAlign: "center",

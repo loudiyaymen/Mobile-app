@@ -10,6 +10,7 @@ import ReportIncidentScreen from "../screens/reports/ReportIncidentScreen";
 import ReportAssaultScreen from "../screens/reports/ReportAssaultScreen";
 import ReportLostItemScreen from "../screens/reports/ReportLostItemScreen";
 import ReportSubmittedScreen from "../screens/reports/ReportSubmittedScreen";
+import ReportDetailsScreen from "../screens/reports/ReportDetailsScreen";
 
 import { headerStyle, headerOptions } from "../themes/header.styles";
 import NotificationHeaderButton from "../components/NotificationHeaderButton";
@@ -64,6 +65,13 @@ export default function ReportStack() {
           headerShown: false,
           animation: "fade",
           contentStyle: styles.reportSubmittedScreenContent,
+        }}
+      />
+      <Stack.Screen
+        name="Report Details"
+        component={ReportDetailsScreen}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

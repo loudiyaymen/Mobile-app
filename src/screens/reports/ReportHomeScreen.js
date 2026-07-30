@@ -210,7 +210,10 @@ export default function ReportHomeScreen() {
             reportStatusBackground[status] || reportStatusBackground.Submitted;
 
           return (
-            <View style={styles.reportRow}>
+            <Pressable
+              style={styles.reportRow}
+              onPress={() => navigation.navigate("Report Details", { report: item })}
+            >
               <View style={styles.reportRowTopRow}>
                 <Text
                   style={[
@@ -224,7 +227,7 @@ export default function ReportHomeScreen() {
                 >
                   {getReportTypeLabel(item.type)}
                 </Text>
-                <Text style={[typography.caption, { color: colors.Grey }]}>
+                <Text style={[typography.caption, { color: colors.Primary_Charcoal }]}>
                   {formatReportDate(item.createdAt)}
                 </Text>
               </View>
@@ -262,7 +265,7 @@ export default function ReportHomeScreen() {
                   </Text>
                 </View>
               </View>
-            </View>
+            </Pressable>
           );
         }}
       />
