@@ -92,7 +92,8 @@ export default function ReportHomeScreen() {
         <View
           style={{
             width: "100%",
-            paddingHorizontal: 24,
+            paddingLeft: 24,
+            paddingRight: 24,
             paddingTop: insets.top + 16,
             paddingBottom: 16,
             flexDirection: "row",
@@ -101,7 +102,7 @@ export default function ReportHomeScreen() {
             gap: 12,
           }}
         >
-          <View style={{ flex: 1, paddingRight: 8 }}>
+          <View style={{ flex: 1 }}>
             <Text style={[typography.h2, { color: colors.Primary_Charcoal }]}>
               My Reports
             </Text>
@@ -114,10 +115,10 @@ export default function ReportHomeScreen() {
                 },
               ]}
             >
-              View and track your incident reports
+              View and track your reports
             </Text>
           </View>
-          <View style={{ paddingTop: 2 }}>
+          <View style={{ paddingRight: 24, paddingVertical: 16 }}>
             <NotificationHeaderButton
               onPress={() => navigation.getParent()?.navigate("Notifications")}
             />
@@ -167,7 +168,8 @@ export default function ReportHomeScreen() {
       <View
         style={{
           width: "100%",
-          paddingHorizontal: 24,
+          paddingLeft: 24,
+          paddingRight: 24,
           paddingTop: insets.top + 16,
           paddingBottom: 16,
           flexDirection: "row",
@@ -176,7 +178,7 @@ export default function ReportHomeScreen() {
           gap: 12,
         }}
       >
-        <View style={{ flex: 1, paddingRight: 8 }}>
+        <View style={{ flex: 1 }}>
           <Text style={[typography.h2, { color: colors.Primary_Charcoal }]}>
             My Reports
           </Text>
@@ -189,10 +191,10 @@ export default function ReportHomeScreen() {
               },
             ]}
           >
-            View and track your incident reports
+            View and track your reports
           </Text>
         </View>
-        <View style={{ paddingTop: 2 }}>
+        <View style={{ paddingRight: 24, paddingVertical: 16 }}>
           <NotificationHeaderButton
             onPress={() => navigation.getParent()?.navigate("Notifications")}
           />
