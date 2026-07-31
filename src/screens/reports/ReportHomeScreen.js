@@ -167,10 +167,8 @@ export default function ReportHomeScreen() {
     >
       <View
         style={{
-          width: "100%",
-          paddingLeft: 24,
-          paddingRight: 24,
-          paddingTop: insets.top + 16,
+          paddingLeft: 8,
+          paddingTop: insets.top + 8,
           paddingBottom: 16,
           flexDirection: "row",
           alignItems: "flex-start",
@@ -194,7 +192,7 @@ export default function ReportHomeScreen() {
             View and track your reports
           </Text>
         </View>
-        <View style={{ paddingRight: 24, paddingVertical: 16 }}>
+        <View style={{ paddingRight: 8, paddingVertical: 2 }}>
           <NotificationHeaderButton
             onPress={() => navigation.getParent()?.navigate("Notifications")}
           />
@@ -214,7 +212,9 @@ export default function ReportHomeScreen() {
           return (
             <Pressable
               style={styles.reportRow}
-              onPress={() => navigation.navigate("Report Details", { report: item })}
+              onPress={() =>
+                navigation.navigate("Report Details", { report: item })
+              }
             >
               <View style={styles.reportRowTopRow}>
                 <Text
@@ -229,7 +229,12 @@ export default function ReportHomeScreen() {
                 >
                   {getReportTypeLabel(item.type)}
                 </Text>
-                <Text style={[typography.caption, { color: colors.Primary_Charcoal }]}>
+                <Text
+                  style={[
+                    typography.caption,
+                    { color: colors.Primary_Charcoal },
+                  ]}
+                >
                   {formatReportDate(item.createdAt)}
                 </Text>
               </View>

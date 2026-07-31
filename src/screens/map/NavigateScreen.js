@@ -7,6 +7,7 @@ import {
   Alert,
   Modal,
   ScrollView,
+  Keyboard,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
@@ -544,6 +545,7 @@ export default function NavigateScreen() {
   };
 
   const handleSelectSuggestion = (field, option) => {
+    Keyboard.dismiss();
     if (field === "start") {
       setStartingPoint(option.name);
       setSelectedStart(option);
@@ -689,9 +691,8 @@ export default function NavigateScreen() {
     navigation.navigate("Wayfinder");
   };
 
-
-
   const handleAmenityPress = (amenity) => {
+    Keyboard.dismiss();
     const hints = AMENITY_LABEL_HINTS[amenity.name] || [
       amenity.name.toLowerCase(),
     ];
@@ -714,13 +715,9 @@ export default function NavigateScreen() {
     if (targetField === "start") {
       setStartingPoint(amenityOption.name);
       setSelectedStart(amenityOption);
-      setDestination("");
-      setSelectedDestination(null);
     } else {
       setDestination(amenityOption.name);
       setSelectedDestination(amenityOption);
-      setStartingPoint("");
-      setSelectedStart(null);
     }
 
     setIsNavigating(false);
@@ -777,7 +774,7 @@ export default function NavigateScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onStartShouldSetResponder={() => false}>
       <View style={styles.navigationCard}>
         <View>
           <Text style={typography.h4}>Plan route</Text>
@@ -802,6 +799,8 @@ export default function NavigateScreen() {
               placeholderTextColor={colors.Primary_Charcoal}
               value={startingPoint}
               onFocus={() => handleInputFocus("start")}
+              onSubmitEditing={Keyboard.dismiss}
+              blurOnSubmit
               onChangeText={(value) => handleSearchChange("start", value)}
             />
             {activeSearchField === "start" ? renderSuggestionsDropdown() : null}
@@ -812,6 +811,8 @@ export default function NavigateScreen() {
               placeholderTextColor={colors.Primary_Charcoal}
               value={destination}
               onFocus={() => handleInputFocus("destination")}
+              onSubmitEditing={Keyboard.dismiss}
+              blurOnSubmit
               onChangeText={(value) => handleSearchChange("destination", value)}
             />
             {activeSearchField === "destination"

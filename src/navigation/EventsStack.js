@@ -30,7 +30,7 @@ export default function EventsStack() {
             />
           ) : null,
         headerRight: () => (
-          <View style={{ paddingRight: 24, paddingVertical: 16 }}>
+          <View>
             <NotificationHeaderButton
               onPress={() => navigation.getParent()?.navigate("Notifications")}
             />

@@ -79,10 +79,12 @@ export function SettingsProvider({ children }) {
   useEffect(() => {
     if (!isLoaded) return;
     syncTypographyTextSize(settings.textSizeIndex);
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(settings)).catch((error) => {
-      console.warn("Failed to save settings:", error);
-      setIsLoaded(false);
-    });
+    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(settings)).catch(
+      (error) => {
+        console.warn("Failed to save settings:", error);
+        setIsLoaded(false);
+      },
+    );
   }, [isLoaded, settings]);
 
   const setCampus = useCallback((campus) => {

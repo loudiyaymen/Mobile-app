@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  Image,
-  Modal,
-} from "react-native";
+import { View, Text, ScrollView, Pressable, Image, Modal } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftIcon, XIcon } from "phosphor-react-native";

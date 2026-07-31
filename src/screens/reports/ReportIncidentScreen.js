@@ -179,7 +179,7 @@ export default function ReportIncidentScreen() {
         setErrors((currentErrors) => ({
           ...currentErrors,
           media:
-            "Attachment must be 5MB or smaller. Use a smaller file or compress the image.",
+            "The photo exceeds the size limit. Please choose a smaller image.",
         }));
         return;
       }
@@ -212,7 +212,7 @@ export default function ReportIncidentScreen() {
         media &&
         typeof mediaSizeBytes === "number" &&
         mediaSizeBytes > MAX_REPORT_ATTACHMENT_SIZE_BYTES
-          ? "Attachment must be 5MB or smaller. Use a smaller file or compress the image."
+          ? "The photo exceeds the size limit. Please choose a smaller image."
           : undefined,
     };
 
