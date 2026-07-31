@@ -150,7 +150,7 @@ export default function ReportIncidentScreen() {
   const handlePickMedia = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (!permission.granted) {
+    if (!permission.granted && permission.status !== "limited") {
       Alert.alert("Permission needed", "Media access is required.");
       return;
     }
