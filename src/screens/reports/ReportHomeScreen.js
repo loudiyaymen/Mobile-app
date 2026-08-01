@@ -118,7 +118,7 @@ export default function ReportHomeScreen() {
               View and track your reports
             </Text>
           </View>
-          <View style={{ paddingRight: 24, paddingVertical: 16 }}>
+          <View>
             <NotificationHeaderButton
               onPress={() => navigation.getParent()?.navigate("Notifications")}
             />
