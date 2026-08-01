@@ -799,6 +799,7 @@ export default function NavigateScreen() {
               placeholderTextColor={colors.Primary_Charcoal}
               value={startingPoint}
               onFocus={() => handleInputFocus("start")}
+              onBlur={() => setActiveSearchField(null)}
               onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit
               onChangeText={(value) => handleSearchChange("start", value)}
@@ -811,6 +812,7 @@ export default function NavigateScreen() {
               placeholderTextColor={colors.Primary_Charcoal}
               value={destination}
               onFocus={() => handleInputFocus("destination")}
+              onBlur={() => setActiveSearchField(null)}
               onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit
               onChangeText={(value) => handleSearchChange("destination", value)}
