@@ -76,10 +76,20 @@ export async function resolveCampusId(campusName) {
     }
   }
 
-  const exact = campusCache.find(
-    (campus) => normalizeCampusName(campus.name) === target,
-  );
+  const findExactCampus = (rows, name) =>
+    rows.find((campus) => normalizeCampusName(campus.name) === name);
+
+  let exact = findExactCampus(campusCache, target);
   if (exact?.campusId) return exact.campusId;
+
+  if (target) {
+    try {
+      const freshCampuses = await fetchCampuses();
+      exact = findExactCampus(freshCampuses, target);
+      if (exact?.campusId) return exact.campusId;
+    } catch {
+    }
+  }
 
   if (!campusCache || campusCache.length === 0) {
     throw new Error(
@@ -88,9 +98,6 @@ export async function resolveCampusId(campusName) {
   }
 
   if (campusCache[0]?.campusId) {
-    console.warn(
-      `Campus "${campusName}" not found. Using "${campusCache[0].name}" instead.`,
-    );
     return campusCache[0].campusId;
   }
 

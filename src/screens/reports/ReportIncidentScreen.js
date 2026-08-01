@@ -125,7 +125,7 @@ export default function ReportIncidentScreen() {
       setErrors((currentErrors) => ({
         ...currentErrors,
         date: dateError || dateTimeError,
-        time: time ? dateTimeError || undefined : currentErrors.time,
+        time: time ? dateTimeError || undefined : undefined,
       }));
     }
   };
@@ -206,7 +206,7 @@ export default function ReportIncidentScreen() {
     const nextErrors = {
       locationText: validateLocation(locationText),
       date: dateError || dateTimeError,
-      time: !time ? "Select a time." : dateTimeError || undefined,
+      time: dateTimeError || undefined,
       details: validateIncidentDetails(details),
       media:
         media &&
@@ -235,13 +235,13 @@ export default function ReportIncidentScreen() {
         photoSizeBytes: mediaSizeBytes,
         locationText,
         incidentAt:
-          date && time
+          date
             ? new Date(
                 date.getFullYear(),
                 date.getMonth(),
                 date.getDate(),
-                time.getHours(),
-                time.getMinutes(),
+                time ? time.getHours() : 0,
+                time ? time.getMinutes() : 0,
                 0,
                 0,
               ).toISOString()
@@ -276,7 +276,6 @@ export default function ReportIncidentScreen() {
     !validateLocation(locationText) &&
     !validateDateInAllowedRange(date) &&
     !validateDateTimeNotFuture(date, time) &&
-    time !== null &&
     !validateIncidentDetails(details);
 
   return (

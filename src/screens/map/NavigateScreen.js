@@ -10,7 +10,7 @@ import {
   Keyboard,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
@@ -265,6 +265,7 @@ function buildRouteStepsFromPath(graph, path, startName, destinationName) {
 }
 
 export default function NavigateScreen() {
+  const navigation = useNavigation();
   const [startingPoint, setStartingPoint] = useState("");
   const [destination, setDestination] = useState("");
   const [selectedStart, setSelectedStart] = useState(null);
