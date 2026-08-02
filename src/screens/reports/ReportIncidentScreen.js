@@ -27,7 +27,7 @@ import { submitReport } from "../../services/reportService";
 import { useSettings } from "../../context/SettingsContext";
 import { isNonEmptyString } from "../../utils/validation";
 
-const MAX_REPORT_DETAILS_LENGTH = 500;
+const MAX_REPORT_DETAILS_LENGTH = 250;
 const MAX_REPORT_ATTACHMENT_SIZE_BYTES = 5 * 1024 * 1024;
 const MAX_REPORT_PAST_DAYS = 31;
 
@@ -286,7 +286,9 @@ export default function ReportIncidentScreen() {
           { paddingBlockEnd: 48, paddingHorizontal: 16 },
         ]}
       >
-        <Text style={[typography.h4, styles.label]}>Location *</Text>
+        <Text style={[typography.h4, styles.label]}>
+          Location <Text style={{ color: colors.SOS_Red }}>*</Text>
+        </Text>
         <View style={styles.shadowContainer}>
           <View style={styles.inputRow}>
             <MapPinIcon
@@ -331,7 +333,9 @@ export default function ReportIncidentScreen() {
           </Text>
         ) : null}
 
-        <Text style={[typography.h4, styles.label]}>Date *</Text>
+        <Text style={[typography.h4, styles.label]}>
+          Date <Text style={{ color: colors.SOS_Red }}>*</Text>
+        </Text>
         <View style={styles.shadowContainer}>
           <Pressable
             onPress={() => setDatePickerVisibility(true)}
@@ -408,7 +412,9 @@ export default function ReportIncidentScreen() {
           </Text>
         ) : null}
 
-        <Text style={[typography.h4, styles.label]}>Incident details *</Text>
+        <Text style={[typography.h4, styles.label]}>
+          Incident details <Text style={{ color: colors.SOS_Red }}>*</Text>
+        </Text>
         <View style={styles.shadowContainer}>
           <TextInput
             placeholder="Describe the situation (e.g., suspicious activity near E-Building entrance)"

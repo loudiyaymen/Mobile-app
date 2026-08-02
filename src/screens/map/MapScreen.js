@@ -49,7 +49,7 @@ export default function MapScreen() {
               },
             ]}
           >
-            Plan your navigation route or scan a QR code
+            Plan your navigation route
           </Text>
         </View>
         <View style={{ paddingTop: 2 }}>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   Modal,
   ScrollView,
   Keyboard,
+  Animated,
+  Easing,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -36,6 +38,7 @@ import {
   StorefrontIcon,
   FirstAidIcon,
   ArrowUpIcon,
+  ArrowLeftIcon,
   ArrowRightIcon,
   StarIcon,
   CheckIcon,
@@ -210,7 +213,7 @@ function inferTurnInstruction(previousNode, currentNode, nextNode) {
   if (cross > 0) {
     return { direction: "right", text: `Turn right toward ${nextNode.name}.` };
   }
-  return { direction: "right", text: `Turn left toward ${nextNode.name}.` };
+  return { direction: "left", text: `Turn left toward ${nextNode.name}.` };
 }
 
 function getNodeDisplayName(node, fallbackId) {
@@ -281,6 +284,26 @@ export default function NavigateScreen() {
   const [graphDatasets, setGraphDatasets] = useState(
     () => LOCAL_GRAPH_DATASETS,
   );
+  const arrivalCardTranslateY = useRef(new Animated.Value(48)).current;
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: isNavigating ? () => null : undefined,
+      gestureEnabled: !isNavigating,
+    });
+  }, [navigation, isNavigating]);
+
+  useEffect(() => {
+    if (!showArrivalModal) return;
+
+    arrivalCardTranslateY.setValue(48);
+    Animated.timing(arrivalCardTranslateY, {
+      toValue: 0,
+      duration: 260,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  }, [showArrivalModal, arrivalCardTranslateY]);
 
   const syncNavigationGraphs = useCallback(async () => {
     try {
@@ -873,6 +896,12 @@ export default function NavigateScreen() {
                   color={colors.Primary_Charcoal}
                   weight="bold"
                 />
+              ) : activeStep.direction === "left" ? (
+                <ArrowLeftIcon
+                  size={24}
+                  color={colors.Primary_Charcoal}
+                  weight="bold"
+                />
               ) : (
                 <ArrowRightIcon
                   size={24}
@@ -949,7 +978,7 @@ export default function NavigateScreen() {
       )}
 
       <Modal
-        animationType="slide"
+        animationType="none"
         transparent
         visible={showArrivalModal}
         onRequestClose={() => {}}
@@ -957,7 +986,12 @@ export default function NavigateScreen() {
         <View style={styles.arrivalModalBackdrop}>
           <View style={styles.arrivalModalScrim} />
 
-          <View style={styles.arrivalModalCard}>
+          <Animated.View
+            style={[
+              styles.arrivalModalCard,
+              { transform: [{ translateY: arrivalCardTranslateY }] },
+            ]}
+          >
             <View style={styles.arrivalModalIconCircle}>
               <CheckIcon size={54} color={colors.primary_White} weight="bold" />
             </View>
@@ -982,7 +1016,7 @@ export default function NavigateScreen() {
                 Back to Wayfinder
               </Text>
             </Pressable>
-          </View>
+          </Animated.View>
         </View>
       </Modal>
     </View>

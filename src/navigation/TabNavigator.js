@@ -58,7 +58,7 @@ function shouldHideTabBar(route, hideOnScreens) {
 export default function TabNavigator() {
   return (
     <Tab.Navigator
-      initialRouteName="WayFinder"
+      initialRouteName="Wayfinder"
       screenOptions={{
         headerShown: false,
         ...headerOptions,
@@ -70,12 +70,12 @@ export default function TabNavigator() {
       }}
     >
       <Tab.Screen
-        name="WayFinder"
+        name="Wayfinder"
         component={MapStack}
         options={({ route }) => {
           const shouldHide = shouldHideTabBar(route, navHideOnScreens);
           return {
-            title: "WayFinder",
+            title: "Wayfinder",
             tabBarStyle: shouldHide ? { display: "none" } : sharedTabBarStyle,
             tabBarBackground: shouldHide
               ? undefined
