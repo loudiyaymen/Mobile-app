@@ -94,6 +94,17 @@ export default function EventRegisterScreen() {
         return;
       }
 
+      if (
+        message.toLowerCase().includes("event is full") ||
+        message.toLowerCase().includes("registration is closed")
+      ) {
+        Alert.alert(
+          "Registration closed",
+          "This event has reached the participant limit.",
+        );
+        return;
+      }
+
       Alert.alert("Registration failed", message || "Please try again.");
     } finally {
       setIsSubmitting(false);

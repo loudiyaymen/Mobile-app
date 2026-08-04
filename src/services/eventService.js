@@ -74,7 +74,10 @@ export async function fetchEventsByTab() {
     const myRows = Array.isArray(myResponse?.data) ? myResponse.data : [];
 
     const myEvents = myRows
-      .map(normalizeEvent)
+      .map((item) => ({
+        ...normalizeEvent(item),
+        isRegistered: true,
+      }))
       .filter((event) => Boolean(event.id));
     const myEventIds = new Set(myEvents.map((event) => event.id));
     const allEvents = allRows.map((item) => {
