@@ -119,7 +119,7 @@ export default function SOSButton() {
       <View style={styles.sosFabInner}>
         {isPressing ? (
           <Text style={[styles.sosFabHoldHint, styles.sosFabHoldHintActive]}>
-            Keep holding…
+            Keep holding
           </Text>
         ) : null}
         {isPressing && (

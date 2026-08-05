@@ -16,6 +16,7 @@ const defaultSettings = {
   darkModeEnabled: false,
   accessibilityEnabled: false,
   textSizeIndex: 1,
+  onboardingCompleted: false,
   alertTypes: {
     fire: true,
     security: true,
@@ -124,6 +125,10 @@ export function SettingsProvider({ children }) {
     }));
   }, []);
 
+  const setOnboardingCompleted = useCallback((completed) => {
+    setSettings((prev) => ({ ...prev, onboardingCompleted: completed }));
+  }, []);
+
   const value = useMemo(
     () => ({
       settings,
@@ -134,6 +139,7 @@ export function SettingsProvider({ children }) {
       setTextSizeIndex,
       setAlertTypeEnabled,
       setPushPreferenceEnabled,
+      setOnboardingCompleted,
     }),
     [
       settings,
@@ -144,6 +150,7 @@ export function SettingsProvider({ children }) {
       setTextSizeIndex,
       setAlertTypeEnabled,
       setPushPreferenceEnabled,
+      setOnboardingCompleted,
     ],
   );
 
