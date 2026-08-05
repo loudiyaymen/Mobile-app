@@ -12,6 +12,7 @@ import SOSButton from "./src/components/SOSButton";
 import NotificationBridge from "./src/components/NotificationBridge";
 import { useFonts } from "expo-font";
 import { logDailyActivity } from "./src/services/userActivityService";
+import { primeNavigationGraphsCacheOnAppStart } from "./src/services/navigationService";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -24,6 +25,7 @@ export default function App() {
   useEffect(() => {
     if (!fontsLoaded) return;
     logDailyActivity();
+    primeNavigationGraphsCacheOnAppStart().catch(() => {});
   }, [fontsLoaded]);
 
   if (!fontsLoaded) return null;

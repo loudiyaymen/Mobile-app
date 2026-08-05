@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
+import { useSettings } from "../../context/SettingsContext";
 
 const sections = [
   {
@@ -79,9 +80,11 @@ function SettingsRow({ icon, label, onPress }) {
 
 export default function SettingsScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { settings } = useSettings();
 
   return (
     <ScrollView
+      key={`settings-${settings.textSizeIndex}`}
       style={{ flex: 1, backgroundColor: colors.primary_White }}
       contentContainerStyle={{ paddingBottom: 36 }}
     >

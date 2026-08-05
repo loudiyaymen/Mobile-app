@@ -16,21 +16,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
-import buildingA from "../../assets/building_graphs/building_A_unified.json";
-import buildingB from "../../assets/building_graphs/building_B_unified.json";
-import buildingC from "../../assets/building_graphs/building_C_unified.json";
-import buildingCA from "../../assets/building_graphs/building_CA_unified.json";
-import buildingD from "../../assets/building_graphs/building_D_unified.json";
-import buildingE from "../../assets/building_graphs/building_E_unified.json";
-import buildingF from "../../assets/building_graphs/building_F_unified.json";
-import buildingH from "../../assets/building_graphs/building_H_unified.json";
-import buildingJ from "../../assets/building_graphs/building_J_unified.json";
-import buildingN from "../../assets/building_graphs/building_N_unified.json";
-import buildingP from "../../assets/building_graphs/building_P_unified.json";
-import buildingT from "../../assets/building_graphs/building_T_unified.json";
-import buildingV from "../../assets/building_graphs/building_V_unified.json";
-import buildingZ from "../../assets/building_graphs/building_Z_unified.json";
-import { fetchNavigationGraphs } from "../../services/navigationService";
+import { getNavigationGraphs } from "../../services/navigationService";
 import {
   DeviceRotateIcon,
   LightbulbIcon,
@@ -45,23 +31,6 @@ import {
   XIcon,
 } from "phosphor-react-native";
 import { NavigationArrowIcon } from "phosphor-react-native";
-
-const LOCAL_GRAPH_DATASETS = {
-  A: buildingA,
-  B: buildingB,
-  C: buildingC,
-  CA: buildingCA,
-  D: buildingD,
-  E: buildingE,
-  F: buildingF,
-  H: buildingH,
-  J: buildingJ,
-  N: buildingN,
-  P: buildingP,
-  T: buildingT,
-  V: buildingV,
-  Z: buildingZ,
-};
 
 const EXCLUDED_WORDS = [
   "entrance",
@@ -281,9 +250,7 @@ export default function NavigateScreen() {
   const [showArrivalModal, setShowArrivalModal] = useState(false);
   const [favoriteKeys, setFavoriteKeys] = useState(() => new Set());
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
-  const [graphDatasets, setGraphDatasets] = useState(
-    () => LOCAL_GRAPH_DATASETS,
-  );
+  const [graphDatasets, setGraphDatasets] = useState(() => ({}));
   const arrivalCardTranslateY = useRef(new Animated.Value(48)).current;
 
   useEffect(() => {
@@ -307,7 +274,7 @@ export default function NavigateScreen() {
 
   const syncNavigationGraphs = useCallback(async () => {
     try {
-      const graphs = await fetchNavigationGraphs();
+      const graphs = await getNavigationGraphs({ checkForUpdates: true });
       const nextGraphDatasets = {};
 
       graphs.forEach((graphEntry) => {
@@ -323,16 +290,9 @@ export default function NavigateScreen() {
           graphEntry?.graphData || graphEntry?.graph_data || {};
       });
 
-      if (Object.keys(nextGraphDatasets).length > 0) {
-        setGraphDatasets((current) => ({
-          ...current,
-          ...nextGraphDatasets,
-        }));
-      }
+      setGraphDatasets(nextGraphDatasets);
     } catch {
-      setGraphDatasets((current) =>
-        Object.keys(current).length > 0 ? current : LOCAL_GRAPH_DATASETS,
-      );
+      // Keep the last known in-memory graph dataset when sync fails.
     }
   }, []);
 
