@@ -174,11 +174,33 @@ function inferTurnInstruction(previousNode, currentNode, nextNode) {
   const vectorAY = currentNode.y - previousNode.y;
   const vectorBX = nextNode.x - currentNode.x;
   const vectorBY = nextNode.y - currentNode.y;
-  const cross = vectorAX * vectorBY - vectorAY * vectorBX;
 
-  if (Math.abs(cross) < 1e-3) {
+  // Calculate magnitudes
+  const magA = Math.sqrt(vectorAX * vectorAX + vectorAY * vectorAY);
+  const magB = Math.sqrt(vectorBX * vectorBX + vectorBY * vectorBY);
+
+  // Avoid division by zero
+  if (magA === 0 || magB === 0) {
+    return { direction: "up", text: `Continue to ${nextNode.name}.` };
+  }
+
+  // Calculate angle using dot product
+  const dot = vectorAX * vectorBX + vectorAY * vectorBY;
+  const cosAngle = dot / (magA * magB);
+  // Clamp to [-1, 1] to avoid acos domain errors from floating point precision
+  const clampedCosAngle = Math.max(-1, Math.min(1, cosAngle));
+  const angle = Math.acos(clampedCosAngle);
+
+  // Minimum angle threshold for registering a turn (15 degrees ≈ 0.262 radians)
+  const TURN_THRESHOLD = 0.262;
+
+  // If angle is below threshold, treat as straight
+  if (angle < TURN_THRESHOLD) {
     return { direction: "up", text: `Continue straight to ${nextNode.name}.` };
   }
+
+  // Determine turn direction using cross product
+  const cross = vectorAX * vectorBY - vectorAY * vectorBX;
   if (cross > 0) {
     return { direction: "right", text: `Turn right toward ${nextNode.name}.` };
   }
