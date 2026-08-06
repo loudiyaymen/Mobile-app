@@ -2,9 +2,7 @@ import { View, Text, Pressable } from "react-native";
 import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
-import {
-  NavigationArrowIcon,
-} from "phosphor-react-native";
+import { NavigationArrowIcon } from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import NotificationHeaderButton from "../../components/NotificationHeaderButton";

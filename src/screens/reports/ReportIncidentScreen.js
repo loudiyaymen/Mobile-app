@@ -234,18 +234,17 @@ export default function ReportIncidentScreen() {
         photoUri: media,
         photoSizeBytes: mediaSizeBytes,
         locationText,
-        incidentAt:
-          date
-            ? new Date(
-                date.getFullYear(),
-                date.getMonth(),
-                date.getDate(),
-                time ? time.getHours() : 0,
-                time ? time.getMinutes() : 0,
-                0,
-                0,
-              ).toISOString()
-            : null,
+        incidentAt: date
+          ? new Date(
+              date.getFullYear(),
+              date.getMonth(),
+              date.getDate(),
+              time ? time.getHours() : 0,
+              time ? time.getMinutes() : 0,
+              0,
+              0,
+            ).toISOString()
+          : null,
         isAnonymous: anonymous,
         emailUpdates,
       });
