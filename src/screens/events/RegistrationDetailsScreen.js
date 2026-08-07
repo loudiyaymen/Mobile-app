@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Modal } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   CalendarIcon,
@@ -54,6 +54,7 @@ export default function RegistrationDetailsScreen() {
   const route = useRoute();
   const event = route && route.params ? route.params.event : undefined;
   const [showToast, setShowToast] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const cancelTimerRef = useRef(null);
 
   const eventTitle = event?.title ?? "Event";
@@ -81,6 +82,19 @@ export default function RegistrationDetailsScreen() {
       setShowToast(false);
       console.error("Failed to cancel registration:", error);
     }
+  };
+
+  const handleConfirmCancelRegistration = () => {
+    setShowCancelConfirm(true);
+  };
+
+  const handleKeepRegistration = () => {
+    setShowCancelConfirm(false);
+  };
+
+  const handleConfirmCancellation = async () => {
+    setShowCancelConfirm(false);
+    await handleCancelRegistration();
   };
 
   const handleBackToEvents = () => {
@@ -161,7 +175,7 @@ export default function RegistrationDetailsScreen() {
           <ActionRow
             icon={<XIcon size={32} color={colors.Primary_Charcoal} />}
             label="Cancel registration"
-            onPress={handleCancelRegistration}
+            onPress={handleConfirmCancelRegistration}
             destructive
           />
         </View>
@@ -222,6 +236,88 @@ export default function RegistrationDetailsScreen() {
           </Text>
         </View>
       ) : null}
+
+      <Modal
+        animationType="fade"
+        transparent
+        visible={showCancelConfirm}
+        onRequestClose={handleKeepRegistration}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.35)",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 24,
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              maxWidth: 360,
+              backgroundColor: colors.primary_White,
+              borderRadius: 18,
+              paddingVertical: 20,
+              paddingHorizontal: 18,
+              gap: 16,
+            }}
+          >
+            <Text
+              style={[typography.h4, { color: colors.Primary_Charcoal }]}
+            >
+              Cancel registration
+            </Text>
+            <Text
+              style={[typography.body, { color: colors.Dark_Grey }]}
+            >
+              Are you sure you want to cancel your registration for this event?
+            </Text>
+
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <Pressable
+                onPress={handleKeepRegistration}
+                style={{
+                  flex: 1,
+                  borderRadius: 12,
+                  paddingVertical: 12,
+                  alignItems: "center",
+                  backgroundColor: colors.Light_Grey,
+                }}
+              >
+                <Text
+                  style={[
+                    typography.secondaryBody,
+                    { color: colors.Primary_Charcoal },
+                  ]}
+                >
+                  Keep registration
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={handleConfirmCancellation}
+                style={{
+                  flex: 1,
+                  borderRadius: 12,
+                  paddingVertical: 12,
+                  alignItems: "center",
+                  backgroundColor: "#B42318",
+                }}
+              >
+                <Text
+                  style={[
+                    typography.secondaryBody,
+                    { color: colors.primary_White },
+                  ]}
+                >
+                  Cancel registration
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
