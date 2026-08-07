@@ -184,24 +184,25 @@ function inferTurnInstruction(previousNode, currentNode, nextNode) {
     return { direction: "up", text: `Continue to ${nextNode.name}.` };
   }
 
-  // Calculate angle using dot product
-  const dot = vectorAX * vectorBX + vectorAY * vectorBY;
-  const cosAngle = dot / (magA * magB);
-  // Clamp to [-1, 1] to avoid acos domain errors from floating point precision
-  const clampedCosAngle = Math.max(-1, Math.min(1, cosAngle));
-  const angle = Math.acos(clampedCosAngle);
+  const incomingAngle = Math.atan2(vectorAY, vectorAX);
+  const outgoingAngle = Math.atan2(vectorBY, vectorBX);
+
+  let signedDelta = outgoingAngle - incomingAngle;
+  while (signedDelta > Math.PI) signedDelta -= 2 * Math.PI;
+  while (signedDelta < -Math.PI) signedDelta += 2 * Math.PI;
+
+  const absoluteDelta = Math.abs(signedDelta);
 
   // Minimum angle threshold for registering a turn (15 degrees ≈ 0.262 radians)
   const TURN_THRESHOLD = 0.262;
 
   // If angle is below threshold, treat as straight
-  if (angle < TURN_THRESHOLD) {
+  if (absoluteDelta < TURN_THRESHOLD) {
     return { direction: "up", text: `Continue straight to ${nextNode.name}.` };
   }
 
-  // Determine turn direction using cross product
-  const cross = vectorAX * vectorBY - vectorAY * vectorBX;
-  if (cross > 0) {
+  // In this map coordinate space, positive delta means clockwise turn (right).
+  if (signedDelta > 0) {
     return { direction: "right", text: `Turn right toward ${nextNode.name}.` };
   }
   return { direction: "left", text: `Turn left toward ${nextNode.name}.` };
@@ -929,25 +930,23 @@ export default function NavigateScreen() {
             </Text>
           </Pressable>
 
-          <Pressable
-            style={[styles.buttonContainer, styles.routeButtonSecondary]}
-            onPress={handleBackStep}
-            disabled={currentStepIndex === 0}
-          >
-            <Text
-              style={[
-                typography.secondaryBody,
-                {
-                  color:
-                    currentStepIndex === 0
-                      ? colors.Light_Grey
-                      : colors.Primary_Charcoal,
-                },
-              ]}
+          {currentStepIndex > 0 ? (
+            <Pressable
+              style={[styles.buttonContainer, styles.routeButtonSecondary]}
+              onPress={handleBackStep}
             >
-              Back
-            </Text>
-          </Pressable>
+              <Text
+                style={[
+                  typography.secondaryBody,
+                  {
+                    color: colors.Primary_Charcoal,
+                  },
+                ]}
+              >
+                Back
+              </Text>
+            </Pressable>
+          ) : null}
         </View>
       ) : (
         <View style={[styles.navigationCard, { gap: 12 }]}>

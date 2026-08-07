@@ -5,7 +5,7 @@ import Svg, { Circle } from "react-native-svg";
 import { navigate, navigationRef } from "../navigation/navigationRef";
 import { styles } from "../themes/styles";
 
-const HIDDEN_SCREENS = ["EmergencyConnected", "EmergencyHelp"];
+const HIDDEN_SCREENS = ["EmergencyConnected", "EmergencyHelp", "Onboarding"];
 const HOLD_TIME = 3000;
 const SECURITY_PHONE = "613-727-4723";
 

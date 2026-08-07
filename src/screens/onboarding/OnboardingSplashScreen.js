@@ -1,11 +1,5 @@
 import { useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  Animated,
-  Easing,
-} from "react-native";
+import { View, Text, Pressable, Animated, Easing } from "react-native";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
 
@@ -63,6 +57,8 @@ export default function OnboardingSplashScreen({ onContinue }) {
                 color: colors.primary_White,
                 fontSize: 48,
                 fontWeight: "700",
+                lineHeight: 58,
+                marginBottom: 6,
               },
             ]}
           >

@@ -28,21 +28,6 @@ const sections = [
     ],
   },
   {
-    title: "Notifications",
-    rows: [
-      {
-        label: "Alert Types",
-        icon: "notifications-outline",
-        route: "Alert Types",
-      },
-      {
-        label: "Push Preferences",
-        icon: "notifications-outline",
-        route: "Push Preferences",
-      },
-    ],
-  },
-  {
     title: "Privacy & Legal",
     rows: [
       { label: "Permissions", icon: "shield-outline", route: "Permissions" },
