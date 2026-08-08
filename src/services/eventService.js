@@ -61,6 +61,14 @@ function normalizeEvent(item) {
   };
 }
 
+function isUpcomingEvent(item) {
+  const eventDate = new Date(item?.event_date || "");
+  if (Number.isNaN(eventDate.getTime())) {
+    return true;
+  }
+  return eventDate.getTime() >= Date.now();
+}
+
 export async function fetchEventsByTab() {
   try {
     const deviceId = await getOrCreateDeviceId();
@@ -73,14 +81,17 @@ export async function fetchEventsByTab() {
     const allRows = Array.isArray(allResponse?.data) ? allResponse.data : [];
     const myRows = Array.isArray(myResponse?.data) ? myResponse.data : [];
 
-    const myEvents = myRows
+    const upcomingAllRows = allRows.filter(isUpcomingEvent);
+    const upcomingMyRows = myRows.filter(isUpcomingEvent);
+
+    const myEvents = upcomingMyRows
       .map((item) => ({
         ...normalizeEvent(item),
         isRegistered: true,
       }))
       .filter((event) => Boolean(event.id));
     const myEventIds = new Set(myEvents.map((event) => event.id));
-    const allEvents = allRows.map((item) => {
+    const allEvents = upcomingAllRows.map((item) => {
       const normalized = normalizeEvent(item);
       return {
         ...normalized,

@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const DEVICE_ID_KEY = "device_id";
 
@@ -40,12 +40,12 @@ function generateUuidLike() {
 }
 
 export async function getOrCreateDeviceId() {
-  const existing = await AsyncStorage.getItem(DEVICE_ID_KEY);
+  const existing = await SecureStore.getItemAsync(DEVICE_ID_KEY);
   if (existing && String(existing).trim()) {
     return String(existing).trim();
   }
 
   const created = generateUuidLike();
-  await AsyncStorage.setItem(DEVICE_ID_KEY, created);
+  await SecureStore.setItemAsync(DEVICE_ID_KEY, created);
   return created;
 }

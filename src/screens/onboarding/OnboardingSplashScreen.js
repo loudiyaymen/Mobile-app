@@ -1,7 +1,57 @@
 import { useEffect, useRef } from "react";
-import { View, Text, Pressable, Animated, Easing } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Animated,
+  Easing,
+  SafeAreaView,
+  StyleSheet,
+} from "react-native";
 import { colors } from "../../themes/color";
 import { typography } from "../../themes/typography";
+
+const splashStyles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.primary_AC_Green,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+  },
+  centeredContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 24,
+  },
+  titleBlock: {
+    alignItems: "center",
+    gap: 8,
+    paddingTop: 18,
+  },
+  titleText: {
+    color: colors.primary_White,
+    fontSize: 48,
+    fontWeight: "700",
+    lineHeight: 58,
+  },
+  titleTopText: {
+    marginBottom: 6,
+  },
+  startButton: {
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    backgroundColor: colors.primary_White,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  startButtonText: {
+    color: colors.primary_AC_Green,
+    fontWeight: "700",
+  },
+});
 
 export default function OnboardingSplashScreen({ onContinue }) {
   const fadeInAnim = useRef(new Animated.Value(0)).current;
@@ -25,83 +75,35 @@ export default function OnboardingSplashScreen({ onContinue }) {
   }, [fadeInAnim, scaleAnim]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: colors.primary_AC_Green,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 24,
-      }}
-    >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 24,
-        }}
-      >
+    <SafeAreaView style={splashStyles.root}>
+      <View style={splashStyles.centeredContent}>
         <Animated.View
-          style={{
-            opacity: fadeInAnim,
-            transform: [{ scale: scaleAnim }],
-            alignItems: "center",
-            gap: 8,
-          }}
+          style={[
+            splashStyles.titleBlock,
+            {
+              opacity: fadeInAnim,
+              transform: [{ scale: scaleAnim }],
+            },
+          ]}
         >
           <Text
             style={[
               typography.h1,
-              {
-                color: colors.primary_White,
-                fontSize: 48,
-                fontWeight: "700",
-                lineHeight: 58,
-                marginBottom: 6,
-              },
+              splashStyles.titleText,
+              splashStyles.titleTopText,
             ]}
           >
             Algonquin
           </Text>
-          <Text
-            style={[
-              typography.h1,
-              {
-                color: colors.primary_White,
-                fontSize: 48,
-                fontWeight: "700",
-              },
-            ]}
-          >
-            GO
-          </Text>
+          <Text style={[typography.h1, splashStyles.titleText]}>GO</Text>
         </Animated.View>
       </View>
 
-      <Pressable
-        onPress={onContinue}
-        style={{
-          paddingVertical: 16,
-          paddingHorizontal: 32,
-          backgroundColor: colors.primary_White,
-          borderRadius: 8,
-          alignItems: "center",
-          marginBottom: 24,
-        }}
-      >
-        <Text
-          style={[
-            typography.h4,
-            {
-              color: colors.primary_AC_Green,
-              fontWeight: "700",
-            },
-          ]}
-        >
+      <Pressable onPress={onContinue} style={splashStyles.startButton}>
+        <Text style={[typography.h4, splashStyles.startButtonText]}>
           Get Started
         </Text>
       </Pressable>
-    </View>
+    </SafeAreaView>
   );
 }

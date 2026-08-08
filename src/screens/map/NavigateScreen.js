@@ -121,6 +121,7 @@ function shortestPath(graph, startNodeId, endNodeId) {
   for (const nodeId of unvisited) distances[nodeId] = Infinity;
   distances[startNodeId] = 0;
 
+  // Dijkstra over weighted neighbors; bridge edges and hallway distances share this same cost model.
   while (unvisited.size > 0) {
     let currentNodeId = null;
 
@@ -193,7 +194,7 @@ function inferTurnInstruction(previousNode, currentNode, nextNode) {
 
   const absoluteDelta = Math.abs(signedDelta);
 
-  // Minimum angle threshold for registering a turn (15 degrees ≈ 0.262 radians)
+  // Minimum angle threshold for registering a turn (15 degrees is about like 0.262 radians)
   const TURN_THRESHOLD = 0.262;
 
   // If angle is below threshold, treat as straight
@@ -263,6 +264,7 @@ function compressRouteSteps(steps) {
       normalizeRouteInstructionKey(previous.targetName) ===
       normalizeRouteInstructionKey(step.targetName);
 
+    // Merge near-duplicate instructions and keep the one pointing to the more informative node type.
     if (sameDirection && (sameKey || sameTarget)) {
       if (rankRouteStep(step) >= rankRouteStep(previous)) {
         compressed[compressed.length - 1] = step;
@@ -282,7 +284,7 @@ function compressRouteSteps(steps) {
 function buildRouteStepsFromPath(graph, path, startName, destinationName) {
   if (!Array.isArray(path) || path.length < 2) return [];
 
-  // Filter path to only include nodes with valid display names
+  // Hide unnamed graph utility nodes so users do not see generic "Waypoint" instructions.
   const filteredPath = path.filter((nodeId) => {
     const node = graph[nodeId];
     return getNodeDisplayName(node) !== null;
@@ -302,7 +304,7 @@ function buildRouteStepsFromPath(graph, path, startName, destinationName) {
   }
 
   const steps = [];
-  // Start from index 1 since filteredPath[0] is the starting node
+  // filteredPath[0] is the selected start room, so instruction steps begin from the next node.
   for (let index = 1; index < filteredPath.length; index += 1) {
     const previousNodeId = filteredPath[index - 1];
     const currentNodeId = filteredPath[index];
