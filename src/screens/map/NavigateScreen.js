@@ -47,12 +47,12 @@ const EXCLUDED_WORDS = [
 ];
 
 const AMENITY_LABEL_HINTS = {
-  "Marketplace Food Court": ["food court", "cafeteria"],
+  "Marketplace Food Court": ["cafeteria"],
   "Tim Hortons": ["tim hortons"],
   Starbucks: ["starbucks"],
   Connections: ["connections"],
   "The Fix": ["the fix"],
-  "Health Services": ["health services", "health service"],
+  "Health Services": ["student health", "wellness"],
 };
 
 const WAYFINDER_FAVORITES_STORAGE_KEY = "wayfinder.favoriteRooms.v1";
@@ -208,45 +208,131 @@ function inferTurnInstruction(previousNode, currentNode, nextNode) {
   return { direction: "left", text: `Turn left toward ${nextNode.name}.` };
 }
 
-function getNodeDisplayName(node, fallbackId) {
+function getNodeDisplayName(node) {
   if (node?.name && String(node.name).trim()) return String(node.name).trim();
   if (node?.label && String(node.label).trim()) {
     return parseRoomLabel(String(node.label));
   }
-  return `Waypoint ${String(fallbackId || "")}`.trim();
+  return null;
+}
+
+function normalizeRouteInstructionKey(instruction) {
+  return String(instruction || "")
+    .toLowerCase()
+    .replace(/\([^)]*\)/g, "")
+    .replace(
+      /^(start at|continue straight to|continue to|turn left toward|turn right toward)\s+/i,
+      "",
+    )
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function rankRouteStep(step) {
+  const text = String(step?.instruction || "").toLowerCase();
+  const nodeType = String(step?.nextNodeType || "").toLowerCase();
+  let score = 0;
+  if (/intersection/.test(text)) score += 6;
+  if (/hallway/.test(text)) score += 4;
+  if (/entrance|exit|bridge/.test(text)) score += 3;
+  if (/room/.test(text)) score += 1;
+
+  if (nodeType === "intersection") score += 6;
+  if (nodeType === "hallway_node") score += 4;
+  if (nodeType === "entrance" || nodeType === "exit") score += 3;
+  if (nodeType === "room_door") score += 1;
+
+  return score;
+}
+
+function compressRouteSteps(steps) {
+  const compressed = [];
+
+  for (const step of steps) {
+    const previous = compressed[compressed.length - 1];
+    if (!previous) {
+      compressed.push(step);
+      continue;
+    }
+
+    const sameDirection = previous.direction === step.direction;
+    const sameKey =
+      normalizeRouteInstructionKey(previous.instruction) ===
+      normalizeRouteInstructionKey(step.instruction);
+    const sameTarget =
+      normalizeRouteInstructionKey(previous.targetName) ===
+      normalizeRouteInstructionKey(step.targetName);
+
+    if (sameDirection && (sameKey || sameTarget)) {
+      if (rankRouteStep(step) >= rankRouteStep(previous)) {
+        compressed[compressed.length - 1] = step;
+      }
+      continue;
+    }
+
+    compressed.push(step);
+  }
+
+  return compressed.map((step, index) => ({
+    ...step,
+    id: index + 1,
+  }));
 }
 
 function buildRouteStepsFromPath(graph, path, startName, destinationName) {
   if (!Array.isArray(path) || path.length < 2) return [];
 
+  // Filter path to only include nodes with valid display names
+  const filteredPath = path.filter((nodeId) => {
+    const node = graph[nodeId];
+    return getNodeDisplayName(node) !== null;
+  });
+
+  if (filteredPath.length < 2) {
+    // Not enough nodes with names, just show arrival
+    return [
+      {
+        id: 1,
+        instruction: `You have arrived at ${destinationName}.`,
+        direction: "right",
+        targetName: destinationName,
+        nextNodeType: "arrival",
+      },
+    ];
+  }
+
   const steps = [];
-  for (let index = 0; index < path.length - 1; index += 1) {
-    const currentNodeId = path[index];
-    const nextNodeId = path[index + 1];
+  // Start from index 1 since filteredPath[0] is the starting node
+  for (let index = 1; index < filteredPath.length; index += 1) {
+    const previousNodeId = filteredPath[index - 1];
+    const currentNodeId = filteredPath[index];
+    const previousNode = graph[previousNodeId];
     const currentNode = graph[currentNodeId];
-    const nextNode = graph[nextNodeId];
-    const nextNodeName = getNodeDisplayName(nextNode, index + 2);
-    const edgeDistance = currentNode?.neighbors?.[nextNodeId] || 0;
+    const currentNodeName = getNodeDisplayName(currentNode);
 
     let instruction;
     let direction;
-    if (index === 0) {
-      instruction = `Start at ${startName} and proceed to ${nextNodeName}.`;
+    if (index === 1) {
+      // First real step after start
+      instruction = `Proceed to ${currentNodeName}.`;
       direction = "up";
     } else {
-      const previousNode = graph[path[index - 1]];
-      const turnStep = inferTurnInstruction(previousNode, currentNode, {
-        ...nextNode,
-        name: nextNodeName,
+      const priorNodeId = filteredPath[index - 2];
+      const priorNode = graph[priorNodeId];
+      const turnStep = inferTurnInstruction(priorNode, previousNode, {
+        ...currentNode,
+        name: currentNodeName,
       });
       instruction = turnStep.text;
       direction = turnStep.direction;
     }
 
     steps.push({
-      id: index + 1,
+      id: steps.length + 1,
       instruction,
       direction,
+      targetName: currentNodeName,
+      nextNodeType: String(currentNode?.type || ""),
     });
   }
 
@@ -254,9 +340,11 @@ function buildRouteStepsFromPath(graph, path, startName, destinationName) {
     id: steps.length + 1,
     instruction: `You have arrived at ${destinationName}.`,
     direction: "right",
+    targetName: destinationName,
+    nextNodeType: "arrival",
   });
 
-  return steps;
+  return compressRouteSteps(steps);
 }
 
 export default function NavigateScreen() {
@@ -393,6 +481,26 @@ export default function NavigateScreen() {
     return options;
   }, [graphDatasets]);
 
+  const unifiedGraph = useMemo(() => {
+    const merged = {};
+
+    Object.values(graphDatasets).forEach((graph) => {
+      Object.entries(graph).forEach(([nodeId, node]) => {
+        merged[nodeId] = node;
+      });
+    });
+
+    return merged;
+  }, [graphDatasets]);
+
+  const locationOptionByNodeId = useMemo(() => {
+    const lookup = new Map();
+    locationOptions.forEach((option) => {
+      lookup.set(option.nodeId, option);
+    });
+    return lookup;
+  }, [locationOptions]);
+
   const optionByName = useMemo(() => {
     const lookup = new Map();
     locationOptions.forEach((option) => {
@@ -439,10 +547,9 @@ export default function NavigateScreen() {
   const amenitiesList = [
     { id: 1, name: "Marketplace Food Court", icon: ForkKnifeIcon },
     { id: 2, name: "Tim Hortons", icon: ForkKnifeIcon },
-    { id: 3, name: "Starbucks", icon: ForkKnifeIcon },
-    { id: 4, name: "Connections", icon: StorefrontIcon },
-    { id: 5, name: "The Fix", icon: ForkKnifeIcon },
-    { id: 6, name: "Health Services", icon: FirstAidIcon },
+    { id: 3, name: "Connections", icon: StorefrontIcon },
+    { id: 4, name: "The Fix", icon: ForkKnifeIcon },
+    { id: 5, name: "Health Services", icon: FirstAidIcon },
   ];
 
   const amenitiesItems = amenitiesList.map((amenity) => (
@@ -463,9 +570,6 @@ export default function NavigateScreen() {
   const activeSearchValue =
     activeSearchField === "start" ? startingPoint : destination;
 
-  const anchorGraphId =
-    selectedStart?.graphId || selectedDestination?.graphId || null;
-
   const filteredSuggestions = useMemo(() => {
     const query = hasTypedInActiveField
       ? activeSearchValue.trim().toLowerCase()
@@ -475,20 +579,6 @@ export default function NavigateScreen() {
     }
 
     let scopedOptions = locationOptions;
-    if (anchorGraphId) {
-      if (activeSearchField === "destination" && selectedStart?.graphId) {
-        scopedOptions = locationOptions.filter(
-          (option) => option.graphId === selectedStart.graphId,
-        );
-      } else if (
-        activeSearchField === "start" &&
-        selectedDestination?.graphId
-      ) {
-        scopedOptions = locationOptions.filter(
-          (option) => option.graphId === selectedDestination.graphId,
-        );
-      }
-    }
 
     if (activeSearchField === "start" && selectedDestination) {
       scopedOptions = scopedOptions.filter(
@@ -520,7 +610,6 @@ export default function NavigateScreen() {
     locationOptions,
     selectedStart,
     selectedDestination,
-    anchorGraphId,
     favoriteKeys,
   ]);
 
@@ -598,15 +687,15 @@ export default function NavigateScreen() {
       return;
     }
 
-    if (startSelection.graphId !== destinationSelection.graphId) {
+    const graph = unifiedGraph;
+    if (!graph[startSelection.nodeId] || !graph[destinationSelection.nodeId]) {
       Alert.alert(
         "Route unavailable",
-        "Start and destination must be in the same building for now.",
+        "One or both selected points are not available in the current map data.",
       );
       return;
     }
 
-    const graph = graphDatasets[startSelection.graphId];
     const path = shortestPath(
       graph,
       startSelection.nodeId,
@@ -615,18 +704,14 @@ export default function NavigateScreen() {
     if (!path.length) {
       Alert.alert(
         "Route unavailable",
-        "No path was found between those two points in this building.",
+        "No path was found between those two points.",
       );
       return;
     }
 
     const graphWithDisplayNames = { ...graph };
     path.forEach((nodeId) => {
-      const option = locationOptions.find(
-        (candidate) =>
-          candidate.graphId === startSelection.graphId &&
-          candidate.nodeId === nodeId,
-      );
+      const option = locationOptionByNodeId.get(nodeId);
       if (option) {
         graphWithDisplayNames[nodeId] = {
           ...graphWithDisplayNames[nodeId],

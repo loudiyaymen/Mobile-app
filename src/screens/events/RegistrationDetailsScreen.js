@@ -263,14 +263,10 @@ export default function RegistrationDetailsScreen() {
               gap: 16,
             }}
           >
-            <Text
-              style={[typography.h4, { color: colors.Primary_Charcoal }]}
-            >
+            <Text style={[typography.h4, { color: colors.Primary_Charcoal }]}>
               Cancel registration
             </Text>
-            <Text
-              style={[typography.body, { color: colors.Dark_Grey }]}
-            >
+            <Text style={[typography.body, { color: colors.Dark_Grey }]}>
               Are you sure you want to cancel your registration for this event?
             </Text>
 
