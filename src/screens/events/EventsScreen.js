@@ -1,0 +1,243 @@
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
+import { styles } from "../../themes/styles";
+import { typography } from "../../themes/typography";
+import Card from "../../components/Cards";
+import { fetchEventsByTab } from "../../services/eventService";
+import { colors } from "../../themes/color";
+import {
+  useNavigation,
+  useFocusEffect,
+  useRoute,
+} from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import NotificationHeaderButton from "../../components/NotificationHeaderButton";
+
+export default function EventsScreen() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const insets = useSafeAreaInsets();
+  const isLoadingRef = useRef(false);
+  const [eventGroups, setEventGroups] = useState({
+    allEvents: [],
+    myEvents: [],
+  });
+  const [activeTab, setActiveTab] = useState("allEvents");
+  const [loading, setLoading] = useState(true);
+
+  const groupedEvents = useMemo(() => {
+    const rows = eventGroups[activeTab] ?? [];
+    const map = new Map();
+
+    rows.forEach((event) => {
+      const type = String(event?.eventType || event?.type || "General").trim();
+      const key = type.length > 0 ? type : "General";
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(event);
+    });
+
+    return Array.from(map.entries()).map(([type, events]) => ({
+      type,
+      events,
+    }));
+  }, [activeTab, eventGroups]);
+
+  const loadEvents = useCallback(async () => {
+    if (isLoadingRef.current) return;
+
+    isLoadingRef.current = true;
+    try {
+      const result = await fetchEventsByTab();
+      setEventGroups({
+        allEvents: result?.allEvents ?? result?.official ?? [],
+        myEvents: result?.myEvents ?? [],
+      });
+      setLoading(false);
+    } finally {
+      isLoadingRef.current = false;
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadEvents();
+
+      const intervalId = setInterval(() => {
+        loadEvents();
+      }, 15000);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    }, [loadEvents]),
+  );
+
+  useEffect(() => {
+    const requestedTab = route?.params?.activeTab;
+    if (requestedTab === "allEvents" || requestedTab === "myEvents") {
+      setActiveTab(requestedTab);
+      navigation.setParams({ activeTab: undefined, refreshKey: undefined });
+    }
+  }, [route?.params?.activeTab, navigation]);
+
+  if (loading) {
+    return (
+      <ActivityIndicator
+        size="large"
+        style={{ flex: 1, justifyContent: "center" }}
+      />
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <View
+        style={{
+          paddingHorizontal: 24,
+          paddingTop: insets.top + 16,
+          paddingBottom: 16,
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
+      >
+        <View style={{ flex: 1, paddingRight: 8 }}>
+          <Text style={[typography.h2, { color: colors.Primary_Charcoal }]}>
+            Events
+          </Text>
+          <Text
+            style={[
+              typography.h5,
+              {
+                color: colors.Dark_Grey,
+                marginTop: 6,
+              },
+            ]}
+          >
+            Discover and join campus activities
+          </Text>
+        </View>
+        <View style={{ paddingTop: 2 }}>
+          <NotificationHeaderButton
+            onPress={() => navigation.getParent()?.navigate("Notifications")}
+          />
+        </View>
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          marginBottom: 15,
+          justifyContent: "center",
+        }}
+      >
+        <Pressable
+          onPress={() => setActiveTab("allEvents")}
+          style={[
+            styles.tabButtonContainer,
+            {
+              backgroundColor:
+                activeTab === "allEvents"
+                  ? colors.primary_AC_Green
+                  : "transparent",
+              borderColor:
+                activeTab === "allEvents"
+                  ? colors.primary_AC_Green
+                  : colors.Secondary_Dark_AC_Green,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              typography.h5,
+              {
+                color:
+                  activeTab === "allEvents"
+                    ? colors.primary_White
+                    : colors.Secondary_Dark_AC_Green,
+              },
+            ]}
+          >
+            All Events
+          </Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => setActiveTab("myEvents")}
+          style={[
+            styles.tabButtonContainer,
+            {
+              backgroundColor:
+                activeTab === "myEvents"
+                  ? colors.primary_AC_Green
+                  : "transparent",
+              borderColor:
+                activeTab === "myEvents"
+                  ? colors.primary_AC_Green
+                  : colors.Secondary_Dark_AC_Green,
+            },
+          ]}
+        >
+          <Text
+            style={[
+              typography.h5,
+              {
+                color:
+                  activeTab === "myEvents"
+                    ? colors.primary_White
+                    : colors.Secondary_Dark_AC_Green,
+              },
+            ]}
+          >
+            My Events
+          </Text>
+        </Pressable>
+      </View>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: insets.bottom + 108 }}
+      >
+        {groupedEvents.length === 0 ? (
+          <View style={[styles.labelContainer, { marginTop: 30 }]}>
+            <Text style={typography.h5}>No events available.</Text>
+          </View>
+        ) : (
+          groupedEvents.map((group) => (
+            <View key={group.type}>
+              <View style={styles.labelContainer}>
+                <Text style={typography.h3}>{group.type}</Text>
+              </View>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.eventsContainer}
+              >
+                {group.events.map((event) => (
+                  <Pressable
+                    key={event.id}
+                    onPress={() =>
+                      navigation.navigate("Event Details", { event })
+                    }
+                  >
+                    <Card
+                      key={event.id}
+                      image={event.image}
+                      title={event.title}
+                      description={event.description}
+                    />
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+          ))
+        )}
+      </ScrollView>
+    </View>
+  );
+}
