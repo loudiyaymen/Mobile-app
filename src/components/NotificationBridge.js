@@ -4,6 +4,7 @@ import * as Notifications from "expo-notifications";
 import { useNotifications } from "../context/NotificationContext";
 import { navigate } from "../navigation/navigationRef";
 import { startAlertsRealtime } from "../services/alertsRealtimeService";
+import { registerDevicePushToken } from "../services/pushTokenService";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -75,7 +76,18 @@ export default function NotificationBridge() {
       }).catch(() => {});
     }
 
-    Notifications.requestPermissionsAsync().catch(() => {});
+    registerDevicePushToken()
+      .then((result) => {
+        if (!result?.ok) {
+          console.warn(
+            "Push token registration skipped:",
+            result?.reason || "unknown_reason",
+          );
+        }
+      })
+      .catch((error) => {
+        console.warn("Failed to register device push token", error);
+      });
 
     Notifications.getLastNotificationResponseAsync()
       .then((response) => {

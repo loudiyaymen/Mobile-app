@@ -14,6 +14,8 @@ import { fetchCampuses } from "../../services/reportService";
 import { useSettings } from "../../context/SettingsContext";
 import OnboardingSplashScreen from "./OnboardingSplashScreen";
 
+const FALLBACK_CAMPUSES = [{ campusId: null, name: "Main Campus" }];
+
 function normalizeCampusRows(rows = []) {
   return rows
     .map((row) => {
@@ -25,7 +27,12 @@ function normalizeCampusRows(rows = []) {
     .filter(Boolean);
 }
 
-function CampusSelectionScreen({ campuses, onCampusSelected, isLoading }) {
+function CampusSelectionScreen({
+  campuses,
+  onCampusSelected,
+  isLoading,
+  showOfflinePrompt,
+}) {
   return (
     <View
       style={{
@@ -56,6 +63,32 @@ function CampusSelectionScreen({ campuses, onCampusSelected, isLoading }) {
           >
             Which campus is your home base?
           </Text>
+
+          {showOfflinePrompt && (
+            <View
+              style={{
+                marginTop: 8,
+                backgroundColor: "rgba(255,255,255,0.2)",
+                borderRadius: 8,
+                paddingVertical: 10,
+                paddingHorizontal: 12,
+              }}
+            >
+              <Text
+                style={[
+                  typography.body,
+                  {
+                    color: colors.primary_White,
+                    textAlign: "center",
+                  },
+                ]}
+              >
+                You appear to be offline. This app needs internet to work
+                properly. You can continue with a fallback campus and reconnect
+                later.
+              </Text>
+            </View>
+          )}
         </View>
 
         <View style={{ gap: 12 }}>
@@ -103,6 +136,7 @@ export default function OnboardingScreen({ onComplete }) {
   const [screen, setScreen] = useState("splash");
   const [campuses, setCampuses] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showOfflinePrompt, setShowOfflinePrompt] = useState(false);
 
   useEffect(() => {
     if (screen !== "campus") return;
@@ -117,14 +151,17 @@ export default function OnboardingScreen({ onComplete }) {
         const normalized = normalizeCampusRows(rows);
         if (normalized.length > 0) {
           setCampuses(normalized);
+          setShowOfflinePrompt(false);
         } else {
           console.warn("No campuses available");
-          setCampuses([]);
+          setCampuses(FALLBACK_CAMPUSES);
+          setShowOfflinePrompt(true);
         }
       } catch (error) {
         if (!mounted) return;
         console.error("Failed to fetch campuses:", error);
-        setCampuses([]);
+        setCampuses(FALLBACK_CAMPUSES);
+        setShowOfflinePrompt(true);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -154,6 +191,7 @@ export default function OnboardingScreen({ onComplete }) {
         campuses={campuses}
         onCampusSelected={handleCampusSelected}
         isLoading={loading}
+        showOfflinePrompt={showOfflinePrompt}
       />
     );
   }

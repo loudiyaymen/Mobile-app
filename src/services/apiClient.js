@@ -6,7 +6,9 @@ function stripTrailingSlash(value) {
 }
 
 export function resolveApiBaseUrl() {
-  const fromEnv = process.env.EXPO_PUBLIC_BACKEND_API_URL;
+  const fromEnv =
+    process.env.EXPO_PUBLIC_BACKEND_API_URL ||
+    process.env.EXPO_PUBLIC_API_BASE_URL;
   const fromConfig = Constants.expoConfig?.extra?.backendApiUrl;
 
   if (fromEnv) return stripTrailingSlash(fromEnv);
@@ -18,7 +20,24 @@ export function resolveApiBaseUrl() {
 
 export async function apiFetch(path, options) {
   const baseUrl = resolveApiBaseUrl();
-  const response = await fetch(`${baseUrl}${path}`, options);
+  const controller = new AbortController();
+  const timeoutMs = 12000;
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  let response;
+  try {
+    response = await fetch(`${baseUrl}${path}`, {
+      ...(options || {}),
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("Request timed out. Please check your internet connection.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   const isJson = response.headers
     .get("content-type")
