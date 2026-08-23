@@ -26,6 +26,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["@react-native-community/datetimepicker", "expo-notifications"]
+    "plugins": [
+      "@react-native-community/datetimepicker",
+      "expo-notifications"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "fd9636b9-77b0-4669-b923-556d157b81f4"
+      }
+    },
+    "owner": "loud0006"
   }
 }
