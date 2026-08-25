@@ -109,7 +109,7 @@ export default function SOSButton() {
   };
 
   const size = 80;
-  const strokeWidth = 4;
+  const strokeWidth = 8;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference * (1 - progressValue);

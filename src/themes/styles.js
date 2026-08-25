@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     height: 80,
     justifyContent: "center",
     alignItems: "center",
+    zIndex: 1,
   },
   progressCircleBase: {
     width: 80,
@@ -169,6 +170,7 @@ const styles = StyleSheet.create({
     height: 80,
     justifyContent: "center",
     alignItems: "center",
+    overflow: "visible",
   },
   sosFabHoldHint: {
     position: "absolute",
@@ -185,6 +187,8 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 10,
     overflow: "hidden",
+    zIndex: 4,
+    elevation: 4,
   },
   sosFabHoldHintActive: {
     color: colors.Primary_Charcoal,
