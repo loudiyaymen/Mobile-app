@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BellSimpleIcon } from "phosphor-react-native";
 import { useNotifications } from "../context/NotificationContext";
 import { colors } from "../themes/color";
@@ -10,13 +10,7 @@ export default function NotificationHeaderButton({ onPress }) {
     <Pressable
       onPress={onPress}
       hitSlop={10}
-      style={{
-        marginRight: 0,
-        width: 34,
-        height: 34,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      style={styles.trigger}
       accessibilityRole="button"
       accessibilityLabel="Open notifications"
     >
@@ -26,30 +20,8 @@ export default function NotificationHeaderButton({ onPress }) {
         weight="regular"
       />
       {unreadCount > 0 && (
-        <View
-          style={{
-            position: "absolute",
-            top: 3,
-            right: 0,
-            minWidth: 16,
-            height: 16,
-            borderRadius: 8,
-            backgroundColor: colors.SOS_Red,
-            borderWidth: 1,
-            borderColor: colors.primary_White,
-            alignItems: "center",
-            justifyContent: "center",
-            paddingHorizontal: 3,
-          }}
-        >
-          <Text
-            style={{
-              color: colors.primary_White,
-              fontSize: 10,
-              fontWeight: "700",
-              lineHeight: 12,
-            }}
-          >
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>
             {unreadCount > 9 ? "9+" : unreadCount}
           </Text>
         </View>
@@ -57,3 +29,37 @@ export default function NotificationHeaderButton({ onPress }) {
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  trigger: {
+    width: 34,
+    height: 34,
+    padding: 0,
+    margin: 0,
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "visible",
+    flexShrink: 0,
+  },
+  badge: {
+    position: "absolute",
+    top: 2,
+    right: -2,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: colors.SOS_Red,
+    borderWidth: 1,
+    borderColor: colors.primary_White,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 3,
+  },
+  badgeText: {
+    color: colors.primary_White,
+    fontSize: 10,
+    fontWeight: "700",
+    lineHeight: 12,
+  },
+});

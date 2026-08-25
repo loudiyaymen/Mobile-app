@@ -71,7 +71,7 @@ export default function ReportStack() {
         name="Report Details"
         component={ReportDetailsScreen}
         options={{
-          headerShown: false,
+          headerShown: true,
         }}
       />
     </Stack.Navigator>

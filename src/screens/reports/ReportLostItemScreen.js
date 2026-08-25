@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
+  KeyboardAvoidingView,
   View,
   Text,
   TextInput,
@@ -28,6 +29,10 @@ import { isNonEmptyString, isValidEmail } from "../../utils/validation";
 
 const MAX_REPORT_DETAILS_LENGTH = 500;
 const MAX_REPORT_ATTACHMENT_SIZE_BYTES = 5 * 1024 * 1024;
+
+function sanitizeBuildingInput(value) {
+  return String(value || "").replace(/[^A-Za-z0-9\s,.-]/g, "");
+}
 
 function validateReporterName(value) {
   const trimmed = String(value || "").trim();
@@ -96,6 +101,17 @@ export default function ReportLostItemScreen() {
   const [errors, setErrors] = useState({});
   const [isPhotoViewerOpen, setIsPhotoViewerOpen] = useState(false);
   const { settings } = useSettings();
+  const scrollRef = useRef(null);
+  const fieldPositions = useRef({});
+
+  function scrollToField(field) {
+    const y = fieldPositions.current[field] || 0;
+    const keyboardBuffer = Platform.OS === "ios" ? 260 : 220;
+    scrollRef.current?.scrollTo({
+      y: Math.max(0, y - keyboardBuffer),
+      animated: true,
+    });
+  }
 
   const handlePickMedia = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -179,6 +195,8 @@ export default function ReportLostItemScreen() {
         type: "lostItem",
         description: details,
         campusName: settings.campus,
+        reporterName: name,
+        reporterEmail: email,
         photoUri: media,
         photoSizeBytes: mediaSizeBytes,
         locationText,
@@ -214,15 +232,26 @@ export default function ReportLostItemScreen() {
     !validateLocationIfProvided(locationText);
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
       <ScrollView
+        ref={scrollRef}
+        keyboardShouldPersistTaps="handled"
         style={[
           styles.container,
           { paddingBlockEnd: 48, paddingHorizontal: 16 },
         ]}
       >
         <Text style={[typography.h4, styles.label]}>Name *</Text>
-        <View style={styles.shadowContainer}>
+        <View
+          style={styles.shadowContainer}
+          onLayout={(event) => {
+            fieldPositions.current.name = event.nativeEvent.layout.y;
+          }}
+        >
           <View style={styles.inputRow}>
             <UserIcon name="name" size={24} color={colors.Primary_Charcoal} />
             <TextInput
@@ -243,6 +272,7 @@ export default function ReportLostItemScreen() {
                       : validateReporterName(sanitized),
                 }));
               }}
+              onFocus={() => scrollToField("name")}
               onBlur={() => {
                 setErrors((currentErrors) => ({
                   ...currentErrors,
@@ -259,7 +289,12 @@ export default function ReportLostItemScreen() {
         ) : null}
 
         <Text style={[typography.h4, styles.label]}>Email *</Text>
-        <View style={styles.shadowContainer}>
+        <View
+          style={styles.shadowContainer}
+          onLayout={(event) => {
+            fieldPositions.current.email = event.nativeEvent.layout.y;
+          }}
+        >
           <View style={styles.inputRow}>
             <EnvelopeIcon
               name="email"
@@ -288,6 +323,7 @@ export default function ReportLostItemScreen() {
                   email: validateReporterEmail(email),
                 }));
               }}
+              onFocus={() => scrollToField("email")}
             />
           </View>
         </View>
@@ -298,7 +334,12 @@ export default function ReportLostItemScreen() {
         ) : null}
 
         <Text style={[typography.h4, styles.label]}>Incident details *</Text>
-        <View style={styles.shadowContainer}>
+        <View
+          style={styles.shadowContainer}
+          onLayout={(event) => {
+            fieldPositions.current.details = event.nativeEvent.layout.y;
+          }}
+        >
           <TextInput
             placeholder="Describe the situation (e.g., suspicious activity near E-Building entrance)"
             style={[
@@ -315,6 +356,7 @@ export default function ReportLostItemScreen() {
                 details: validateLostItemDetails(value),
               }));
             }}
+            onFocus={() => scrollToField("details")}
             onBlur={() => {
               setErrors((currentErrors) => ({
                 ...currentErrors,
@@ -333,7 +375,12 @@ export default function ReportLostItemScreen() {
         </Text>
 
         <Text style={[typography.h4, styles.label]}>Location </Text>
-        <View style={styles.shadowContainer}>
+        <View
+          style={styles.shadowContainer}
+          onLayout={(event) => {
+            fieldPositions.current.location = event.nativeEvent.layout.y;
+          }}
+        >
           <View style={styles.inputRow}>
             <MapPinIcon
               name="location"
@@ -345,12 +392,17 @@ export default function ReportLostItemScreen() {
               placeholder="e.g., ACCE Building, Floor 2"
               value={locationText}
               onChangeText={(value) => {
-                setLocationText(value);
+                const sanitized = sanitizeBuildingInput(value);
+                setLocationText(sanitized);
                 setErrors((currentErrors) => ({
                   ...currentErrors,
-                  locationText: validateLocationIfProvided(value),
+                  locationText:
+                    sanitized !== value
+                      ? "Only letters, numbers, spaces, commas, dots and hyphens are allowed."
+                      : validateLocationIfProvided(sanitized),
                 }));
               }}
+              onFocus={() => scrollToField("location")}
               onBlur={() => {
                 setErrors((currentErrors) => ({
                   ...currentErrors,
@@ -452,6 +504,6 @@ export default function ReportLostItemScreen() {
           </Text>
         </Pressable>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

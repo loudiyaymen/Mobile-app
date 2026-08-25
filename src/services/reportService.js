@@ -87,8 +87,7 @@ export async function resolveCampusId(campusName) {
       const freshCampuses = await fetchCampuses();
       exact = findExactCampus(freshCampuses, target);
       if (exact?.campusId) return exact.campusId;
-    } catch {
-    }
+    } catch {}
   }
 
   if (!campusCache || campusCache.length === 0) {
@@ -108,6 +107,8 @@ export async function submitReport({
   type,
   description,
   campusName,
+  reporterName,
+  reporterEmail,
   photoUri,
   photoSizeBytes,
   locationText,
@@ -127,6 +128,13 @@ export async function submitReport({
   formData.append("description", String(description || "").trim());
   formData.append("campus_id", campusId);
   formData.append("device_id", deviceId);
+  formData.append("reporter_name", String(reporterName || "").trim());
+  formData.append(
+    "reporter_email",
+    String(reporterEmail || "")
+      .trim()
+      .toLowerCase(),
+  );
   formData.append("location_text", String(locationText || "").trim());
   formData.append("incident_at", incidentAt ? String(incidentAt) : "");
   formData.append("is_anonymous", String(Boolean(isAnonymous)));

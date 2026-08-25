@@ -1,5 +1,5 @@
-import React from "react";
-import { ScrollView, View, Text } from "react-native";
+import React, { useState } from "react";
+import { Alert, ScrollView, View, Text } from "react-native";
 import { Image, Pressable } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { styles } from "../../themes/styles";
@@ -13,13 +13,49 @@ import {
   ClockIcon,
 } from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
+import { cancelEventRegistration } from "../../services/eventService";
 
 export default function EventDetailsScreen() {
   const route = useRoute();
   const { event } = route.params ?? {};
+  const sourceTab = route.params?.sourceTab || "allEvents";
   const imageUri = event?.image;
   const navigation = useNavigation();
   const alreadyRegistered = Boolean(event?.isRegistered);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  async function handleCancelRegistration() {
+    if (!event?.id || isCancelling) return;
+
+    Alert.alert(
+      "Cancel registration",
+      "Are you sure you want to cancel your registration for this event?",
+      [
+        { text: "Keep registration", style: "cancel" },
+        {
+          text: "Cancel registration",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setIsCancelling(true);
+              await cancelEventRegistration(event.id);
+              navigation.navigate("Events Home", {
+                activeTab: sourceTab,
+                refreshKey: Date.now(),
+              });
+            } catch (error) {
+              Alert.alert(
+                "Cancellation failed",
+                error?.message || "Please try again.",
+              );
+            } finally {
+              setIsCancelling(false);
+            }
+          },
+        },
+      ],
+    );
+  }
 
   return (
     <View style={[styles.container]}>
@@ -76,14 +112,23 @@ export default function EventDetailsScreen() {
         <Pressable
           style={[
             styles.registerButton,
-            alreadyRegistered ? { opacity: 0.6 } : null,
+            alreadyRegistered ? { backgroundColor: colors.SOS_Red } : null,
           ]}
-          key={event.id}
-          disabled={alreadyRegistered}
-          onPress={() => navigation.navigate("Event Register", { event })}
+          disabled={isCancelling}
+          onPress={() => {
+            if (alreadyRegistered) {
+              handleCancelRegistration();
+            } else {
+              navigation.navigate("Event Register", { event });
+            }
+          }}
         >
           <Text style={[typography.body, { color: colors.primary_White }]}>
-            {alreadyRegistered ? "Registered" : "Register"}
+            {alreadyRegistered
+              ? isCancelling
+                ? "Cancelling..."
+                : "Cancel registration"
+              : "Register"}
           </Text>
         </Pressable>
       </View>

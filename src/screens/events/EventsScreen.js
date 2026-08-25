@@ -222,7 +222,10 @@ export default function EventsScreen() {
                   <Pressable
                     key={event.id}
                     onPress={() =>
-                      navigation.navigate("Event Details", { event })
+                      navigation.navigate("Event Details", {
+                        event,
+                        sourceTab: activeTab,
+                      })
                     }
                   >
                     <Card

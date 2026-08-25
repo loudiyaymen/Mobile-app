@@ -26,8 +26,8 @@ export const headerOptions = {
   },
   headerRightContainerStyle: {
     paddingRight: 24,
-    paddingVertical: Platform.OS === "ios" ? 10 : 16,
-    paddingTop: Platform.OS === "ios" ? 20 : 16,
+    paddingVertical: 0,
+    paddingTop: 0,
   },
   headerTitleStyle: {
     color: colors.Primary_Charcoal,

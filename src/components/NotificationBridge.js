@@ -5,13 +5,14 @@ import { useNotifications } from "../context/NotificationContext";
 import { navigate } from "../navigation/navigationRef";
 import { startAlertsRealtime } from "../services/alertsRealtimeService";
 import { registerDevicePushToken } from "../services/pushTokenService";
+import { fetchAlerts } from "../services/alertService";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowBanner: true,
     shouldShowList: true,
     shouldPlaySound: true,
-    shouldSetBadge: false,
+    shouldSetBadge: true,
   }),
 });
 
@@ -60,8 +61,48 @@ function toAppNotification(input = {}) {
   };
 }
 
+function toAppNotificationFromAlert(alert = {}) {
+  const stableAlertId = String(
+    alert?.alert_id || alert?.id || alert?.uuid || "",
+  ).trim();
+  const sentAt =
+    alert?.sent_at ||
+    alert?.created_at ||
+    alert?.starts_at ||
+    new Date().toISOString();
+  const parsedDate = new Date(sentAt);
+  const timestamp = Number.isNaN(parsedDate.getTime())
+    ? "now"
+    : parsedDate.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+      });
+
+  return {
+    id:
+      stableAlertId ||
+      `alert-${String(alert?.message || "")
+        .trim()
+        .toLowerCase()}-${String(sentAt)}`,
+    title: alert?.title || "Campus alert",
+    body:
+      alert?.message || alert?.body || "A new safety alert has been issued.",
+    timestamp,
+    createdAt: sentAt,
+    read: false,
+    type: "ALERT",
+    severity: alert?.severity || null,
+    alertType: alert?.alert_type || null,
+    campusId: alert?.campus_id || null,
+    buildingId: alert?.building_id || null,
+    startsAt: alert?.starts_at || null,
+    endsAt: alert?.ends_at || null,
+    sentAt,
+  };
+}
+
 export default function NotificationBridge() {
-  const { addNotification } = useNotifications();
+  const { addNotification, unreadCount } = useNotifications();
 
   useEffect(() => {
     let mounted = true;
@@ -98,6 +139,15 @@ export default function NotificationBridge() {
       })
       .catch(() => {});
 
+    Notifications.getPresentedNotificationsAsync()
+      .then((presentedNotifications) => {
+        if (!mounted || !Array.isArray(presentedNotifications)) return;
+        presentedNotifications.forEach((notification) => {
+          addNotification(toAppNotification(notification));
+        });
+      })
+      .catch(() => {});
+
     const receiveSub = Notifications.addNotificationReceivedListener(
       (notification) => {
         addNotification(toAppNotification(notification));
@@ -118,6 +168,10 @@ export default function NotificationBridge() {
       responseSub.remove();
     };
   }, [addNotification]);
+
+  useEffect(() => {
+    Notifications.setBadgeCountAsync(unreadCount).catch(() => {});
+  }, [unreadCount]);
 
   useEffect(() => {
     const stopRealtime = startAlertsRealtime(async (note) => {
@@ -153,6 +207,55 @@ export default function NotificationBridge() {
 
     return () => {
       stopRealtime();
+    };
+  }, [addNotification]);
+
+  useEffect(() => {
+    let stopped = false;
+    let isInitialSync = true;
+    const knownAlertIds = new Set();
+
+    async function syncAlertsFeed() {
+      try {
+        const alerts = await fetchAlerts({ limit: 30, offset: 0 });
+        if (stopped || !Array.isArray(alerts)) return;
+
+        for (const alert of alerts) {
+          const note = toAppNotificationFromAlert(alert);
+          const isKnown = knownAlertIds.has(note.id);
+
+          addNotification(note);
+
+          if (!isInitialSync && !isKnown) {
+            Notifications.scheduleNotificationAsync({
+              content: {
+                title: note.title,
+                body: note.body,
+                data: {
+                  id: note.id,
+                  source: "alerts_poll",
+                  sentAt: note.sentAt,
+                },
+              },
+              trigger: null,
+            }).catch(() => {});
+          }
+
+          knownAlertIds.add(note.id);
+        }
+
+        isInitialSync = false;
+      } catch {
+        // Keep realtime handling active; polling is only a fallback path.
+      }
+    }
+
+    syncAlertsFeed();
+    const intervalId = setInterval(syncAlertsFeed, 15000);
+
+    return () => {
+      stopped = true;
+      clearInterval(intervalId);
     };
   }, [addNotification]);
 

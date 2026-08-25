@@ -17,7 +17,13 @@ export async function registerDevicePushToken() {
   let permissionStatus = permissions.status;
 
   if (permissionStatus !== "granted") {
-    const requested = await Notifications.requestPermissionsAsync();
+    const requested = await Notifications.requestPermissionsAsync({
+      ios: {
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+      },
+    });
     permissionStatus = requested.status;
   }
 

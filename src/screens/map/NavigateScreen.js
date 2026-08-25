@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { HeaderBackButton } from "@react-navigation/elements";
 import { styles } from "../../themes/styles";
 import { typography } from "../../themes/typography";
 import { colors } from "../../themes/color";
@@ -368,7 +369,15 @@ export default function NavigateScreen() {
 
   useEffect(() => {
     navigation.setOptions({
-      headerLeft: isNavigating ? () => null : undefined,
+      headerLeft: isNavigating
+        ? () => null
+        : ({ tintColor }) => (
+            <HeaderBackButton
+              tintColor={tintColor ?? colors.Primary_Charcoal}
+              labelVisible={false}
+              onPress={() => navigation.goBack()}
+            />
+          ),
       gestureEnabled: !isNavigating,
     });
   }, [navigation, isNavigating]);

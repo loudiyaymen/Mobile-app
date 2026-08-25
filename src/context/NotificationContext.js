@@ -1,12 +1,17 @@
 import {
   createContext,
+  useEffect,
   useCallback,
   useContext,
   useMemo,
   useState,
 } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const NotificationContext = createContext();
+const NOTIFICATIONS_STORAGE_KEY = "campus.notifications.v1";
+const DISMISSED_NOTIFICATION_IDS_STORAGE_KEY =
+  "campus.notifications.dismissedIds.v1";
 
 function normalizeNotification(note = {}) {
   const createdAt = note.createdAt || note.timestamp || Date.now();
@@ -40,15 +45,84 @@ function normalizeNotification(note = {}) {
 
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
+  const [dismissedIds, setDismissedIds] = useState(() => new Set());
 
-  const addNotification = useCallback((note) => {
-    const normalized = normalizeNotification(note);
+  useEffect(() => {
+    let mounted = true;
 
-    setNotifications((prev) => {
-      if (prev.find((n) => n.id === normalized.id)) return prev;
-      return [normalized, ...prev];
-    });
+    async function loadStoredNotifications() {
+      try {
+        const [rawNotifications, rawDismissedIds] = await Promise.all([
+          AsyncStorage.getItem(NOTIFICATIONS_STORAGE_KEY),
+          AsyncStorage.getItem(DISMISSED_NOTIFICATION_IDS_STORAGE_KEY),
+        ]);
+        if (!mounted) return;
+
+        const parsedDismissed = rawDismissedIds
+          ? JSON.parse(rawDismissedIds)
+          : [];
+        const dismissedIdSet = Array.isArray(parsedDismissed)
+          ? new Set(parsedDismissed.map((id) => String(id)))
+          : new Set();
+        setDismissedIds(dismissedIdSet);
+
+        if (!rawNotifications) return;
+        const parsed = JSON.parse(rawNotifications);
+        if (!Array.isArray(parsed)) return;
+
+        const normalized = parsed
+          .map((item) => normalizeNotification(item))
+          .filter((item) => !dismissedIdSet.has(String(item.id)))
+          .sort(
+            (first, second) =>
+              new Date(second.createdAt).getTime() -
+              new Date(first.createdAt).getTime(),
+          );
+
+        setNotifications(normalized);
+      } catch {
+        // Ignore corrupted local cache and continue with an empty in-memory list.
+      }
+    }
+
+    loadStoredNotifications();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
+
+  useEffect(() => {
+    AsyncStorage.setItem(
+      NOTIFICATIONS_STORAGE_KEY,
+      JSON.stringify(notifications),
+    ).catch(() => {});
+  }, [notifications]);
+
+  useEffect(() => {
+    AsyncStorage.setItem(
+      DISMISSED_NOTIFICATION_IDS_STORAGE_KEY,
+      JSON.stringify(Array.from(dismissedIds)),
+    ).catch(() => {});
+  }, [dismissedIds]);
+
+  const addNotification = useCallback(
+    (note) => {
+      const normalized = normalizeNotification(note);
+      if (dismissedIds.has(normalized.id)) return;
+
+      setNotifications((prev) => {
+        if (prev.find((n) => n.id === normalized.id)) return prev;
+
+        return [normalized, ...prev].sort(
+          (first, second) =>
+            new Date(second.createdAt).getTime() -
+            new Date(first.createdAt).getTime(),
+        );
+      });
+    },
+    [dismissedIds],
+  );
 
   const markAllAsRead = useCallback(() => {
     setNotifications((prev) => {
@@ -58,11 +132,29 @@ export const NotificationProvider = ({ children }) => {
   }, []);
 
   const removeNotification = useCallback((id) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== String(id)));
+    const idString = String(id);
+    setDismissedIds((prev) => {
+      const next = new Set(prev);
+      next.add(idString);
+      return next;
+    });
+    setNotifications((prev) => prev.filter((n) => n.id !== idString));
   }, []);
 
   const clearNotifications = useCallback(() => {
-    setNotifications((prev) => (prev.length === 0 ? prev : []));
+    setNotifications((prev) => {
+      if (prev.length === 0) return prev;
+
+      setDismissedIds((currentDismissed) => {
+        const next = new Set(currentDismissed);
+        prev.forEach((item) => {
+          next.add(String(item.id));
+        });
+        return next;
+      });
+
+      return [];
+    });
   }, []);
 
   const unreadCount = useMemo(

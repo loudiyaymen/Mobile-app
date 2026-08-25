@@ -14,6 +14,10 @@ export function resolveApiBaseUrl() {
   if (fromEnv) return stripTrailingSlash(fromEnv);
   if (fromConfig) return stripTrailingSlash(fromConfig);
 
+  if (!__DEV__) {
+    return "https://algonquingo-backend.azurewebsites.net/api/v1";
+  }
+
   const localHost = Platform.OS === "android" ? "10.0.2.2" : "localhost";
   return `http://${localHost}:4000/api/v1`;
 }
@@ -32,7 +36,9 @@ export async function apiFetch(path, options) {
     });
   } catch (error) {
     if (error?.name === "AbortError") {
-      throw new Error("Request timed out. Please check your internet connection.");
+      throw new Error(
+        "Request timed out. Please check your internet connection.",
+      );
     }
     throw error;
   } finally {

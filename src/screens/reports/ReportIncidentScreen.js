@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
+  KeyboardAvoidingView,
   View,
   Text,
   TextInput,
@@ -30,6 +31,10 @@ import { isNonEmptyString } from "../../utils/validation";
 const MAX_REPORT_DETAILS_LENGTH = 250;
 const MAX_REPORT_ATTACHMENT_SIZE_BYTES = 5 * 1024 * 1024;
 const MAX_REPORT_PAST_DAYS = 31;
+
+function sanitizeBuildingInput(value) {
+  return String(value || "").replace(/[^A-Za-z0-9\s,.-]/g, "");
+}
 
 function validateLocation(value) {
   return isNonEmptyString(value)
@@ -115,6 +120,17 @@ export default function ReportIncidentScreen() {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
   const [isPhotoViewerOpen, setIsPhotoViewerOpen] = useState(false);
+  const scrollRef = useRef(null);
+  const fieldPositions = useRef({});
+
+  function scrollToField(field) {
+    const y = fieldPositions.current[field] || 0;
+    const keyboardBuffer = Platform.OS === "ios" ? 260 : 220;
+    scrollRef.current?.scrollTo({
+      y: Math.max(0, y - keyboardBuffer),
+      animated: true,
+    });
+  }
 
   const handleDateConfirm = (selectedDate) => {
     setDatePickerVisibility(false);
@@ -278,8 +294,14 @@ export default function ReportIncidentScreen() {
     !validateIncidentDetails(details);
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
       <ScrollView
+        ref={scrollRef}
+        keyboardShouldPersistTaps="handled"
         style={[
           styles.container,
           { paddingBlockEnd: 48, paddingHorizontal: 16 },
@@ -288,7 +310,12 @@ export default function ReportIncidentScreen() {
         <Text style={[typography.h4, styles.label]}>
           Location <Text style={{ color: colors.SOS_Red }}>*</Text>
         </Text>
-        <View style={styles.shadowContainer}>
+        <View
+          style={styles.shadowContainer}
+          onLayout={(event) => {
+            fieldPositions.current.location = event.nativeEvent.layout.y;
+          }}
+        >
           <View style={styles.inputRow}>
             <MapPinIcon
               name="location"
@@ -301,17 +328,22 @@ export default function ReportIncidentScreen() {
               value={locationText}
               maxLength={20}
               onChangeText={(value) => {
-                setLocationText(value);
+                const sanitized = sanitizeBuildingInput(value);
+                setLocationText(sanitized);
                 const trimmed = String(value || "").trim();
                 const error =
                   trimmed.length > 0 && trimmed.length < 3
                     ? "Location must be at least 3 characters."
-                    : validateLocation(value);
+                    : validateLocation(sanitized);
                 setErrors((currentErrors) => ({
                   ...currentErrors,
-                  locationText: error,
+                  locationText:
+                    sanitized !== value
+                      ? "Only letters, numbers, spaces, commas, dots and hyphens are allowed."
+                      : error,
                 }));
               }}
+              onFocus={() => scrollToField("location")}
               onBlur={() => {
                 const trimmed = String(locationText || "").trim();
                 const error =
@@ -361,6 +393,7 @@ export default function ReportIncidentScreen() {
           mode="date"
           accentColor={colors.primary_AC_Green}
           buttonTextColorIOS={colors.primary_AC_Green}
+          isDarkModeEnabled={false}
           onConfirm={handleDateConfirm}
           onCancel={() => setDatePickerVisibility(false)}
         />
@@ -403,6 +436,7 @@ export default function ReportIncidentScreen() {
           onCancel={() => setTimePickerVisibility(false)}
           accentColor={colors.primary_AC_Green}
           buttonTextColorIOS={colors.primary_AC_Green}
+          isDarkModeEnabled={false}
           is24Hour={false}
         />
         {errors.time ? (
@@ -414,7 +448,12 @@ export default function ReportIncidentScreen() {
         <Text style={[typography.h4, styles.label]}>
           Incident details <Text style={{ color: colors.SOS_Red }}>*</Text>
         </Text>
-        <View style={styles.shadowContainer}>
+        <View
+          style={styles.shadowContainer}
+          onLayout={(event) => {
+            fieldPositions.current.details = event.nativeEvent.layout.y;
+          }}
+        >
           <TextInput
             placeholder="Describe the situation (e.g., suspicious activity near E-Building entrance)"
             style={[
@@ -431,6 +470,7 @@ export default function ReportIncidentScreen() {
                 details: validateIncidentDetails(value),
               }));
             }}
+            onFocus={() => scrollToField("details")}
             onBlur={() => {
               setErrors((currentErrors) => ({
                 ...currentErrors,
@@ -534,6 +574,6 @@ export default function ReportIncidentScreen() {
           </Text>
         </Pressable>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
